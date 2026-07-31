@@ -381,23 +381,41 @@ async function printReport(){
         doc.text("Total Salary : Rs. " + salary, 25, y);
 
         y += 8;
-        doc.text("Attendance :", 25, y);
-
-        worker.attendance.forEach(date => {
-            y += 7;
-            doc.text("- " + date, 35, y);
-        });
-
-        y += 15;
 
         if(y > 260){
             doc.addPage();
             y = 20;
         }
-
     });
 
-    doc.save("Worker_Attendance_Report.pdf");
+
+    let pdf = doc.output("blob");
+
+    window.resolveLocalFileSystemURL(
+        cordova.file.externalRootDirectory + "Download/",
+        function(dir){
+
+            dir.getFile(
+                "Worker_Attendance_Report.pdf",
+                {create:true},
+                function(file){
+
+                    file.createWriter(function(writer){
+
+                        writer.write(pdf);
+
+                        alert("PDF Saved in Download folder");
+
+                    });
+
+                }
+            );
+
+        },
+        function(error){
+            alert("Folder access error");
+        }
+    );
 }
 function exportExcel(){
 
