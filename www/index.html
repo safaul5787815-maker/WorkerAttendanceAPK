@@ -1,0 +1,459 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Worker Attendance App</title>
+
+<style>
+
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+    font-family:Arial,sans-serif;
+}
+
+body{
+    background:#f2f2f2;
+    padding:20px;
+}
+
+.container{
+    max-width:900px;
+    margin:auto;
+}
+
+h1{
+    text-align:center;
+    margin-bottom:20px;
+}
+
+.box{
+    background:white;
+    padding:20px;
+    border-radius:10px;
+    box-shadow:0 0 10px rgba(0,0,0,.2);
+}
+
+input{
+    width:100%;
+    padding:10px;
+    margin-top:10px;
+}
+
+button{
+    padding:10px 20px;
+    margin-top:10px;
+    cursor:pointer;
+}
+
+.btns{
+    display:flex;
+    gap:10px;
+    justify-content:center;
+    flex-wrap:wrap;
+}
+
+table{
+    width:100%;
+    margin-top:20px;
+    border-collapse:collapse;
+    background:white;
+}
+
+table th,
+table td{
+    border:1px solid #ddd;
+    padding:10px;
+    text-align:center;
+}
+
+table th{
+    background:#1976d2;
+    color:white;
+}
+
+.totalBox{
+    margin-top:20px;
+    background:white;
+    padding:15px;
+    border-radius:10px;
+    text-align:center;
+    font-size:20px;
+    font-weight:bold;
+}
+.dashboard{
+    display:flex;
+    gap:15px;
+    margin:20px 0;
+    flex-wrap:wrap;
+}
+
+.card{
+    flex:1;
+    min-width:180px;
+    background:#2196F3;
+    color:white;
+    border-radius:10px;
+    padding:15px;
+    text-align:center;
+}
+.profile{
+    text-align:center;
+    margin-top:20px;
+}
+
+.profile{
+    text-align:center;
+    margin-top:20px;
+}
+
+.profile-img{
+    width:100px;
+    height:100px;
+    border-radius:50%;
+    border:3px solid #2196F3;
+    object-fit:cover;
+}
+</style>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/xlsx/dist/xlsx.full.min.js"></script>
+</head>
+
+<body>
+
+<div class="profile">
+    <img src="profile.png" class="profile-img">
+</div>
+
+<h1>Worker Attendance App</h1> 
+<div class="dashboard">
+
+<div class="card">
+<h3>Total Workers</h3>
+<h2 id="totalWorkers">0</h2>
+</div>
+
+<div class="card">
+<h3>Present Days</h3>
+<h2 id="totalPresent">0</h2>
+</div>
+
+<div class="card">
+<h3>Total Salary</h3>
+<h2>₹<span id="dashboardSalary">0</span></h2>
+</div>
+
+</div>
+<div class="box">
+
+<input
+type="text"
+id="name"
+placeholder="Worker Name">
+
+<input
+type="number"
+id="wage"
+placeholder="Daily Rate">
+
+<input type="date" id="attendanceDate" onchange="renderWorkers()">
+
+<div class="btns">
+
+<button onclick="addWorker()">
+Add Worker
+</button>
+
+<button onclick="printReport()">
+Download PDF
+<button onclick="exportExcel()">Export Excel</button>
+
+</div>
+
+</div>
+
+<table>
+
+<thead>
+
+<tr>
+
+<th>Name</th>
+
+<th>Daily Rate</th>
+
+<th>Present Days</th>
+
+<th>Total Salary</th>
+
+<th>Action</th>
+
+</tr>
+
+</thead>
+
+<tbody id="workerList">
+
+</tbody>
+
+</table>
+
+<script>
+let workers = JSON.parse(localStorage.getItem("workers")) || [];
+
+function saveWorkers() {
+    localStorage.setItem("workers", JSON.stringify(workers));
+}
+
+function renderWorkers() {
+
+    let list = document.getElementById("workerList");
+    list.innerHTML = "";
+
+    let totalSalary = 0;
+
+    workers.forEach((worker, index) => {
+
+        if (!worker.presentDays) worker.presentDays = 0;
+        if (!worker.attendance) worker.attendance = [];
+
+        let monthlySalary = worker.wage * worker.presentDays;
+        totalSalary += monthlySalary;
+
+        let row = list.insertRow();
+
+        row.insertCell(0).innerHTML = worker.name;
+        row.insertCell(1).innerHTML = "₹" + worker.wage;
+        row.insertCell(2).innerHTML = worker.presentDays;
+        row.insertCell(3).innerHTML = "₹" + monthlySalary;
+
+        row.insertCell(4).innerHTML = `
+${
+worker.attendance.includes(document.getElementById("attendanceDate").value)
+?
+`<button onclick="markPresent(${index})">Absent</button>`
+:
+`<button onclick="markPresent(${index})">Present</button>`
+}
+<button onclick="showHistory(${index})">History</button>
+<button onclick="downloadWorkerPDF(${index})">PDF</button>
+<button onclick="deleteWorker(${index})">Delete</button>
+        `;
+    });
+
+    document.getElementById("totalWorkers").innerHTML = workers.length;
+
+let totalPresent = 0;
+
+workers.forEach(worker=>{
+    totalPresent += worker.presentDays;
+});
+
+document.getElementById("totalPresent").innerHTML = totalPresent;
+
+document.getElementById("dashboardSalary").innerHTML = totalSalary;
+}
+
+function addWorker() {
+
+    let name = document.getElementById("name").value.trim();
+    let wage = Number(document.getElementById("wage").value);
+    let attendanceDate = document.getElementById("attendanceDate").value;
+
+    if (name === "" || wage <= 0 || attendanceDate === "") {
+        alert("Please fill all details");
+        return;
+    }
+
+    workers.push({
+        name: name,
+        wage: wage,
+        presentDays: 0,
+        attendance: []
+    });
+
+    saveWorkers();
+    renderWorkers();
+
+    document.getElementById("name").value = "";
+    document.getElementById("wage").value = "";
+}
+function markPresent(index){
+
+    let date = document.getElementById("attendanceDate").value;
+
+    if(date === ""){
+        alert("Please select date");
+        return;
+    }
+
+    let pos = workers[index].attendance.indexOf(date);
+
+    if(pos !== -1){
+
+        // Attendance हटाएँ
+        workers[index].attendance.splice(pos, 1);
+
+        if(workers[index].presentDays > 0){
+            workers[index].presentDays--;
+        }
+
+
+    }else{
+
+        // Attendance जोड़ें
+        workers[index].attendance.push(date);
+        workers[index].presentDays++;
+
+    }
+
+    saveWorkers();
+    renderWorkers();
+}
+
+function showHistory(index){
+
+    if(workers[index].attendance.length===0){
+        alert("No attendance found.");
+        return;
+    }
+
+    alert(
+        "Attendance History\n\n" +
+        workers[index].attendance.join("\n")
+    );
+}
+
+function deleteWorker(index){
+
+    workers.splice(index,1);
+
+    saveWorkers();
+    renderWorkers();
+}
+function editWorker(index){
+
+    let newName = prompt("Enter new worker name", workers[index].name);
+
+    if(newName === null) return;
+
+    let newWage = prompt("Enter new daily wage", workers[index].wage);
+
+    if(newWage === null) return;
+
+    workers[index].name = newName;
+    workers[index].wage = Number(newWage);
+
+    saveWorkers();
+    renderWorkers();
+}
+async function printReport(){
+
+    const { jsPDF } = window.jspdf;
+    const doc = new jsPDF();
+
+    doc.setFontSize(18);
+    doc.text("Worker Attendance Report", 20, 20);
+
+    let y = 35;
+
+    workers.forEach((worker, index) => {
+
+        let salary = worker.wage * worker.presentDays;
+
+        doc.setFontSize(14);
+        doc.text("Worker " + (index + 1), 20, y);
+
+        y += 10;
+        doc.setFontSize(12);
+        doc.text("Name : " + worker.name, 25, y);
+
+        y += 8;
+        doc.text("Daily Rate : Rs. " + worker.wage, 25, y);
+
+        y += 8;
+        doc.text("Present Days : " + worker.presentDays, 25, y);
+
+        y += 8;
+        doc.text("Total Salary : Rs. " + salary, 25, y);
+
+        y += 8;
+        doc.text("Attendance :", 25, y);
+
+        worker.attendance.forEach(date => {
+            y += 7;
+            doc.text("- " + date, 35, y);
+        });
+
+        y += 15;
+
+        if(y > 260){
+            doc.addPage();
+            y = 20;
+        }
+
+    });
+
+    doc.save("Worker_Attendance_Report.pdf");
+}
+function exportExcel(){
+
+    let data = [];
+
+    workers.forEach(worker=>{
+
+        data.push({
+            "Worker Name": worker.name,
+            "Daily Rate": worker.wage,
+            "Present Days": worker.presentDays,
+            "Total Salary": worker.wage * worker.presentDays
+        });
+
+    });
+
+    let workbook = XLSX.utils.book_new();
+
+    let worksheet = XLSX.utils.json_to_sheet(data);
+
+    XLSX.utils.book_append_sheet(workbook, worksheet, "Workers");
+
+    XLSX.writeFile(workbook, "Worker_Attendance_Report.xlsx");
+
+}
+function downloadWorkerPDF(index){
+
+    const { jsPDF } = window.jspdf;
+    const doc = new jsPDF();
+
+    let worker = workers[index];
+    let salary = worker.wage * worker.presentDays;
+
+    doc.setFontSize(18);
+    doc.text("Worker Report", 20, 20);
+
+    doc.setFontSize(12);
+    doc.text("Name: " + worker.name, 20, 40);
+    doc.text("Daily Rate: Rs." + worker.wage, 20, 50);
+    doc.text("Present Days: " + worker.presentDays, 20, 60);
+    doc.text("Total Salary: Rs." + salary, 20, 70);
+
+    doc.text("Attendance Dates:", 20, 90);
+
+    let y = 100;
+
+    worker.attendance.forEach(date => {
+        doc.text(date, 25, y);
+        y += 10;
+    });
+
+    doc.save(worker.name + "_Report.pdf");
+}
+renderWorkers();
+
+</script>
+
+</body>
+</html>
