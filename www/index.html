@@ -388,35 +388,33 @@ async function printReport(){
         }
     });
 
+let pdf = doc.output("blob");
 
-    let pdf = doc.output("blob");
+window.resolveLocalFileSystemURL(
+    cordova.file.dataDirectory,
+    function(dir){
 
-    window.resolveLocalFileSystemURL(
-        cordova.file.externalRootDirectory + "Download/",
-        function(dir){
+        dir.getFile(
+            "Worker_Attendance_Report.pdf",
+            {create:true},
+            function(file){
 
-            dir.getFile(
-                "Worker_Attendance_Report.pdf",
-                {create:true},
-                function(file){
+                file.createWriter(function(writer){
 
-                    file.createWriter(function(writer){
+                    writer.write(pdf);
 
-                        writer.write(pdf);
+                    alert("PDF Saved Successfully");
 
-                        alert("PDF Saved in Download folder");
+                });
 
-                    });
+            }
+        );
 
-                }
-            );
-
-        },
-        function(error){
-            alert("Folder access error");
-        }
-    );
-}
+    },
+    function(error){
+        alert("PDF Save Error");
+    }
+);
 function exportExcel(){
 
     let data = [];
