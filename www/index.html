@@ -568,6 +568,10 @@ function showMenu(index, event){
     selectedWorker = index;
 
     let menu = document.getElementById("popupMenu");
+    alert(event.clientX + ", " + event.clientY);
+
+    menu.style.top = event.clientY + "px";
+    menu.style.left = event.clientX + "px";
     menu.style.display = "block";
 }
 function menuHistory(){
