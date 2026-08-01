@@ -492,7 +492,9 @@ function downloadWorkerPDF(index){
         y += 10;
     });
 
-    doc.save(worker.name + "_Report.pdf");
+let pdf = doc.output("blob");
+
+downloadPDFToDownloads(pdf, worker.name + "_Report.pdf");
 }
 document.addEventListener("deviceready", function () {
     alert("Device Ready");
