@@ -1,14 +1,49 @@
-<?xml version='1.0' encoding='utf-8'?>
-<widget id="com.safaul.workerattendance" version="1.0.0" xmlns="http://www.w3.org/ns/widgets" xmlns:cdv="http://cordova.apache.org/ns/1.0">
+<?xml version="1.0" encoding="utf-8"?>
+
+<widget id="com.safaul.workerattendance"
+    version="1.0.0"
+    xmlns="http://www.w3.org/ns/widgets"
+    xmlns:cdv="http://cordova.apache.org/ns/1.0">
+
     <name>Worker Attendance</name>
+
     <description>
-        A sample Apache Cordova application that responds to the deviceready event.
+        Worker Attendance and Salary App
     </description>
-    <author email="dev@cordova.apache.org" href="https://cordova.apache.org">
-        Apache Cordova Team
+
+    <author email="safaul5787815@gmail.com">
+        Safaul Ansari
     </author>
+
     <content src="index.html" />
+
     <icon src="icon.png" />
+
+    <preference name="AndroidXEnabled" value="true" />
+    <preference name="AndroidPersistentFileLocation" value="Compatibility" />
+    <preference name="SplashScreenDelay" value="0" />
+    <preference name="AndroidLaunchMode" value="singleTask" />
+
+    <allow-navigation href="*" />
+
+    <access origin="*" />
+
     <allow-intent href="http://*/*" />
     <allow-intent href="https://*/*" />
+    <allow-intent href="tel:*" />
+    <allow-intent href="sms:*" />
+    <allow-intent href="mailto:*" />
+    <allow-intent href="geo:*" />
+
+<platform name="android">
+
+    <preference name="AndroidTargetSdkVersion" value="36" />
+    <preference name="AndroidCompileSdkVersion" value="36" />
+
+    <edit-config file="app/src/main/AndroidManifest.xml" mode="merge" target="/manifest">
+        <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" android:maxSdkVersion="28" />
+        <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" android:maxSdkVersion="32" />
+    </edit-config>
+
+</platform>
 </widget>

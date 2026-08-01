@@ -169,7 +169,11 @@ Add Worker
 
 <button onclick="printReport()">
 Download PDF
-<button onclick="exportExcel()">Export Excel</button>
+</button>
+
+<button onclick="exportExcel()">
+Export Excel
+</button>
 
 </div>
 
@@ -390,37 +394,41 @@ async function printReport(){
 
 let pdf = doc.output("blob");
 
-window.resolveLocalFileSystemURL(
-    cordova.file.dataDirectory,
-    function(dir){
+downloadPDFToDownloads(pdf, "Worker_Attendance_Report.pdf");
+}
+function downloadPDFToDownloads(blob, fileName){
 
-        dir.getFile(
-            "Worker_Attendance_Report.pdf",
-            {create:true},
-function(file){
+    window.resolveLocalFileSystemURL(
+        cordova.file.externalRootDirectory + "Download/",
+        function(dir){
 
-    file.createWriter(function(writer){
+            dir.getFile(
+                fileName,
+                {create:true},
+                function(file){
 
-    writer.onwriteend = function () {
-        alert("PDF Saved Successfully");
-    };
+                    file.createWriter(function(writer){
 
-    writer.onerror = function (e) {
-        alert("PDF Save Error: " + e.toString());
-    };
+                        writer.onwriteend=function(){
+                            alert("PDF Download folder me save ho gayi");
+                        };
 
-    writer.write(pdf);
+                        writer.onerror=function(){
+                            alert("PDF Save Error");
+                        };
 
-});
+                        writer.write(blob);
 
-            }
-        );
+                    });
 
-    },
-    function(error){
-        alert("PDF Save Error");
-    }
-);
+                }
+            );
+
+        },
+        function(){
+            alert("Download folder nahi mila");
+        }
+    );
 }
 function exportExcel(){
 
