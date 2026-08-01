@@ -351,8 +351,6 @@ function editWorker(index){
     renderWorkers();
 }
 async function printReport(){
-    alert("PrintReport Started");
-    alert(typeof cordova);
 
     const { jsPDF } = window.jspdf;
     const doc = new jsPDF();
@@ -399,15 +397,21 @@ window.resolveLocalFileSystemURL(
         dir.getFile(
             "Worker_Attendance_Report.pdf",
             {create:true},
-            function(file){
+function(file){
 
-                file.createWriter(function(writer){
+    file.createWriter(function(writer){
 
-                    writer.write(pdf);
+    writer.onwriteend = function () {
+        alert("PDF Saved Successfully");
+    };
 
-                    alert("PDF Saved Successfully");
+    writer.onerror = function (e) {
+        alert("PDF Save Error: " + e.toString());
+    };
 
-                });
+    writer.write(pdf);
+
+});
 
             }
         );
