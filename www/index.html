@@ -568,8 +568,10 @@ function showMenu(index, event){
 
     let menu = document.getElementById("popupMenu");
 
-    menu.style.top = (event.pageY + 5) + "px";
-    menu.style.left = Math.max(10, event.pageX - 170) + "px";
+const rect = event.target.getBoundingClientRect();
+
+    menu.style.top = (rect.bottom + 5) + "px";
+    menu.style.left = Math.max(10, rect.right - 170) + "px";
     menu.style.display = "block";
 }
 function menuHistory(){
@@ -626,9 +628,9 @@ renderWorkers();
 
 document.addEventListener("click", function(e){
 
-    if(!e.target.classList.contains("menu-btn")){
-        document.getElementById("popupMenu").style.display = "none";
-    }
+if (!e.target.closest(".menu-btn") && !e.target.closest("#popupMenu")) {
+    document.getElementById("popupMenu").style.display = "none";
+}
 
 });
 
