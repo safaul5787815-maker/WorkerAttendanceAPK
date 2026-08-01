@@ -470,9 +470,14 @@ function downloadWorkerPDF(index){
 
     doc.save(worker.name + "_Report.pdf");
 }
+document.addEventListener("deviceready", function () {
+    alert("Device Ready");
+});
 renderWorkers();
 
 </script>
+
+<script src="cordova.js"></script>
 
 </body>
 </html>
