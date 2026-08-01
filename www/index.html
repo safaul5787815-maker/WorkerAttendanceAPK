@@ -399,7 +399,7 @@ downloadPDFToDownloads(pdf, "Worker_Attendance_Report.pdf");
 function downloadPDFToDownloads(blob, fileName){
 
     window.resolveLocalFileSystemURL(
-        cordova.file.externalRootDirectory + "Download/",
+        cordova.file.dataDirectory,
         function(dir){
 
             dir.getFile(
@@ -410,7 +410,26 @@ function downloadPDFToDownloads(blob, fileName){
                     file.createWriter(function(writer){
 
                         writer.onwriteend = function(){
-                            alert("PDF Download folder me save ho gayi");
+
+                            alert("PDF ready");
+
+                            cordova.plugins.fileOpener2.open(
+                                file.nativeURL,
+                                "application/pdf",
+                                {
+                                    error:function(e){
+                                        alert("Open error: "+e.status);
+                                    },
+                                    success:function(){
+                                        console.log("PDF opened");
+                                    }
+                                }
+                            );
+
+                        };
+
+                        writer.onerror=function(){
+                            alert("PDF save error");
                         };
 
                         writer.write(blob);
@@ -420,9 +439,6 @@ function downloadPDFToDownloads(blob, fileName){
                 }
             );
 
-        },
-        function(){
-            alert("Download folder nahi mila");
         }
     );
 }
