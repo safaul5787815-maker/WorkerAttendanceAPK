@@ -116,6 +116,28 @@ table th{
     border:3px solid #2196F3;
     object-fit:cover;
 }
+.action-cell{
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    gap:8px;
+}
+
+.menu-btn{
+    width:34px;
+    height:34px;
+    border:none;
+    border-radius:50%;
+    background:#1976d2;
+    color:white;
+    font-size:20px;
+    font-weight:bold;
+    cursor:pointer;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    padding:0;
+}
 </style>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
@@ -234,7 +256,8 @@ function renderWorkers() {
         row.insertCell(2).innerHTML = worker.presentDays;
         row.insertCell(3).innerHTML = "₹" + monthlySalary;
 
-        row.insertCell(4).innerHTML = `
+row.insertCell(4).innerHTML = `
+<div class="action-cell">
 ${
 worker.attendance.includes(document.getElementById("attendanceDate").value)
 ?
@@ -242,10 +265,9 @@ worker.attendance.includes(document.getElementById("attendanceDate").value)
 :
 `<button onclick="markPresent(${index})">Present</button>`
 }
-<button onclick="showHistory(${index})">History</button>
-<button onclick="downloadWorkerPDF(${index})">PDF</button>
-<button onclick="deleteWorker(${index})">Delete</button>
-        `;
+<button class="menu-btn" onclick="showMenu(${index})">⋮</button>
+</div>
+`;
     });
 
     document.getElementById("totalWorkers").innerHTML = workers.length;
@@ -509,6 +531,27 @@ function downloadExcel(blob, fileName){
 
         }
     );
+}
+function showMenu(index){
+
+    let choice = prompt(
+        "Select Option\n\n" +
+        "1. History\n" +
+        "2. PDF\n" +
+        "3. Delete"
+    );
+
+    if(choice === "1"){
+        showHistory(index);
+    }
+    else if(choice === "2"){
+        downloadWorkerPDF(index);
+    }
+    else if(choice === "3"){
+        if(confirm("Delete this worker?")){
+            deleteWorker(index);
+        }
+    }
 }
 function downloadWorkerPDF(index){
 
