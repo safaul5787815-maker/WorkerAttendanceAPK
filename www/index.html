@@ -138,6 +138,33 @@ table th{
     justify-content:center;
     padding:0;
 }
+
+.popup-menu{
+    display:none;
+    position:fixed;
+    background:#fff;
+    border-radius:10px;
+    box-shadow:0 4px 12px rgba(0,0,0,.25);
+    min-width:170px;
+    overflow:hidden;
+    z-index:9999;
+}
+
+.popup-menu div{
+    padding:12px 15px;
+    cursor:pointer;
+    font-size:16px;
+    border-bottom:1px solid #eee;
+}
+
+.popup-menu div:last-child{
+    border-bottom:none;
+}
+
+.popup-menu div:hover{
+    background:#f5f5f5;
+}
+
 </style>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
@@ -229,6 +256,7 @@ Export Excel
 
 <script>
 let workers = JSON.parse(localStorage.getItem("workers")) || [];
+let selectedWorker = -1;
 
 function saveWorkers() {
     localStorage.setItem("workers", JSON.stringify(workers));
@@ -265,7 +293,7 @@ worker.attendance.includes(document.getElementById("attendanceDate").value)
 :
 `<button onclick="markPresent(${index})">Present</button>`
 }
-<button class="menu-btn" onclick="showMenu(${index})">⋮</button>
+<button class="menu-btn" onclick="showMenu(${index}, event)">⋮</button>
 </div>
 `;
     });
@@ -532,25 +560,31 @@ function downloadExcel(blob, fileName){
         }
     );
 }
-function showMenu(index){
+function showMenu(index, event){
 
-    let choice = prompt(
-        "Select Option\n\n" +
-        "1. History\n" +
-        "2. PDF\n" +
-        "3. Delete"
-    );
+    selectedWorker = index;
 
-    if(choice === "1"){
-        showHistory(index);
-    }
-    else if(choice === "2"){
-        downloadWorkerPDF(index);
-    }
-    else if(choice === "3"){
-        if(confirm("Delete this worker?")){
-            deleteWorker(index);
-        }
+    let menu = document.getElementById("popupMenu");
+
+    menu.style.display = "block";
+    menu.style.left = event.pageX + "px";
+    menu.style.top = event.pageY + "px";
+}
+function menuHistory(){
+    document.getElementById("popupMenu").style.display="none";
+    showHistory(selectedWorker);
+}
+
+function menuPDF(){
+    document.getElementById("popupMenu").style.display="none";
+    downloadWorkerPDF(selectedWorker);
+}
+
+function menuDelete(){
+    document.getElementById("popupMenu").style.display="none";
+
+    if(confirm("Delete this worker?")){
+        deleteWorker(selectedWorker);
     }
 }
 function downloadWorkerPDF(index){
@@ -588,7 +622,21 @@ document.addEventListener("deviceready", function () {
 });
 renderWorkers();
 
+document.addEventListener("click", function(e){
+
+    if(!e.target.classList.contains("menu-btn")){
+        document.getElementById("popupMenu").style.display = "none";
+    }
+
+});
+
 </script>
+
+<div id="popupMenu" class="popup-menu">
+    <div onclick="menuHistory()">📜 History</div>
+    <div onclick="menuPDF()">📄 PDF</div>
+    <div onclick="menuDelete()">🗑 Delete</div>
+</div>
 
 <script src="cordova.js"></script>
 
