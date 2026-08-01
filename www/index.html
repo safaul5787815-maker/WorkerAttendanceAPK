@@ -729,9 +729,12 @@ function selectDate(day){
 }
 
 function closeDateAction(){
+
 function markDatePresent(){
 
     attendanceData[selectedDay] = "present";
+
+    alert(JSON.stringify(attendanceData));
 
     closeDateAction();
 
