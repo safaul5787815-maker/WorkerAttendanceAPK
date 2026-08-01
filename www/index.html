@@ -704,8 +704,31 @@ function renderCalendar(){
     }
 
 }
+let selectedDay = 0;
+
 function selectDate(day){
-    alert(day + " August 2026");
+
+    selectedDay = day;
+
+    document.getElementById("selectedDateTitle").innerHTML =
+        day + " August 2026";
+
+    document.getElementById("dateActionModal").style.display = "flex";
+}
+
+function closeDateAction(){
+function markDatePresent(){
+    alert("Present: " + selectedDay);
+}
+
+function markDateAbsent(){
+    alert("Absent: " + selectedDay);
+}
+
+function addDateOT(){
+    alert("Add OT: " + selectedDay);
+}
+    document.getElementById("dateActionModal").style.display = "none";
 }
 function menuHistory(){
     document.getElementById("popupMenu").style.display="none";
@@ -794,6 +817,20 @@ if (!e.target.closest(".menu-btn") && !e.target.closest("#popupMenu")) {
 </div>
 
         <button onclick="closeAttendance()">Close</button>
+    </div>
+</div>
+
+<div id="dateActionModal" class="attendance-modal" style="display:none;">
+    <div class="attendance-box">
+        <h3 id="selectedDateTitle">Date</h3>
+
+        <button onclick="markDatePresent()">✅ Present</button>
+        <button onclick="markDateAbsent()">❌ Absent</button>
+        <button onclick="addDateOT()">⏱ Add OT</button>
+
+        <br><br>
+
+        <button onclick="closeDateAction()">Close</button>
     </div>
 </div>
 
