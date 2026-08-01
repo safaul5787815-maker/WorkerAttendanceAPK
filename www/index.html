@@ -146,6 +146,8 @@ table th{
     border-radius:10px;
     box-shadow:0 4px 12px rgba(0,0,0,.25);
     min-width:170px;
+    min-width:170px;
+    max-width:170px;
     overflow:hidden;
     z-index:9999;
 }
@@ -562,13 +564,31 @@ function downloadExcel(blob, fileName){
 }
 function showMenu(index, event){
 
+    event.stopPropagation();
+
     selectedWorker = index;
 
     let menu = document.getElementById("popupMenu");
 
     menu.style.display = "block";
-    menu.style.left = event.pageX + "px";
-    menu.style.top = event.pageY + "px";
+
+    let btn = event.currentTarget;
+    let rect = btn.getBoundingClientRect();
+
+    let menuWidth = 170;
+    let left = rect.left + window.scrollX;
+    let top = rect.bottom + window.scrollY + 5;
+
+    if(left + menuWidth > window.innerWidth){
+        left = window.innerWidth - menuWidth - 10;
+    }
+
+    if(left < 10){
+        left = 10;
+    }
+
+    menu.style.left = left + "px";
+    menu.style.top = top + "px";
 }
 function menuHistory(){
     document.getElementById("popupMenu").style.display="none";
