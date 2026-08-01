@@ -352,6 +352,8 @@ function editWorker(index){
 }
 async function printReport(){
     alert("PrintReport Started");
+    alert(typeof cordova);
+
     const { jsPDF } = window.jspdf;
     const doc = new jsPDF();
 
