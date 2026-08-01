@@ -222,6 +222,17 @@ table th{
     padding:8px 0;
 }
 
+.calendar-day{
+    height:40px;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    border-radius:8px;
+    background:#f5f5f5;
+    cursor:pointer;
+    font-weight:bold;
+}
+
 </style>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
@@ -664,6 +675,12 @@ function renderCalendar(){
 
     const grid = document.getElementById("calendarGrid");
 
+    const year = 2026;
+    const month = 7; // August (0 = January)
+
+    const firstDay = new Date(year, month, 1).getDay();
+    const totalDays = new Date(year, month + 1, 0).getDate();
+
     grid.innerHTML = `
         <div class="day-name">Sun</div>
         <div class="day-name">Mon</div>
@@ -673,6 +690,15 @@ function renderCalendar(){
         <div class="day-name">Fri</div>
         <div class="day-name">Sat</div>
     `;
+
+    for(let i = 0; i < firstDay; i++){
+        grid.innerHTML += `<div></div>`;
+    }
+
+    for(let day = 1; day <= totalDays; day++){
+        grid.innerHTML += `<div class="calendar-day">${day}</div>`;
+    }
+
 }
 function menuHistory(){
     document.getElementById("popupMenu").style.display="none";
