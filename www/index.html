@@ -209,6 +209,19 @@ table th{
     margin:0;
 }
 
+#calendarGrid{
+    display:grid;
+    grid-template-columns:repeat(7,1fr);
+    gap:6px;
+}
+
+.day-name{
+    text-align:center;
+    font-weight:bold;
+    color:#1976d2;
+    padding:8px 0;
+}
+
 </style>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
@@ -640,10 +653,26 @@ let selectedAttendanceWorker = -1;
 function openAttendance(index){
     selectedAttendanceWorker = index;
     document.getElementById("attendanceModal").style.display = "flex";
+    renderCalendar();
 }
 
 function closeAttendance(){
     document.getElementById("attendanceModal").style.display = "none";
+}
+
+function renderCalendar(){
+
+    const grid = document.getElementById("calendarGrid");
+
+    grid.innerHTML = `
+        <div class="day-name">Sun</div>
+        <div class="day-name">Mon</div>
+        <div class="day-name">Tue</div>
+        <div class="day-name">Wed</div>
+        <div class="day-name">Thu</div>
+        <div class="day-name">Fri</div>
+        <div class="day-name">Sat</div>
+    `;
 }
 function menuHistory(){
     document.getElementById("popupMenu").style.display="none";
