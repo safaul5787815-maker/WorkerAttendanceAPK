@@ -398,9 +398,42 @@ downloadPDFToDownloads(pdf, "Worker_Attendance_Report.pdf");
 }
 function downloadPDFToDownloads(blob, fileName){
 
-    alert("External Root: " + cordova.file.externalRootDirectory);
-    alert("External Data: " + cordova.file.externalDataDirectory);
+    window.resolveLocalFileSystemURL(
+        cordova.file.externalRootDirectory,
+        function(root){
 
+            root.getDirectory(
+                "Download",
+                {create:true},
+                function(dir){
+
+                    dir.getFile(
+                        fileName,
+                        {create:true},
+                        function(file){
+
+                            file.createWriter(function(writer){
+
+                                writer.onwriteend = function(){
+                                    alert("PDF Download folder me save ho gayi");
+                                };
+
+                                writer.onerror = function(){
+                                    alert("PDF save error");
+                                };
+
+                                writer.write(blob);
+
+                            });
+
+                        }
+                    );
+
+                }
+            );
+
+        }
+    );
 }
 function exportExcel(){
 
