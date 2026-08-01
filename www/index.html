@@ -463,8 +463,52 @@ alert("Export Excel Clicked");
 
     XLSX.utils.book_append_sheet(workbook, worksheet, "Workers");
 
-    XLSX.writeFile(workbook, "Worker_Attendance_Report.xlsx");
+let excelData = XLSX.write(workbook, {
+    bookType: "xlsx",
+    type: "array"
+});
 
+let blob = new Blob(
+    [excelData],
+    {
+        type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+    }
+);
+
+downloadExcel(blob, "Worker_Attendance_Report.xlsx");
+
+}
+function downloadExcel(blob, fileName){
+
+    window.resolveLocalFileSystemURL(
+        cordova.file.dataDirectory,
+        function(dir){
+
+            dir.getFile(
+                fileName,
+                {create:true},
+                function(file){
+
+                    file.createWriter(function(writer){
+
+                        writer.onwriteend = function(){
+
+                            cordova.plugins.fileOpener2.open(
+                                file.nativeURL,
+                                "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+                            );
+
+                        };
+
+                        writer.write(blob);
+
+                    });
+
+                }
+            );
+
+        }
+    );
 }
 function downloadWorkerPDF(index){
 
