@@ -399,39 +399,30 @@ downloadPDFToDownloads(pdf, "Worker_Attendance_Report.pdf");
 function downloadPDFToDownloads(blob, fileName){
 
     window.resolveLocalFileSystemURL(
-        cordova.file.externalRootDirectory,
-        function(root){
+        cordova.file.externalRootDirectory + "Download/",
+        function(dir){
 
-            root.getDirectory(
-                "Download",
+            dir.getFile(
+                fileName,
                 {create:true},
-                function(dir){
+                function(file){
 
-                    dir.getFile(
-                        fileName,
-                        {create:true},
-                        function(file){
+                    file.createWriter(function(writer){
 
-                            file.createWriter(function(writer){
+                        writer.onwriteend = function(){
+                            alert("PDF Download folder me save ho gayi");
+                        };
 
-                                writer.onwriteend = function(){
-                                    alert("PDF Download folder me save ho gayi");
-                                };
+                        writer.write(blob);
 
-                                writer.onerror = function(){
-                                    alert("PDF save error");
-                                };
-
-                                writer.write(blob);
-
-                            });
-
-                        }
-                    );
+                    });
 
                 }
             );
 
+        },
+        function(){
+            alert("Download folder nahi mila");
         }
     );
 }
