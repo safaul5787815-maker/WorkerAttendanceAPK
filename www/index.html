@@ -563,15 +563,13 @@ function downloadExcel(blob, fileName){
 }
 function showMenu(index, event){
 
-    alert("Menu Clicked");
 
     selectedWorker = index;
 
     let menu = document.getElementById("popupMenu");
-    alert(event.clientX + ", " + event.clientY);
 
-    menu.style.top = event.clientY + "px";
-    menu.style.left = event.clientX + "px";
+    menu.style.top = (event.pageY + 5) + "px";
+    menu.style.left = Math.max(10, event.pageX - 170) + "px";
     menu.style.display = "block";
 }
 function menuHistory(){
@@ -622,7 +620,7 @@ let pdf = doc.output("blob");
 downloadPDFToDownloads(pdf, worker.name + "_Report.pdf");
 }
 document.addEventListener("deviceready", function () {
-    alert("Device Ready");
+    alert("Creat by Safaul Ansari");
 });
 renderWorkers();
 
