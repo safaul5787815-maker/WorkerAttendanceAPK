@@ -187,6 +187,28 @@ table th{
     box-shadow:0 4px 15px rgba(0,0,0,.3);
 }
 
+.calendar-header{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    margin-bottom:15px;
+}
+
+.calendar-header button{
+    width:40px;
+    height:40px;
+    border:none;
+    border-radius:50%;
+    background:#1976d2;
+    color:white;
+    font-size:18px;
+    cursor:pointer;
+}
+
+#calendarTitle{
+    margin:0;
+}
+
 </style>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
@@ -695,7 +717,19 @@ if (!e.target.closest(".menu-btn") && !e.target.closest("#popupMenu")) {
     <div class="attendance-box">
         <h2>Attendance Calendar</h2>
 
-        <div id="calendar"></div>
+<div id="calendar">
+
+    <div class="calendar-header">
+        <button onclick="prevMonth()">◀</button>
+
+        <h3 id="calendarTitle">August 2026</h3>
+
+        <button onclick="nextMonth()">▶</button>
+    </div>
+
+    <div id="calendarGrid"></div>
+
+</div>
 
         <button onclick="closeAttendance()">Close</button>
     </div>
