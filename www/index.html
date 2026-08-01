@@ -233,6 +233,11 @@ table th{
     font-weight:bold;
 }
 
+.present-day{
+    background:#4caf50;
+    color:white;
+}
+
 </style>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
@@ -696,8 +701,14 @@ function renderCalendar(){
     }
 
     for(let day = 1; day <= totalDays; day++){
-        grid.innerHTML += `
-<div class="calendar-day" onclick="selectDate(${day})">
+let color = "";
+
+if(attendanceData[day] === "present"){
+    color = "present-day";
+}
+
+grid.innerHTML += `
+<div class="calendar-day ${color}" onclick="selectDate(${day})">
     ${day}
 </div>
 `;
@@ -705,6 +716,7 @@ function renderCalendar(){
 
 }
 let selectedDay = 0;
+let attendanceData = {};
 
 function selectDate(day){
 
@@ -718,7 +730,13 @@ function selectDate(day){
 
 function closeDateAction(){
 function markDatePresent(){
-    alert("Present: " + selectedDay);
+
+    attendanceData[selectedDay] = "present";
+
+    closeDateAction();
+
+    renderCalendar();
+
 }
 
 function markDateAbsent(){
