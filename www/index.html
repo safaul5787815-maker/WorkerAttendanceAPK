@@ -696,9 +696,16 @@ function renderCalendar(){
     }
 
     for(let day = 1; day <= totalDays; day++){
-        grid.innerHTML += `<div class="calendar-day">${day}</div>`;
+        grid.innerHTML += `
+<div class="calendar-day" onclick="selectDate(${day})">
+    ${day}
+</div>
+`;
     }
 
+}
+function selectDate(day){
+    alert(day + " August 2026");
 }
 function menuHistory(){
     document.getElementById("popupMenu").style.display="none";
