@@ -287,13 +287,7 @@ function renderWorkers() {
 
 row.insertCell(4).innerHTML = `
 <div class="action-cell">
-${
-worker.attendance.includes(document.getElementById("attendanceDate").value)
-?
-`<button onclick="markPresent(${index})">Absent</button>`
-:
-`<button onclick="markPresent(${index})">Present</button>`
-}
+<button onclick="openAttendance(${index})">Attendance</button>
 <button class="menu-btn" onclick="showMenu(${index}, event)">⋮</button>
 </div>
 `;
@@ -597,6 +591,9 @@ function showMenu(index, event){
     menu.style.left = left + "px";
     menu.style.top = top + "px";
     menu.style.visibility = "visible";
+}
+function openAttendance(index){
+    alert("Attendance Calendar - Coming Soon");
 }
 function menuHistory(){
     document.getElementById("popupMenu").style.display="none";
