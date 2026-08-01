@@ -592,8 +592,15 @@ function showMenu(index, event){
     menu.style.top = top + "px";
     menu.style.visibility = "visible";
 }
+let selectedAttendanceWorker = -1;
+
 function openAttendance(index){
-    alert("Attendance Calendar - Coming Soon");
+    selectedAttendanceWorker = index;
+    document.getElementById("attendanceModal").style.display = "flex";
+}
+
+function closeAttendance(){
+    document.getElementById("attendanceModal").style.display = "none";
 }
 function menuHistory(){
     document.getElementById("popupMenu").style.display="none";
@@ -661,6 +668,16 @@ if (!e.target.closest(".menu-btn") && !e.target.closest("#popupMenu")) {
     <div onclick="menuHistory()">📜 History</div>
     <div onclick="menuPDF()">📄 PDF</div>
     <div onclick="menuDelete()">🗑 Delete</div>
+</div>
+
+<div id="attendanceModal" class="attendance-modal" style="display:none;">
+    <div class="attendance-box">
+        <h2>Attendance Calendar</h2>
+
+        <div id="calendar"></div>
+
+        <button onclick="closeAttendance()">Close</button>
+    </div>
 </div>
 
 <script src="cordova.js"></script>
