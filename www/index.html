@@ -785,12 +785,13 @@ if(attendanceData[dateKey]){
     if(attendanceData[dateKey].status === "present"){
         color = "present-day";
     }
-    else if(attendanceData[day].status === "absent"){
+    else if(attendanceData[dateKey].status === "absent"){
         color = "absent-day";
     }
 
-    if(attendanceData[day].ot > 0){
-        otText = `<small>${attendanceData[day].ot}h</small>`;
+    if(attendanceData[dateKey].ot > 0){
+        otText = `<small>$
+{attendanceData[dateKey].ot}h</small>`;
     }
 
 }
