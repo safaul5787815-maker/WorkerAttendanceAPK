@@ -774,6 +774,17 @@ function markDatePresent(){
         ot: attendanceData[selectedDay]?.ot || 0
     };
 
+    workers[selectedAttendanceWorker].presentDays = 0;
+
+    Object.values(attendanceData).forEach(item => {
+        if(item.status === "present"){
+            workers[selectedAttendanceWorker].presentDays++;
+        }
+    });
+
+    saveWorkers();
+    renderWorkers();
+
     closeDateAction();
     renderCalendar();
 
@@ -785,6 +796,17 @@ function markDateAbsent(){
         status: "absent",
         ot: attendanceData[selectedDay]?.ot || 0
     };
+
+    workers[selectedAttendanceWorker].presentDays = 0;
+
+    Object.values(attendanceData).forEach(item => {
+        if(item.status === "present"){
+            workers[selectedAttendanceWorker].presentDays++;
+        }
+    });
+
+    saveWorkers();
+    renderWorkers();
 
     closeDateAction();
     renderCalendar();
