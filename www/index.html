@@ -364,7 +364,7 @@ function renderWorkers() {
     workers.forEach((worker, index) => {
 
         if (!worker.presentDays) worker.presentDays = 0;
-        if (!worker.attendance) worker.attendance = [];
+        if (!worker.attendance) worker.attendance = {};
 
 let hourlyRate = worker.wage / 8;
 
@@ -957,7 +957,19 @@ Object.keys(worker.attendance || {}).forEach(day => {
 
     let item = worker.attendance[day];
 
-    let line = day + " : " + item.status.toUpperCase();
+let parts = day.split("-");
+
+const months = [
+  "Jan","Feb","Mar","Apr","May","Jun",
+  "Jul","Aug","Sep","Oct","Nov","Dec"
+];
+
+let displayDate =
+    parts[2] + " " +
+    months[parseInt(parts[1]) - 1] + " " +
+    parts[0];
+
+let line = displayDate + " : " + item.status.toUpperCase();
 
     if(item.ot > 0){
         line += " | OT: " + item.ot + "h";
