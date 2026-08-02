@@ -366,11 +366,24 @@ function renderWorkers() {
         if (!worker.presentDays) worker.presentDays = 0;
         if (!worker.attendance) worker.attendance = {};
 
+let presentDays = 0;
+let totalOT = 0;
+
+Object.values(attendance).forEach(item => {
+
+    if(item.status === "present"){
+        presentDays++;
+    }
+
+    totalOT += item.ot || 0;
+
+});
+
 let hourlyRate = worker.wage / 8;
 
-let monthlySalary =
-    (worker.wage * worker.presentDays) +
-    (hourlyRate * (worker.totalOT || 0));
+let salary =
+    (worker.wage * presentDays) +
+    (hourlyRate * totalOT);
 
 totalSalary += monthlySalary;
 
@@ -917,8 +930,12 @@ function menuHistory(){
 }
 
 function menuPDF(){
-    document.getElementById("popupMenu").style.display="none";
-    downloadWorkerPDF(selectedWorker);
+
+    document.getElementById("popupMenu").style.display = "none";
+
+    showMonthSelector(selectedWorker);
+
+}
 }
 
 function menuDelete(){
@@ -928,34 +945,104 @@ function menuDelete(){
         deleteWorker(selectedWorker);
     }
 }
-function downloadWorkerPDF(index){
+function closeMonthSelector(){
+    document.getElementById("monthSelectorModal").style.display = "none";
+}
+
+function showMonthSelector(index){
+
+    let worker = workers[index];
+    let months = {};
+
+    Object.keys(worker.attendance || {}).forEach(date => {
+
+        let parts = date.split("-");
+
+        let key = parts[0] + "-" + parts[1];
+
+        months[key] = true;
+
+    });
+
+    const monthNames = [
+        "January","February","March","April","May","June",
+        "July","August","September","October","November","December"
+    ];
+
+    let html = "";
+
+    Object.keys(months).sort().forEach(key => {
+
+        let p = key.split("-");
+
+        let title =
+            monthNames[parseInt(p[1]) - 1] + " " + p[0];
+
+        html += `
+<button onclick="downloadWorkerPDF(${index}, '${key}'); closeMonthSelector();">
+${title}
+</button><br><br>`;
+    });
+
+    if(html === ""){
+        html = "<p>No attendance found.</p>";
+    }
+
+    document.getElementById("monthList").innerHTML = html;
+    document.getElementById("monthSelectorModal").style.display = "flex";
+}
+function downloadWorkerPDF(index, selectedMonth = null){
 
     const { jsPDF } = window.jspdf;
     const doc = new jsPDF();
 
     let worker = workers[index];
+let attendance = {};
+
+Object.keys(worker.attendance || {}).forEach(date => {
+
+    if (
+        selectedMonth === null ||
+        date.startsWith(selectedMonth)
+    ) {
+        attendance[date] = worker.attendance[date];
+    }
+
+});
 
     let hourlyRate = worker.wage / 8;
 
     let salary =
     (worker.wage * worker.presentDays) +
     (hourlyRate * (worker.totalOT || 0));
-    doc.setFontSize(18);
-    doc.text("Worker Report", 20, 20);
 
-    doc.setFontSize(12);
-    doc.text("Name: " + worker.name, 20, 40);
-    doc.text("Daily Rate: Rs." + worker.wage, 20, 50);
-    doc.text("Present Days: " + worker.presentDays, 20, 60);
-    doc.text("Total OT: " + (worker.totalOT || 0) + "h", 20, 70);
-    doc.text("Total Salary: Rs." + salary.toFixed(2), 20, 80);
-    doc.text("Attendance:", 20, 90);
+doc.setFont("helvetica", "bold");
+doc.setFontSize(20);
+doc.text("WORKER REPORT", 60, 20);
+
+doc.line(20, 25, 190, 25);
+
+doc.setFont("helvetica", "normal");
+doc.setFontSize(12);
+
+doc.text("Worker Name : " + worker.name, 20, 40);
+doc.text("Daily Rate  : Rs. " + worker.wage, 20, 50);
+doc.text("Present Days: " + presentDays, 20, 60);
+doc.text("Total OT    : " + totalOT + "h", 20, 70);
+doc.text("Total Salary: Rs. " + salary.toFixed(2), 20, 80);
+
+doc.line(20, 86, 190, 86);
+
+doc.setFont("helvetica", "bold");
+doc.text("ATTENDANCE DETAILS", 20, 95);
+
+doc.setFont("helvetica", "normal");
 
 let y = 100;
 
-Object.keys(worker.attendance || {}).forEach(day => {
+Object.keys(attendance || {}).forEach(day => {
 
-    let item = worker.attendance[day];
+    let item = attendance[day];
 
 let parts = day.split("-");
 
@@ -1039,6 +1126,22 @@ if (!e.target.closest(".menu-btn") && !e.target.closest("#popupMenu")) {
         <br><br>
 
         <button onclick="closeDateAction()">Close</button>
+    </div>
+</div>
+
+<script src="cordova.js"></script>
+
+<div id="monthSelectorModal" class="attendance-modal" style="display:none;">
+    <div class="attendance-box">
+        <h3>Select Report Month</h3>
+
+        <div id="monthList"></div>
+
+        <br>
+
+        <button onclick="closeMonthSelector()">
+            Cancel
+        </button>
     </div>
 </div>
 
