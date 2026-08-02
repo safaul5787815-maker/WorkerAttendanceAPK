@@ -764,8 +764,17 @@ function markDateAbsent(){
 }
 
 function addDateOT(){
-    alert("Add OT: " + selectedDay);
+
+    let hours = prompt("Enter OT Hours");
+
+    if(hours == null || hours == ""){
+        return;
+    }
+
+    alert("OT Saved: " + hours + "h");
+
 }
+
 function menuHistory(){
     document.getElementById("popupMenu").style.display="none";
     showHistory(selectedWorker);
