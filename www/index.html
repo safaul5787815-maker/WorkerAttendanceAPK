@@ -238,6 +238,11 @@ table th{
     color:white;
 }
 
+.absent-day{
+    background:#f44336;
+    color:white;
+}
+
 </style>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
@@ -701,10 +706,14 @@ function renderCalendar(){
     }
 
     for(let day = 1; day <= totalDays; day++){
+
 let color = "";
 
 if(attendanceData[day] === "present"){
     color = "present-day";
+}
+else if(attendanceData[day] === "absent"){
+    color = "absent-day";
 }
 
 grid.innerHTML += `
@@ -745,7 +754,13 @@ function markDatePresent(){
 }
 
 function markDateAbsent(){
-    alert("Absent: " + selectedDay);
+
+    attendanceData[selectedDay] = "absent";
+
+    closeDateAction();
+
+    renderCalendar();
+
 }
 
 function addDateOT(){
