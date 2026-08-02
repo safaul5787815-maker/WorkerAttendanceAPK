@@ -243,6 +243,13 @@ table th{
     color:white;
 }
 
+.calendar-day small{
+    display:block;
+    font-size:10px;
+    margin-top:2px;
+    color:#000;
+}
+
 </style>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
@@ -708,17 +715,27 @@ function renderCalendar(){
     for(let day = 1; day <= totalDays; day++){
 
 let color = "";
+let otText = "";
 
-if(attendanceData[day] === "present"){
-    color = "present-day";
-}
-else if(attendanceData[day] === "absent"){
-    color = "absent-day";
+if(attendanceData[day]){
+
+    if(attendanceData[day].status === "present"){
+        color = "present-day";
+    }
+    else if(attendanceData[day].status === "absent"){
+        color = "absent-day";
+    }
+
+    if(attendanceData[day].ot > 0){
+        otText = `<small>${attendanceData[day].ot}h</small>`;
+    }
+
 }
 
 grid.innerHTML += `
 <div class="calendar-day ${color}" onclick="selectDate(${day})">
-    ${day}
+    <div>${day}</div>
+    ${otText}
 </div>
 `;
     }
@@ -743,22 +760,24 @@ function closeDateAction(){
 
 function markDatePresent(){
 
-    attendanceData[selectedDay] = "present";
-
-    alert(JSON.stringify(attendanceData));
+    attendanceData[selectedDay] = {
+        status: "present",
+        ot: attendanceData[selectedDay]?.ot || 0
+    };
 
     closeDateAction();
-
     renderCalendar();
 
 }
 
 function markDateAbsent(){
 
-    attendanceData[selectedDay] = "absent";
+    attendanceData[selectedDay] = {
+        status: "absent",
+        ot: attendanceData[selectedDay]?.ot || 0
+    };
 
     closeDateAction();
-
     renderCalendar();
 
 }
@@ -771,7 +790,18 @@ function addDateOT(){
         return;
     }
 
-    alert("OT Saved: " + hours + "h");
+    if(!attendanceData[selectedDay]){
+        attendanceData[selectedDay] = {
+            status: "",
+            ot: 0
+        };
+    }
+
+    attendanceData[selectedDay].ot = parseFloat(hours);
+
+    closeDateAction();
+
+    renderCalendar();
 
 }
 
