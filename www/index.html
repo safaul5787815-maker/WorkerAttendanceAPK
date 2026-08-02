@@ -330,13 +330,10 @@ Export Excel
 <tr>
 
 <th>Name</th>
-
 <th>Daily Rate</th>
-
-<th>Present Days</th>
-
-<th>Total Salary</th>
-
+<th>Present</th>
+<th>OT</th>
+<th>Salary</th>
 <th>Action</th>
 
 </tr>
@@ -377,9 +374,10 @@ function renderWorkers() {
         row.insertCell(0).innerHTML = worker.name;
         row.insertCell(1).innerHTML = "₹" + worker.wage;
         row.insertCell(2).innerHTML = worker.presentDays;
-        row.insertCell(3).innerHTML = "₹" + monthlySalary;
+        row.insertCell(3).innerHTML = worker.totalOT || "0h";
+        row.insertCell(4).innerHTML = "₹" + monthlySalary;
 
-row.insertCell(4).innerHTML = `
+        row.insertCell(5).innerHTML = `
 <div class="action-cell">
 <button onclick="openAttendance(${index})">Attendance</button>
 <button class="menu-btn" onclick="showMenu(${index}, event)">⋮</button>
@@ -411,10 +409,11 @@ function addWorker() {
         return;
     }
 
-    workers.push({
-        name: name,
-        wage: wage,
-        presentDays: 0,
+workers.push({
+    name: name,
+    wage: wage,
+    presentDays: 0,
+    totalOT: 0,
         attendance: []
     });
 
@@ -809,6 +808,14 @@ function addDateOT(){
 
     attendanceData[selectedDay].ot = parseFloat(hours);
 
+workers[selectedAttendanceWorker].totalOT = 0;
+
+Object.values(attendanceData).forEach(item => {
+    workers[selectedAttendanceWorker].totalOT += Number(item.ot || 0);
+});
+
+saveWorkers();
+renderWorkers();
     closeDateAction();
 
     renderCalendar();
