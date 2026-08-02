@@ -775,9 +775,14 @@ document.getElementById("calendarTitle").innerHTML =
 let color = "";
 let otText = "";
 
-if(attendanceData[day]){
+let dateKey =
+    currentYear + "-" +
+    String(currentMonth + 1).padStart(2, "0") + "-" +
+    String(day).padStart(2, "0");
 
-    if(attendanceData[day].status === "present"){
+if(attendanceData[dateKey]){
+
+    if(attendanceData[dateKey].status === "present"){
         color = "present-day";
     }
     else if(attendanceData[day].status === "absent"){
@@ -804,10 +809,14 @@ let attendanceData = {};
 
 function selectDate(day){
 
-    selectedDay = day;
+    selectedDay =
+    currentYear + "-" +
+    String(currentMonth + 1).padStart(2, "0") + "-" +
+    String(day).padStart(2, "0");
 
     document.getElementById("selectedDateTitle").innerHTML =
-        day + " August 2026";
+        day + " " + 
+    document.getElementById("calendarTitle").innerHTML;
 
     document.getElementById("dateActionModal").style.display = "flex";
 }
