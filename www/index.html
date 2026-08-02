@@ -379,6 +379,19 @@ Object.values(attendance).forEach(item => {
 
 });
 
+let presentDays = 0;
+let totalOT = 0;
+
+Object.values(attendance).forEach(item => {
+
+    if(item.status === "present"){
+        presentDays++;
+    }
+
+    totalOT += item.ot || 0;
+
+});
+
 let hourlyRate = worker.wage / 8;
 
 let salary =
