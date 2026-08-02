@@ -419,7 +419,7 @@ workers.push({
     wage: wage,
     presentDays: 0,
     totalOT: 0,
-        attendance: []
+        attendance: {}
     });
 
     saveWorkers();
@@ -693,9 +693,15 @@ function showMenu(index, event){
 let selectedAttendanceWorker = -1;
 
 function openAttendance(index){
+
     selectedAttendanceWorker = index;
+
+    attendanceData = workers[index].attendance || {};
+
     document.getElementById("attendanceModal").style.display = "flex";
+
     renderCalendar();
+
 }
 
 function closeAttendance(){
@@ -787,7 +793,9 @@ function markDatePresent(){
         }
     });
 
-    saveWorkers();
+workers[selectedAttendanceWorker].attendance = attendanceData;
+saveWorkers();
+
     renderWorkers();
 
     closeDateAction();
@@ -810,7 +818,9 @@ function markDateAbsent(){
         }
     });
 
-    saveWorkers();
+workers[selectedAttendanceWorker].attendance = attendanceData;
+saveWorkers();
+
     renderWorkers();
 
     closeDateAction();
@@ -831,6 +841,11 @@ function addDateOT(){
             status: "",
             ot: 0
         };
+workers[selectedAttendanceWorker].attendance = attendanceData;
+saveWorkers();
+renderWorkers();
+closeDateAction();
+renderCalendar();
     }
 
     attendanceData[selectedDay].ot = parseFloat(hours);
