@@ -366,8 +366,13 @@ function renderWorkers() {
         if (!worker.presentDays) worker.presentDays = 0;
         if (!worker.attendance) worker.attendance = [];
 
-        let monthlySalary = worker.wage * worker.presentDays;
-        totalSalary += monthlySalary;
+let hourlyRate = worker.wage / 8;
+
+let monthlySalary =
+    (worker.wage * worker.presentDays) +
+    (hourlyRate * (worker.totalOT || 0));
+
+totalSalary += monthlySalary;
 
         let row = list.insertRow();
 
