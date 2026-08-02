@@ -509,7 +509,11 @@ async function printReport(){
 
     workers.forEach((worker, index) => {
 
-        let salary = worker.wage * worker.presentDays;
+    let hourlyRate = worker.wage / 8;
+
+    let salary =
+    (worker.wage * worker.presentDays) +
+    (hourlyRate * (worker.totalOT || 0));
 
         doc.setFontSize(14);
         doc.text("Worker " + (index + 1), 20, y);
@@ -896,16 +900,27 @@ function downloadWorkerPDF(index){
     doc.text("Name: " + worker.name, 20, 40);
     doc.text("Daily Rate: Rs." + worker.wage, 20, 50);
     doc.text("Present Days: " + worker.presentDays, 20, 60);
-    doc.text("Total Salary: Rs." + salary, 20, 70);
+    doc.text("Total OT: " + (worker.totalOT || 0) + "h", 20, 70);
+    doc.text("Total Salary: Rs." + salary.toFixed(2), 20, 80);
+    doc.text("Attendance:", 20, 90);
 
-    doc.text("Attendance Dates:", 20, 90);
+let y = 100;
 
-    let y = 100;
+Object.keys(worker.attendance || {}).forEach(day => {
 
-    worker.attendance.forEach(date => {
-        doc.text(date, 25, y);
-        y += 10;
-    });
+    let item = worker.attendance[day];
+
+    let line = day + " : " + item.status.toUpperCase();
+
+    if(item.ot > 0){
+        line += " | OT: " + item.ot + "h";
+    }
+
+    doc.text(line, 25, y);
+
+    y += 10;
+
+});
 
 let pdf = doc.output("blob");
 
