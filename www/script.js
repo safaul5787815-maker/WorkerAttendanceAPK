@@ -866,7 +866,7 @@ for(let day=1; day<=daysInMonth; day++){
     let yy = y + (row * cellH);
 
     doc.setFont("helvetica","bold");
-    doc.setFontSize(10);
+    doc.setFontSize(18);
 
     doc.text(
         String(day),
@@ -882,7 +882,8 @@ let item = attendance[dateKey];
 if(item){
 
     doc.setFont("helvetica","normal");
-    doc.setFontSize(7);
+doc.setFontSize(17);
+doc.setFont("helvetica","bold");
 
     if(item.status==="present"){
 
@@ -899,7 +900,8 @@ if(item){
     if(item.ot>0){
 
         doc.setTextColor(255,140,0);
-        doc.setFontSize(6);
+doc.setFontSize(13);
+doc.setFont("helvetica","bold");
 
         doc.text(
             "+"+item.ot+"h",
