@@ -3,1116 +3,172 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Worker Attendance App</title>
+<title>Worker Attendance App v2</title>
 
-<style>
-
-*{
-    margin:0;
-    padding:0;
-    box-sizing:border-box;
-    font-family:Arial,sans-serif;
-}
-
-body{
-    background:#f2f2f2;
-    padding:20px;
-}
-
-.container{
-    max-width:900px;
-    margin:auto;
-}
-
-h1{
-    text-align:center;
-    margin-bottom:20px;
-}
-
-.box{
-    background:white;
-    padding:20px;
-    border-radius:10px;
-    box-shadow:0 0 10px rgba(0,0,0,.2);
-}
-
-input{
-    width:100%;
-    padding:10px;
-    margin-top:10px;
-}
-
-button{
-    padding:10px 20px;
-    margin-top:10px;
-    cursor:pointer;
-}
-
-.btns{
-    display:flex;
-    gap:10px;
-    justify-content:center;
-    flex-wrap:wrap;
-}
-
-table{
-    width:100%;
-    margin-top:20px;
-    border-collapse:collapse;
-    background:white;
-}
-
-table th,
-table td{
-    border:1px solid #ddd;
-    padding:10px;
-    text-align:center;
-}
-
-table th{
-    background:#1976d2;
-    color:white;
-}
-
-.totalBox{
-    margin-top:20px;
-    background:white;
-    padding:15px;
-    border-radius:10px;
-    text-align:center;
-    font-size:20px;
-    font-weight:bold;
-}
-.dashboard{
-    display:flex;
-    gap:15px;
-    margin:20px 0;
-    flex-wrap:wrap;
-}
-
-.card{
-    flex:1;
-    min-width:180px;
-    background:#2196F3;
-    color:white;
-    border-radius:10px;
-    padding:15px;
-    text-align:center;
-}
-.profile{
-    text-align:center;
-    margin-top:20px;
-}
-
-.profile{
-    text-align:center;
-    margin-top:20px;
-}
-
-.profile-img{
-    width:100px;
-    height:100px;
-    border-radius:50%;
-    border:3px solid #2196F3;
-    object-fit:cover;
-}
-.action-cell{
-    display:flex;
-    align-items:center;
-    justify-content:center;
-    gap:8px;
-}
-
-.menu-btn{
-    width:34px;
-    height:34px;
-    border:none;
-    border-radius:50%;
-    background:#1976d2;
-    color:white;
-    font-size:20px;
-    font-weight:bold;
-    cursor:pointer;
-    display:flex;
-    align-items:center;
-    justify-content:center;
-    padding:0;
-}
-
-.popup-menu{
-    display:none;
-    position:fixed;
-    background:#fff;
-    border-radius:10px;
-    box-shadow:0 4px 12px rgba(0,0,0,.25);
-    min-width:170px;
-    max-width:170px;
-    overflow:hidden;
-    z-index:9999;
-}
-
-.popup-menu div{
-    padding:12px 15px;
-    cursor:pointer;
-    font-size:16px;
-    border-bottom:1px solid #eee;
-}
-
-.popup-menu div:last-child{
-    border-bottom:none;
-}
-
-.popup-menu div:hover{
-    background:#f5f5f5;
-}
-.attendance-modal{
-    display:none;
-    position:fixed;
-    top:0;
-    left:0;
-    width:100%;
-    height:100%;
-    background:rgba(0,0,0,.5);
-    z-index:10000;
-    justify-content:center;
-    align-items:center;
-}
-
-.attendance-box{
-    width:95%;
-    max-width:420px;
-    background:#fff;
-    border-radius:12px;
-    padding:20px;
-    box-shadow:0 4px 15px rgba(0,0,0,.3);
-}
-
-.calendar-header{
-    display:flex;
-    justify-content:space-between;
-    align-items:center;
-    margin-bottom:15px;
-}
-
-.calendar-header button{
-    width:40px;
-    height:40px;
-    border:none;
-    border-radius:50%;
-    background:#1976d2;
-    color:white;
-    font-size:18px;
-    cursor:pointer;
-}
-
-#calendarTitle{
-    margin:0;
-}
-
-#calendarGrid{
-    display:grid;
-    grid-template-columns:repeat(7,1fr);
-    gap:6px;
-}
-
-.day-name{
-    text-align:center;
-    font-weight:bold;
-    color:#1976d2;
-    padding:8px 0;
-}
-
-.calendar-day{
-    height:50px;
-    display:flex;
-    flex-direction:column;
-    align-items:center;
-    justify-content:center;
-    border-radius:8px;
-    background:#f5f5f5;
-    cursor:pointer;
-    font-weight:bold;
-}
-
-.present-day{
-    background:#4caf50;
-    color:white;
-}
-
-.absent-day{
-    background:#f44336;
-    color:white;
-}
-
-.calendar-day small{
-    display:block;
-    font-size:10px;
-    line-height:1;
-    margin-top:2px;
-    color:black;
-}
-
-.present-day small{
-    color:white;
-}
-
-.absent-day small{
-    color:white;
-}
-
-</style>
+<link rel="stylesheet" href="style.css">
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/xlsx/dist/xlsx.full.min.js"></script>
+
 </head>
 
 <body>
 
-<div class="profile">
-    <img src="profile.png" class="profile-img">
+<div class="container">
+
+    <div class="profile">
+        <img src="profile.png" class="profile-img">
+    </div>
+
+    <h1>👷 Worker Attendance App</h1>
+
+    <div class="dashboard">
+
+        <div class="card">
+            <h3>Total Workers</h3>
+            <h2 id="totalWorkers">0</h2>
+        </div>
+
+        <div class="card">
+            <h3>Total Salary</h3>
+            <h2>₹ <span id="dashboardSalary">0</span></h2>
+        </div>
+
+    </div>
+
+    <div class="box">
+
+        <input
+            type="text"
+            id="name"
+            placeholder="Worker Name">
+
+        <input
+            type="number"
+            id="wage"
+            placeholder="Daily Wage">
+
+        <div class="btns">
+
+            <button onclick="addWorker()">
+                ➕ Add Worker
+            </button>
+
+            <button onclick="printReport()">
+                📄 PDF
+            </button>
+
+            <button onclick="exportExcel()">
+                📊 Excel
+            </button>
+
+        </div>
+
+    </div>
+
+    <table>
+
+        <thead>
+
+        <tr>
+
+            <th>Name</th>
+            <th>Daily Wage</th>
+            <th>Present</th>
+            <th>OT</th>
+            <th>Salary</th>
+            <th>Action</th>
+
+        </tr>
+
+        </thead>
+
+        <tbody id="workerList">
+
+        </tbody>
+
+    </table>
+
 </div>
 
-<h1>Worker Attendance App</h1> 
-<div class="dashboard">
-
-<div class="card">
-<h3>Total Workers</h3>
-<h2 id="totalWorkers">0</h2>
-</div>
-
-<div class="card">
-<h3>Present Days</h3>
-<h2 id="totalPresent">0</h2>
-</div>
-
-<div class="card">
-<h3>Total Salary</h3>
-<h2>₹<span id="dashboardSalary">0</span></h2>
-</div>
-
-</div>
-<div class="box">
-
-<input
-type="text"
-id="name"
-placeholder="Worker Name">
-
-<input
-type="number"
-id="wage"
-placeholder="Daily Rate">
-
-<input type="date" id="attendanceDate" onchange="renderWorkers()">
-
-<div class="btns">
-
-<button onclick="addWorker()">
-Add Worker
-</button>
-
-<button onclick="printReport()">
-Download PDF
-</button>
-
-<button onclick="exportExcel()">
-Export Excel
-</button>
-
-</div>
-
-</div>
-
-<table>
-
-<thead>
-
-<tr>
-
-<th>Name</th>
-<th>Daily Rate</th>
-<th>Present</th>
-<th>OT</th>
-<th>Salary</th>
-<th>Action</th>
-
-</tr>
-
-</thead>
-
-<tbody id="workerList">
-
-</tbody>
-
-</table>
-
-<script>
-let workers = JSON.parse(localStorage.getItem("workers")) || [];
-let selectedWorker = -1;
-
-function saveWorkers() {
-    localStorage.setItem("workers", JSON.stringify(workers));
-}
-
-function renderWorkers() {
-
-    let list = document.getElementById("workerList");
-    list.innerHTML = "";
-
-    let totalSalary = 0;
-
-    workers.forEach((worker, index) => {
-
-        if (!worker.presentDays) worker.presentDays = 0;
-        if (!worker.attendance) worker.attendance = {};
-
-let presentDays = 0;
-let totalOT = 0;
-
-Object.values(attendance).forEach(item => {
-
-    if(item.status === "present"){
-        presentDays++;
-    }
-
-    totalOT += item.ot || 0;
-
-});
-
-let presentDays = 0;
-let totalOT = 0;
-
-Object.values(attendance).forEach(item => {
-
-    if(item.status === "present"){
-        presentDays++;
-    }
-
-    totalOT += item.ot || 0;
-
-});
-
-let hourlyRate = worker.wage / 8;
-
-let salary =
-    (worker.wage * presentDays) +
-    (hourlyRate * totalOT);
-
-totalSalary += monthlySalary;
-
-        let row = list.insertRow();
-
-        row.insertCell(0).innerHTML = worker.name;
-        row.insertCell(1).innerHTML = "₹" + worker.wage;
-        row.insertCell(2).innerHTML = worker.presentDays;
-        row.insertCell(3).innerHTML = worker.totalOT || "0h";
-        row.insertCell(4).innerHTML = "₹" + monthlySalary;
-
-        row.insertCell(5).innerHTML = `
-<div class="action-cell">
-<button onclick="openAttendance(${index})">Attendance</button>
-<button class="menu-btn" onclick="showMenu(${index}, event)">⋮</button>
-</div>
-`;
-    });
-
-    document.getElementById("totalWorkers").innerHTML = workers.length;
-
-let totalPresent = 0;
-
-workers.forEach(worker=>{
-    totalPresent += worker.presentDays;
-});
-
-document.getElementById("totalPresent").innerHTML = totalPresent;
-
-document.getElementById("dashboardSalary").innerHTML = totalSalary;
-}
-
-function addWorker() {
-
-    let name = document.getElementById("name").value.trim();
-    let wage = Number(document.getElementById("wage").value);
-    if (name === "" || wage <= 0) {
-
-        alert("Please fill all details");
-        return;
-    }
-
-workers.push({
-    name: name,
-    wage: wage,
-    presentDays: 0,
-    totalOT: 0,
-        attendance: {}
-    });
-
-    saveWorkers();
-    renderWorkers();
-
-    document.getElementById("name").value = "";
-    document.getElementById("wage").value = "";
-}
-
-function showHistory(index){
-
-    if(workers[index].attendance.length===0){
-        alert("No attendance found.");
-        return;
-    }
-
-    alert(
-        "Attendance History\n\n" +
-        workers[index].attendance.join("\n")
-    );
-}
-
-function deleteWorker(index){
-
-    workers.splice(index,1);
-
-    saveWorkers();
-    renderWorkers();
-}
-function editWorker(index){
-
-    let newName = prompt("Enter new worker name", workers[index].name);
-
-    if(newName === null) return;
-
-    let newWage = prompt("Enter new daily wage", workers[index].wage);
-
-    if(newWage === null) return;
-
-    workers[index].name = newName;
-    workers[index].wage = Number(newWage);
-
-    saveWorkers();
-    renderWorkers();
-}
-async function printReport(){
-
-    const { jsPDF } = window.jspdf;
-    const doc = new jsPDF();
-
-    doc.setFontSize(18);
-    doc.text("Worker Attendance Report", 20, 20);
-
-    let y = 35;
-
-    workers.forEach((worker, index) => {
-
-    let hourlyRate = worker.wage / 8;
-
-    let salary =
-    (worker.wage * worker.presentDays) +
-    (hourlyRate * (worker.totalOT || 0));
-
-        doc.setFontSize(14);
-        doc.text("Worker " + (index + 1), 20, y);
-
-        y += 10;
-        doc.setFontSize(12);
-        doc.text("Name : " + worker.name, 25, y);
-
-        y += 8;
-        doc.text("Daily Rate : Rs. " + worker.wage, 25, y);
-
-        y += 8;
-        doc.text("Present Days : " + worker.presentDays, 25, y);
-
-        y += 8;
-        doc.text("Total Salary : Rs. " + salary, 25, y);
-
-        y += 8;
-
-        if(y > 260){
-            doc.addPage();
-            y = 20;
-        }
-    });
-
-let pdf = doc.output("blob");
-
-downloadPDFToDownloads(pdf, "Worker_Attendance_Report.pdf");
-}
-function downloadPDFToDownloads(blob, fileName){
-
-    window.resolveLocalFileSystemURL(
-        cordova.file.dataDirectory,
-        function(dir){
-
-            dir.getFile(
-                fileName,
-                {create:true},
-                function(file){
-
-                    file.createWriter(function(writer){
-
-                        writer.onwriteend = function(){
-
-                            alert("PDF ready");
-
-                            cordova.plugins.fileOpener2.open(
-                                file.nativeURL,
-                                "application/pdf",
-                                {
-                                    error:function(e){
-                                        alert("Open error: "+e.status);
-                                    },
-                                    success:function(){
-                                        console.log("PDF opened");
-                                    }
-                                }
-                            );
-
-                        };
-
-                        writer.onerror=function(){
-                            alert("PDF save error");
-                        };
-
-                        writer.write(blob);
-
-                    });
-
-                }
-            );
-
-        }
-    );
-}
-function exportExcel(){
-alert("Export Excel Clicked");
-    let data = [];
-
-    workers.forEach(worker=>{
-
-        data.push({
-            "Worker Name": worker.name,
-            "Daily Rate": worker.wage,
-            "Present Days": worker.presentDays,
-            "Total Salary": worker.wage * worker.presentDays
-        });
-
-    });
-
-    let workbook = XLSX.utils.book_new();
-
-    let worksheet = XLSX.utils.json_to_sheet(data);
-
-    XLSX.utils.book_append_sheet(workbook, worksheet, "Workers");
-
-let excelData = XLSX.write(workbook, {
-    bookType: "xlsx",
-    type: "array"
-});
-
-let blob = new Blob(
-    [excelData],
-    {
-        type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
-    }
-);
-
-downloadExcel(blob, "Worker_Attendance_Report.xlsx");
-
-}
-function downloadExcel(blob, fileName){
-
-    window.resolveLocalFileSystemURL(
-        cordova.file.dataDirectory,
-        function(dir){
-
-            dir.getFile(
-                fileName,
-                {create:true},
-                function(file){
-
-                    file.createWriter(function(writer){
-
-                        writer.onwriteend = function(){
-
-                            cordova.plugins.fileOpener2.open(
-                                file.nativeURL,
-                                "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
-                            );
-
-                        };
-
-                        writer.write(blob);
-
-                    });
-
-                }
-            );
-
-        }
-    );
-}
-function showMenu(index, event){
-
-    selectedWorker = index;
-
-    const menu = document.getElementById("popupMenu");
-
-    menu.style.display = "block";
-    menu.style.visibility = "hidden";
-
-    const rect = event.target.getBoundingClientRect();
-
-    const menuWidth = menu.offsetWidth;
-    const menuHeight = menu.offsetHeight;
-
-    let left = rect.right - menuWidth;
-    let top = rect.bottom + 5;
-
-    if (top + menuHeight > window.innerHeight) {
-        top = rect.top - menuHeight - 5;
-    }
-
-    if (top < 10) {
-        top = 10;
-    }
-
-    if (left + menuWidth > window.innerWidth) {
-        left = window.innerWidth - menuWidth - 10;
-    }
-
-    if (left < 10) {
-        left = 10;
-    }
-
-    menu.style.left = left + "px";
-    menu.style.top = top + "px";
-    menu.style.visibility = "visible";
-}
-let selectedAttendanceWorker = -1;
-
-function openAttendance(index){
-
-    selectedAttendanceWorker = index;
-
-    attendanceData = workers[index].attendance || {};
-
-    document.getElementById("attendanceModal").style.display = "flex";
-
-    renderCalendar();
-
-}
-
-function closeAttendance(){
-    document.getElementById("attendanceModal").style.display = "none";
-}
-let currentYear = 2026;
-let currentMonth = 7;
-
-function prevMonth(){
-
-    currentMonth--;
-
-    if(currentMonth < 0){
-        currentMonth = 11;
-        currentYear--;
-    }
-
-    renderCalendar();
-}
-
-function nextMonth(){
-
-    currentMonth++;
-
-    if(currentMonth > 11){
-        currentMonth = 0;
-        currentYear++;
-    }
-
-    renderCalendar();
-}
-
-function renderCalendar(){
-
-    const grid = document.getElementById("calendarGrid");
-
-    const year = currentYear;
-    const month = currentMonth;
-
-const monthNames = [
-    "January","February","March","April","May","June",
-    "July","August","September","October","November","December"
-];
-
-document.getElementById("calendarTitle").innerHTML =
-    monthNames[month] + " " + year;
-
-    const firstDay = new Date(year, month, 1).getDay();
-    const totalDays = new Date(year, month + 1, 0).getDate();
-
-    grid.innerHTML = `
-        <div class="day-name">Sun</div>
-        <div class="day-name">Mon</div>
-        <div class="day-name">Tue</div>
-        <div class="day-name">Wed</div>
-        <div class="day-name">Thu</div>
-        <div class="day-name">Fri</div>
-        <div class="day-name">Sat</div>
-    `;
-
-    for(let i = 0; i < firstDay; i++){
-        grid.innerHTML += `<div></div>`;
-    }
-
-    for(let day = 1; day <= totalDays; day++){
-
-let color = "";
-let otText = "";
-
-let dateKey =
-    currentYear + "-" +
-    String(currentMonth + 1).padStart(2, "0") + "-" +
-    String(day).padStart(2, "0");
-
-if(attendanceData[dateKey]){
-
-    if(attendanceData[dateKey].status === "present"){
-        color = "present-day";
-    }
-    else if(attendanceData[dateKey].status === "absent"){
-        color = "absent-day";
-    }
-
-    if(attendanceData[dateKey].ot > 0){
-otText = `<small>${attendanceData[dateKey].ot}h</small>`;
-    }
-
-}
-
-grid.innerHTML += `
-<div class="calendar-day ${color}" onclick="selectDate(${day})">
-    <div>${day}</div>
-    ${otText}
-</div>
-`;
-    }
-
-}
-let selectedDay = 0;
-let attendanceData = {};
-
-function selectDate(day){
-
-    selectedDay =
-    currentYear + "-" +
-    String(currentMonth + 1).padStart(2, "0") + "-" +
-    String(day).padStart(2, "0");
-
-    document.getElementById("selectedDateTitle").innerHTML =
-        day + " " + 
-    document.getElementById("calendarTitle").innerHTML;
-
-    document.getElementById("dateActionModal").style.display = "flex";
-}
-
-function closeDateAction(){
-    document.getElementById("dateActionModal").style.display = "none";
-}
-
-function markDatePresent(){
-
-    attendanceData[selectedDay] = {
-        status: "present",
-        ot: attendanceData[selectedDay]?.ot || 0
-    };
-
-    workers[selectedAttendanceWorker].presentDays = 0;
-
-    Object.values(attendanceData).forEach(item => {
-        if(item.status === "present"){
-            workers[selectedAttendanceWorker].presentDays++;
-        }
-    });
-
-workers[selectedAttendanceWorker].attendance = attendanceData;
-saveWorkers();
-
-    renderWorkers();
-
-    closeDateAction();
-    renderCalendar();
-
-}
-
-function markDateAbsent(){
-
-    attendanceData[selectedDay] = {
-        status: "absent",
-        ot: attendanceData[selectedDay]?.ot || 0
-    };
-
-    workers[selectedAttendanceWorker].presentDays = 0;
-
-    Object.values(attendanceData).forEach(item => {
-        if(item.status === "present"){
-            workers[selectedAttendanceWorker].presentDays++;
-        }
-    });
-
-workers[selectedAttendanceWorker].attendance = attendanceData;
-saveWorkers();
-
-    renderWorkers();
-
-    closeDateAction();
-    renderCalendar();
-
-}
-
-function addDateOT(){
-
-    let hours = prompt("Enter OT Hours");
-
-    if(hours == null || hours == ""){
-        return;
-    }
-
-    if(!attendanceData[selectedDay]){
-        attendanceData[selectedDay] = {
-            status: "",
-            ot: 0
-        };
-workers[selectedAttendanceWorker].attendance = attendanceData;
-saveWorkers();
-renderWorkers();
-closeDateAction();
-renderCalendar();
-    }
-
-    attendanceData[selectedDay].ot = parseFloat(hours);
-
-workers[selectedAttendanceWorker].totalOT = 0;
-
-Object.values(attendanceData).forEach(item => {
-    workers[selectedAttendanceWorker].totalOT += Number(item.ot || 0);
-});
-
-saveWorkers();
-renderWorkers();
-    closeDateAction();
-
-    renderCalendar();
-
-}
-
-function menuHistory(){
-    document.getElementById("popupMenu").style.display="none";
-    showHistory(selectedWorker);
-}
-
-function menuPDF(){
-
-    document.getElementById("popupMenu").style.display = "none";
-
-    showMonthSelector(selectedWorker);
-
-}
-}
-
-function menuDelete(){
-    document.getElementById("popupMenu").style.display="none";
-
-    if(confirm("Delete this worker?")){
-        deleteWorker(selectedWorker);
-    }
-}
-function closeMonthSelector(){
-    document.getElementById("monthSelectorModal").style.display = "none";
-}
-
-function showMonthSelector(index){
-
-    let worker = workers[index];
-    let months = {};
-
-    Object.keys(worker.attendance || {}).forEach(date => {
-
-        let parts = date.split("-");
-
-        let key = parts[0] + "-" + parts[1];
-
-        months[key] = true;
-
-    });
-
-    const monthNames = [
-        "January","February","March","April","May","June",
-        "July","August","September","October","November","December"
-    ];
-
-    let html = "";
-
-    Object.keys(months).sort().forEach(key => {
-
-        let p = key.split("-");
-
-        let title =
-            monthNames[parseInt(p[1]) - 1] + " " + p[0];
-
-        html += `
-<button onclick="downloadWorkerPDF(${index}, '${key}'); closeMonthSelector();">
-${title}
-</button><br><br>`;
-    });
-
-    if(html === ""){
-        html = "<p>No attendance found.</p>";
-    }
-
-    document.getElementById("monthList").innerHTML = html;
-    document.getElementById("monthSelectorModal").style.display = "flex";
-}
-function downloadWorkerPDF(index, selectedMonth = null){
-
-    const { jsPDF } = window.jspdf;
-    const doc = new jsPDF();
-
-    let worker = workers[index];
-let attendance = {};
-
-Object.keys(worker.attendance || {}).forEach(date => {
-
-    if (
-        selectedMonth === null ||
-        date.startsWith(selectedMonth)
-    ) {
-        attendance[date] = worker.attendance[date];
-    }
-
-});
-
-    let hourlyRate = worker.wage / 8;
-
-    let salary =
-    (worker.wage * worker.presentDays) +
-    (hourlyRate * (worker.totalOT || 0));
-
-doc.setFont("helvetica", "bold");
-doc.setFontSize(20);
-doc.text("WORKER REPORT", 60, 20);
-
-doc.line(20, 25, 190, 25);
-
-doc.setFont("helvetica", "normal");
-doc.setFontSize(12);
-
-doc.text("Worker Name : " + worker.name, 20, 40);
-doc.text("Daily Rate  : Rs. " + worker.wage, 20, 50);
-doc.text("Present Days: " + presentDays, 20, 60);
-doc.text("Total OT    : " + totalOT + "h", 20, 70);
-doc.text("Total Salary: Rs. " + salary.toFixed(2), 20, 80);
-
-doc.line(20, 86, 190, 86);
-
-doc.setFont("helvetica", "bold");
-doc.text("ATTENDANCE DETAILS", 20, 95);
-
-doc.setFont("helvetica", "normal");
-
-let y = 100;
-
-Object.keys(attendance || {}).forEach(day => {
-
-    let item = attendance[day];
-
-let parts = day.split("-");
-
-const months = [
-  "Jan","Feb","Mar","Apr","May","Jun",
-  "Jul","Aug","Sep","Oct","Nov","Dec"
-];
-
-let displayDate =
-    parts[2] + " " +
-    months[parseInt(parts[1]) - 1] + " " +
-    parts[0];
-
-let line = displayDate + " : " + item.status.toUpperCase();
-
-    if(item.ot > 0){
-        line += " | OT: " + item.ot + "h";
-    }
-
-    doc.text(line, 25, y);
-
-    y += 10;
-
-});
-
-let pdf = doc.output("blob");
-
-downloadPDFToDownloads(pdf, worker.name + "_Report.pdf");
-}
-document.addEventListener("deviceready", function () {
-    alert("Creat by Safaul Ansari");
-});
-renderWorkers();
-
-document.addEventListener("click", function(e){
-
-if (!e.target.closest(".menu-btn") && !e.target.closest("#popupMenu")) {
-    document.getElementById("popupMenu").style.display = "none";
-}
-
-});
-
-</script>
+<!-- Popup Menu -->
 
 <div id="popupMenu" class="popup-menu">
+
     <div onclick="menuHistory()">📜 History</div>
+
     <div onclick="menuPDF()">📄 PDF</div>
+
     <div onclick="menuDelete()">🗑 Delete</div>
+
 </div>
 
-<div id="attendanceModal" class="attendance-modal" style="display:none;">
+<!-- Attendance Modal -->
+
+<div id="attendanceModal" class="attendance-modal">
+
     <div class="attendance-box">
+
         <h2>Attendance Calendar</h2>
 
-<div id="calendar">
+        <div class="calendar-header">
 
-    <div class="calendar-header">
-        <button onclick="prevMonth()">◀</button>
+            <button onclick="prevMonth()">◀</button>
 
-        <h3 id="calendarTitle">August 2026</h3>
+            <h3 id="calendarTitle"></h3>
 
-        <button onclick="nextMonth()">▶</button>
+            <button onclick="nextMonth()">▶</button>
+
+        </div>
+
+        <div id="calendarGrid"></div>
+
+        <br>
+
+        <button onclick="closeAttendance()">
+            Close
+        </button>
+
     </div>
-
-    <div id="calendarGrid"></div>
 
 </div>
 
-        <button onclick="closeAttendance()">Close</button>
-    </div>
-</div>
+<!-- Date Action -->
 
-<div id="dateActionModal" class="attendance-modal" style="display:none;">
+<div id="dateActionModal" class="attendance-modal">
+
     <div class="attendance-box">
-        <h3 id="selectedDateTitle">Date</h3>
 
-        <button onclick="markDatePresent()">✅ Present</button>
-        <button onclick="markDateAbsent()">❌ Absent</button>
-        <button onclick="addDateOT()">⏱ Add OT</button>
+        <h3 id="selectedDateTitle"></h3>
+
+        <button onclick="markDatePresent()">
+            ✅ Present
+        </button>
+
+        <button onclick="markDateAbsent()">
+            ❌ Absent
+        </button>
+
+        <button onclick="addDateOT()">
+            ⏱ Add OT
+        </button>
 
         <br><br>
 
-        <button onclick="closeDateAction()">Close</button>
+        <button onclick="closeDateAction()">
+            Close
+        </button>
+
     </div>
+
 </div>
 
-<script src="cordova.js"></script>
+<!-- Month Selector -->
 
-<div id="monthSelectorModal" class="attendance-modal" style="display:none;">
+<div id="monthSelectorModal" class="attendance-modal">
+
     <div class="attendance-box">
+
         <h3>Select Report Month</h3>
 
         <div id="monthList"></div>
@@ -1122,9 +178,12 @@ if (!e.target.closest(".menu-btn") && !e.target.closest("#popupMenu")) {
         <button onclick="closeMonthSelector()">
             Cancel
         </button>
+
     </div>
+
 </div>
 
+<script src="script.js"></script>
 <script src="cordova.js"></script>
 
 </body>
