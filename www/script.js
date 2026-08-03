@@ -980,17 +980,6 @@ doc.setTextColor(0,0,0);
 // Create PDF Blob
 const pdfBlob = doc.output("blob");
 
-// Browser test
-if(!window.cordova){
-
-    const url = URL.createObjectURL(pdfBlob);
-    window.open(url, "_blank");
-    closeMonthSelector();
-    return;
-
-}
-
-// Android (Cordova)
 const fileName =
     worker.name + "_" + selectedMonth + ".pdf";
 
@@ -1004,19 +993,23 @@ window.resolveLocalFileSystemURL(
 
                 writer.onwriteend=function(){
 
-                    window.plugins.socialsharing.share(
-                        "",
-                        "Attendance Report",
+                    cordova.plugins.fileOpener2.open(
                         file.toURL(),
-                        null
+                        "application/pdf",
+                        {
+                            error:function(e){
+                                alert("Open Error : " + JSON.stringify(e));
+                            },
+                            success:function(){
+                                closeMonthSelector();
+                            }
+                        }
                     );
-
-                    closeMonthSelector();
 
                 };
 
                 writer.onerror=function(e){
-                    alert("PDF Error : "+e.toString());
+                    alert("PDF Save Error");
                 };
 
                 writer.write(pdfBlob);
@@ -1027,6 +1020,6 @@ window.resolveLocalFileSystemURL(
 
     }
 );
+closeMonthSelector();
 
 }
-
