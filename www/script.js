@@ -39,33 +39,55 @@ function renderWorkers(){
 
         totalSalary += salary;
 
-        let row = list.insertRow();
+        list.innerHTML += `
+<div class="worker-card">
 
-        row.insertCell(0).innerHTML = worker.name;
-        row.insertCell(1).innerHTML = "Rs." + worker.wage;
-        row.insertCell(2).innerHTML = worker.presentDays;
-        row.insertCell(3).innerHTML = worker.totalOT + "h";
-        row.insertCell(4).innerHTML = "Rs." + Math.round(salary);
+    <div class="worker-header">
+<span class="worker-name">👷 ${worker.name}</span>
 
-        row.insertCell(5).innerHTML = `
-<div class="action-cell">
-<button onclick="openAttendance(${index})">
-Attendance
-</button>
+        <button class="menu-btn"
+        onclick="showMenu(${index},event)">⋮</button>
+    </div>
 
-<button class="menu-btn"
-onclick="showMenu(${index},event)">
-⋮
-</button>
+<div class="worker-info">
+
+    <div>
+        <span class="worker-label">💰 Daily Wage</span>
+        <span class="worker-value">Rs.${worker.wage}</span>
+    </div>
+
+    <div>
+        <span class="worker-label">📅 Present</span>
+        <span class="worker-value">${worker.presentDays}</span>
+    </div>
+
+    <div>
+        <span class="worker-label">🕒 OT</span>
+        <span class="worker-value">${worker.totalOT}h</span>
+    </div>
+
+    <div>
+        <span class="worker-label">💵 Salary</span>
+        <span class="worker-value">Rs.${Math.round(salary)}</span>
+    </div>
+
+</div>
+
+    <button class="attendance-btn"
+    onclick="openAttendance(${index})">
+        Attendance
+    </button>
 
 </div>`;
+
     });
 
     document.getElementById("totalWorkers").innerHTML =
         workers.length;
 
     document.getElementById("dashboardSalary").innerHTML =
-        totalSalary.toFixed(2);
+        Math.round(totalSalary);
+
 }
 
 function addWorker(){
@@ -955,14 +977,56 @@ doc.text(
 );
 
 doc.setTextColor(0,0,0);
-    doc.save(
-        worker.name+
-        "_"+
-        selectedMonth+
-        ".pdf"
-    );
+// Create PDF Blob
+const pdfBlob = doc.output("blob");
 
+// Browser test
+if(!window.cordova){
+
+    const url = URL.createObjectURL(pdfBlob);
+    window.open(url, "_blank");
     closeMonthSelector();
+    return;
+
+}
+
+// Android (Cordova)
+const fileName =
+    worker.name + "_" + selectedMonth + ".pdf";
+
+window.resolveLocalFileSystemURL(
+    cordova.file.cacheDirectory,
+    function(dir){
+
+        dir.getFile(fileName,{create:true},function(file){
+
+            file.createWriter(function(writer){
+
+                writer.onwriteend=function(){
+
+                    window.plugins.socialsharing.share(
+                        "",
+                        "Attendance Report",
+                        file.toURL(),
+                        null
+                    );
+
+                    closeMonthSelector();
+
+                };
+
+                writer.onerror=function(e){
+                    alert("PDF Error : "+e.toString());
+                };
+
+                writer.write(pdfBlob);
+
+            });
+
+        });
+
+    }
+);
 
 }
 
