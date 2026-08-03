@@ -788,10 +788,58 @@ doc.text("Total Salary : Rs." + Math.round(salary),110,84);
 
     let y=105;
 
-    doc.setFontSize(13);
-    doc.text("Attendance",20,y);
+doc.setFont("helvetica","bold");
+doc.setFontSize(14);
+doc.text("ATTENDANCE CALENDAR",20,y);
 
-    y+=10;
+y += 8;
+
+doc.setFillColor(16,72,138);
+
+const headers = [
+"Sun","Mon","Tue","Wed","Thu","Fri","Sat"
+];
+
+for(let i=0;i<7;i++){
+
+    doc.rect(
+        15 + (i*26),
+        y,
+        26,
+        10,
+        "F"
+    );
+
+    doc.setTextColor(255,255,255);
+
+    doc.text(
+        headers[i],
+        22 + (i*26),
+        y+7
+    );
+
+}
+
+doc.setTextColor(0,0,0);
+
+y += 15;
+
+const firstDay =
+new Date(selectedMonth + "-01").getDay();
+
+const daysInMonth =
+new Date(
+parseInt(selectedMonth.split("-")[0]),
+parseInt(selectedMonth.split("-")[1]),
+0
+).getDate();
+
+let startX = 15;
+let cellW = 26;
+let cellH = 18;
+
+let row = 0;
+let col = firstDay;
 
     Object.keys(attendance).sort().forEach(date=>{
 
