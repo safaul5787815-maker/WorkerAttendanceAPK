@@ -994,7 +994,7 @@ window.resolveLocalFileSystemURL(
                 writer.onwriteend=function(){
 
                     cordova.plugins.fileOpener2.open(
-                        file.toURL(),
+                        file.nativeURL,
                         "application/pdf",
                         {
                             error:function(e){
