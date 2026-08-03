@@ -433,9 +433,8 @@ function addWorker() {
 
     let name = document.getElementById("name").value.trim();
     let wage = Number(document.getElementById("wage").value);
-    let attendanceDate = document.getElementById("attendanceDate").value;
+    if (name === "" || wage <= 0) {
 
-    if (name === "" || wage <= 0 || attendanceDate === "") {
         alert("Please fill all details");
         return;
     }
