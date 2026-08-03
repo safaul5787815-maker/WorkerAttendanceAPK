@@ -666,6 +666,97 @@ ${title}
 }
 
 function closeMonthSelector(){
+function downloadWorkerPDF(index, selectedMonth){
+
+    const { jsPDF } = window.jspdf;
+    const doc = new jsPDF();
+
+    let worker = workers[index];
+
+    let attendance = {};
+
+    Object.keys(worker.attendance || {}).forEach(date=>{
+
+        if(date.startsWith(selectedMonth)){
+            attendance[date]=worker.attendance[date];
+        }
+
+    });
+
+    let presentDays=0;
+    let totalOT=0;
+
+    Object.values(attendance).forEach(item=>{
+
+        if(item.status==="present")
+            presentDays++;
+
+        totalOT += item.ot || 0;
+
+    });
+
+    let hourlyRate = worker.wage / 8;
+
+    let salary =
+        (presentDays * worker.wage) +
+        (totalOT * hourlyRate);
+
+    doc.setFontSize(20);
+    doc.text("WORKER REPORT",60,20);
+
+    doc.setFontSize(12);
+
+    doc.text("Worker : "+worker.name,20,40);
+    doc.text("Month  : "+selectedMonth,20,50);
+    doc.text("Daily Rate : ₹"+worker.wage,20,60);
+    doc.text("Present : "+presentDays,20,70);
+    doc.text("Total OT : "+totalOT+"h",20,80);
+    doc.text("Salary : ₹"+salary.toFixed(2),20,90);
+
+    doc.line(20,96,190,96);
+
+    let y=105;
+
+    doc.setFontSize(13);
+    doc.text("Attendance",20,y);
+
+    y+=10;
+
+    Object.keys(attendance).sort().forEach(date=>{
+
+        let item=attendance[date];
+
+        let line =
+            date+
+            "   "+
+            item.status.toUpperCase();
+
+        if(item.ot>0){
+            line +=
+            " | OT "+item.ot+"h";
+        }
+
+        doc.text(line,20,y);
+
+        y+=8;
+
+        if(y>280){
+            doc.addPage();
+            y=20;
+        }
+
+    });
+
+    doc.save(
+        worker.name+
+        "_"+
+        selectedMonth+
+        ".pdf"
+    );
+
+    closeMonthSelector();
+
+}
 
     document.getElementById(
         "monthSelectorModal"
