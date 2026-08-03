@@ -42,10 +42,10 @@ function renderWorkers(){
         let row = list.insertRow();
 
         row.insertCell(0).innerHTML = worker.name;
-        row.insertCell(1).innerHTML = "₹ " + worker.wage;
+        row.insertCell(1).innerHTML = "Rs." + worker.wage;
         row.insertCell(2).innerHTML = worker.presentDays;
         row.insertCell(3).innerHTML = worker.totalOT + "h";
-        row.insertCell(4).innerHTML = "₹ " + salary.toFixed(2);
+        row.insertCell(4).innerHTML = "Rs." + Math.round(salary);
 
         row.insertCell(5).innerHTML = `
 <div class="action-cell">
@@ -666,6 +666,13 @@ ${title}
 }
 
 function closeMonthSelector(){
+
+    document.getElementById(
+        "monthSelectorModal"
+    ).style.display = "none";
+
+}
+
 function downloadWorkerPDF(index, selectedMonth){
 
     const { jsPDF } = window.jspdf;
@@ -701,17 +708,81 @@ function downloadWorkerPDF(index, selectedMonth){
         (presentDays * worker.wage) +
         (totalOT * hourlyRate);
 
-    doc.setFontSize(20);
-    doc.text("WORKER REPORT",60,20);
+const monthNames = [
+"January","February","March","April",
+"May","June","July","August",
+"September","October","November","December"
+];
 
-    doc.setFontSize(12);
+let monthTitle = selectedMonth;
 
-    doc.text("Worker : "+worker.name,20,40);
-    doc.text("Month  : "+selectedMonth,20,50);
-    doc.text("Daily Rate : ₹"+worker.wage,20,60);
-    doc.text("Present : "+presentDays,20,70);
-    doc.text("Total OT : "+totalOT+"h",20,80);
-    doc.text("Salary : ₹"+salary.toFixed(2),20,90);
+if(selectedMonth){
+
+    let p = selectedMonth.split("-");
+
+    monthTitle =
+        monthNames[parseInt(p[1])-1] +
+        " " +
+        p[0];
+
+}
+doc.setFillColor(16,72,138);
+doc.rect(0,0,210,30,"F");
+
+doc.setTextColor(255,255,255);
+doc.setFont("helvetica","bold");
+doc.setFontSize(22);
+doc.text("WORKER ATTENDANCE REPORT",18,18);
+
+doc.setTextColor(0,0,0);
+
+doc.setFont("helvetica","normal");
+doc.setFontSize(11);
+
+doc.text("Report Month : " + monthTitle,150,12);
+
+let today=new Date();
+
+doc.text(
+"Report Date : "+
+today.getDate()+"-"+
+(today.getMonth()+1)+"-"+
+today.getFullYear(),
+150,
+20
+);
+
+doc.setDrawColor(16,72,138);
+doc.line(15,35,195,35);
+
+doc.setFontSize(14);
+doc.setFont("helvetica","bold");
+doc.text("WORKER DETAILS",20,45);
+
+doc.setFont("helvetica","normal");
+doc.setFontSize(11);
+doc.setDrawColor(16,72,138);
+doc.roundedRect(15,50,180,45,3,3);
+
+doc.setFont("helvetica","bold");
+doc.setFontSize(13);
+doc.text("WORKER DETAILS",20,58);
+
+doc.setFont("helvetica","normal");
+doc.setFontSize(11);
+
+doc.text("Worker Name : " + worker.name,20,68);
+doc.text("Daily Rate  : Rs." + worker.wage,20,76);
+
+let absentDays =
+new Date(currentYear,currentMonth+1,0).getDate() - presentDays;
+
+doc.text("Present Days : " + presentDays,110,68);
+doc.text("Absent Days : " + absentDays,110,76);
+
+doc.text("Total OT : " + totalOT + "h",20,84);
+doc.text("Total Salary : Rs." + Math.round(salary),110,84);
+
 
     doc.line(20,96,190,96);
 
@@ -758,8 +829,3 @@ function downloadWorkerPDF(index, selectedMonth){
 
 }
 
-    document.getElementById(
-        "monthSelectorModal"
-    ).style.display="none";
-
-}
