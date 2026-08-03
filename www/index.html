@@ -453,38 +453,6 @@ workers.push({
     document.getElementById("name").value = "";
     document.getElementById("wage").value = "";
 }
-function markPresent(index){
-
-    let date = document.getElementById("attendanceDate").value;
-
-    if(date === ""){
-        alert("Please select date");
-        return;
-    }
-
-    let pos = workers[index].attendance.indexOf(date);
-
-    if(pos !== -1){
-
-        // Attendance हटाएँ
-        workers[index].attendance.splice(pos, 1);
-
-        if(workers[index].presentDays > 0){
-            workers[index].presentDays--;
-        }
-
-
-    }else{
-
-        // Attendance जोड़ें
-        workers[index].attendance.push(date);
-        workers[index].presentDays++;
-
-    }
-
-    saveWorkers();
-    renderWorkers();
-}
 
 function showHistory(index){
 
