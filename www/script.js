@@ -877,64 +877,116 @@ function closeSettings(){
 
 }
 
+function openPinManager(title, callback){
+
+    document.getElementById("pinManagerTitle").innerHTML = title;
+
+    let input = document.getElementById("pinManagerInput");
+
+    input.value = "";
+
+    document.getElementById("pinManagerModal").style.display = "flex";
+
+    setTimeout(function(){
+
+        input.focus();
+
+    },100);
+
+    document.getElementById("pinManagerOk").onclick = function(){
+
+        callback(input.value);
+
+    };
+
+}
+
+function closePinManager(){
+
+    document.getElementById("pinManagerModal").style.display = "none";
+
+    let input = document.getElementById("pinManagerInput");
+
+    input.blur();
+
+    input.value = "";
+
+    if(window.Keyboard && Keyboard.hide){
+
+        Keyboard.hide();
+
+    }
+
+}
+
 function changePin(){
 
     let oldPin = localStorage.getItem("appPin") || "";
 
-    let current = prompt("Enter Current PIN");
+    openPinManager("Enter Current PIN", function(current){
 
-    if(current === null) return;
+        if(current !== oldPin){
 
-    if(current !== oldPin){
+            alert("Wrong PIN");
+            return;
 
-        alert("Wrong PIN");
-        return;
+        }
 
-    }
+        closePinManager();
 
-    let newPin = prompt("Enter New PIN");
+        openPinManager("Enter New PIN", function(newPin){
 
-    if(newPin === null) return;
+            if(newPin.length !== 4){
 
-    if(newPin.length < 4){
+                alert("PIN must be exactly 4 digits");
+                return;
 
-        alert("PIN must be at least 4 digits");
-        return;
+            }
 
-    }
+            localStorage.setItem("appPin", newPin);
 
-    localStorage.setItem("appPin", newPin);
+            savedPin = newPin;
 
-    alert("PIN Changed Successfully");
+            alert("PIN Changed Successfully");
 
-    closeSettings();
+            closePinManager();
+
+            closeSettings();
+
+        });
+
+    });
 
 }
 
 function removePin(){
 
-    let pin = localStorage.getItem("appPin") || "";
+    let saved = localStorage.getItem("appPin") || "";
 
-    let current = prompt("Enter Current PIN");
+    openPinManager("Enter Current PIN", function(pin){
 
-    if(current === null) return;
+        if(pin !== saved){
 
-    if(current !== pin){
+            alert("Wrong PIN");
+            return;
 
-        alert("Wrong PIN");
-        return;
+        }
 
-    }
+        if(confirm("Remove PIN Lock?")){
 
-    if(confirm("Remove PIN Lock?")){
+            localStorage.removeItem("appPin");
 
-        localStorage.removeItem("appPin");
+            savedPin = "";
 
-        alert("PIN Removed Successfully");
+            alert("PIN Removed Successfully");
 
-        closeSettings();
+            closePinManager();
 
-    }
+            closeSettings();
+
+        }
+
+    });
 
 }
 
@@ -1057,33 +1109,33 @@ function aboutApp(){
 
 function enablePinLock(){
 
-    let pin = localStorage.getItem("appPin");
-
-    if(pin){
+    if(localStorage.getItem("appPin")){
 
         alert("PIN Lock is already enabled");
         return;
 
     }
 
-    let newPin = prompt("Create 4 Digit PIN");
+    openPinManager("Create 4 Digit PIN", function(pin){
 
-    if(newPin === null) return;
+        if(pin.length !== 4){
 
-    if(newPin.length != 4){
+            alert("PIN must be exactly 4 digits");
+            return;
 
-        alert("PIN must be exactly 4 digits");
-        return;
+        }
 
-    }
+        localStorage.setItem("appPin", pin);
 
-    localStorage.setItem("appPin", newPin);
+        savedPin = pin;
 
-    savedPin = newPin;
+        alert("PIN Lock Enabled Successfully");
 
-    alert("PIN Lock Enabled Successfully");
+        closePinManager();
 
-    closeSettings();
+        closeSettings();
+
+    });
 
 }
 

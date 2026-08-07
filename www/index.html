@@ -261,5 +261,35 @@
     style="display:none"
     onchange="restoreFileSelected(event)">
 
+<!-- PIN Manager Modal -->
+
+<div id="pinManagerModal" class="attendance-modal">
+
+    <div class="attendance-box">
+
+        <h2 id="pinManagerTitle">PIN</h2>
+
+        <input
+            id="pinManagerInput"
+            type="tel"
+            inputmode="numeric"
+            pattern="[0-9]*"
+            maxlength="4"
+            placeholder="4 Digit PIN">
+
+        <br><br>
+
+        <button id="pinManagerOk">
+            OK
+        </button>
+
+        <button onclick="closePinManager()">
+            Cancel
+        </button>
+
+    </div>
+
+</div>
+
 </body>
 </html>
