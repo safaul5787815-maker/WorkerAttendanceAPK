@@ -18,18 +18,58 @@ let currentMonth = new Date().getMonth();
 let savedPin =
     localStorage.getItem("appPin") || "";
 
-window.addEventListener("load",function(){
+window.addEventListener("load", function(){
 
     savedPin = localStorage.getItem("appPin") || "";
 
-    if(savedPin===""){
+    let fingerprintEnabled =
+        localStorage.getItem("fingerprintEnabled");
+
+    if(fingerprintEnabled === "true" &&
+       window.Fingerprint){
+
+        Fingerprint.show({
+
+            title: "Unlock App",
+            subtitle: "Worker Attendance",
+            description: "Touch fingerprint sensor",
+            disableBackup: true
+
+        },
+
+        function(){
+
+            // Fingerprint Success
+            return;
+
+        },
+
+        function(){
+
+            // Fingerprint Failed
+            if(savedPin !== ""){
+
+                document.getElementById("pinModal").style.display="flex";
+
+                document.getElementById("pinTitle").innerHTML =
+                "Enter PIN";
+
+            }
+
+        });
+
         return;
+
     }
 
-    document.getElementById("pinModal").style.display="flex";
+    if(savedPin !== ""){
 
-    document.getElementById("pinTitle").innerHTML =
-    "Enter PIN";
+        document.getElementById("pinModal").style.display="flex";
+
+        document.getElementById("pinTitle").innerHTML =
+        "Enter PIN";
+
+    }
 
 });
 
