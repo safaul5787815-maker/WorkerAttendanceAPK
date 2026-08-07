@@ -5,6 +5,22 @@
 
 let workers = JSON.parse(localStorage.getItem("workers")) || [];
 
+workers.forEach(function(worker){
+
+    if(worker.paid === undefined){
+
+        worker.paid = 0;
+
+    }
+
+    if(!worker.paymentHistory){
+
+        worker.paymentHistory = [];
+
+    }
+
+});
+
 let selectedWorker = -1;
 let selectedAttendanceWorker = -1;
 
@@ -183,6 +199,25 @@ function renderWorkers(){
         <span class="worker-value">Rs.${Math.round(salary)}</span>
     </div>
 
+<div>
+    <span class="worker-label">💸 Paid</span>
+    <span class="worker-value">
+        Rs.${worker.paid || 0}
+    </span>
+</div>
+
+<div>
+    <span class="worker-label">💰 Balance</span>
+    <span class="worker-value">
+        Rs.${Math.round(salary - (worker.paid || 0))}
+    </span>
+</div>
+
+<button class="attendance-btn"
+onclick="openPaidDialog(${index})">
+    💵 Paid
+</button>
+
 </div>
 
     <button class="attendance-btn"
@@ -218,19 +253,23 @@ function addWorker(){
 
     }
 
-    workers.push({
+workers.push({
 
-        name:name,
+    name:name,
 
-        wage:wage,
+    wage:wage,
 
-        presentDays:0,
+    presentDays:0,
 
-        totalOT:0,
+    totalOT:0,
 
-        attendance:{}
+    paid:0,
 
-    });
+    paymentHistory:[],
+
+    attendance:{}
+
+});
 
     saveWorkers();
 
@@ -328,44 +367,6 @@ function menuHistory(){
     document.getElementById("popupMenu").style.display="none";
 
     showHistory(selectedWorker);
-
-}
-
-function showHistory(index){
-
-    let worker=workers[index];
-
-    let text="Attendance History\n\n";
-
-    let keys=Object.keys(worker.attendance);
-
-    if(keys.length===0){
-
-        alert("No attendance found");
-
-        return;
-
-    }
-
-    keys.sort().forEach(date=>{
-
-        let item=worker.attendance[date];
-
-        text+=date+
-        "  |  "+
-        item.status.toUpperCase();
-
-        if(item.ot>0){
-
-            text+=" | OT: "+item.ot+"h";
-
-        }
-
-        text+="\n";
-
-    });
-
-    alert(text);
 
 }
 
@@ -746,13 +747,28 @@ function showHistory(index){
 
     dates.forEach(date=>{
 
-        let item =
-            worker.attendance[date];
+let item =
+    worker.attendance[date];
 
-        text +=
-            date +
-            " : " +
-            item.status.toUpperCase();
+let d = new Date(date);
+
+let showDate =
+    d.toLocaleDateString("en-GB",{
+        day:"2-digit",
+        month:"short",
+        year:"numeric"
+    });
+
+let status = item.status.toUpperCase();
+
+if(status=="PRESENT") status="P";
+if(status=="ABSENT") status="A";
+if(status=="HALF") status="H";
+
+text +=
+    showDate +
+    " : " +
+    status;
 
         if(item.ot>0){
 
@@ -766,6 +782,37 @@ function showHistory(index){
         text += "\n";
 
     });
+
+if(worker.paymentHistory && worker.paymentHistory.length){
+
+    text += "\n\n💵 Payment History\n\n";
+
+    worker.paymentHistory.forEach(function(item){
+
+let d = new Date(item.date);
+
+let showDate = d.toLocaleDateString("en-GB",{
+    day:"2-digit",
+    month:"short",
+    year:"numeric"
+});
+
+let showTime = d.toLocaleTimeString("en-US",{
+    hour:"2-digit",
+    minute:"2-digit",
+    hour12:true
+});
+
+text +=
+    showDate + " " +
+    showTime +
+    "  ₹" +
+    item.amount +
+    "\n";
+
+    });
+
+}
 
     alert(text);
 
@@ -916,6 +963,86 @@ function closePinManager(){
         Keyboard.hide();
 
     }
+
+}
+
+let selectedPaidWorker = -1;
+
+function openPaidDialog(index){
+
+    selectedPaidWorker = index;
+
+    document.getElementById("paidInput").value = "";
+
+    document.getElementById("paidModal").style.display = "flex";
+
+    setTimeout(function(){
+
+        document.getElementById("paidInput").focus();
+
+    },100);
+
+}
+
+function closePaidDialog(){
+
+    document.getElementById("paidModal").style.display = "none";
+
+    document.getElementById("paidInput").value = "";
+
+    if(window.Keyboard && Keyboard.hide){
+
+        Keyboard.hide();
+
+    }
+
+}
+
+function savePaidAmount(){
+
+    let amount = Number(
+        document.getElementById("paidInput").value
+    );
+
+    if(amount <= 0){
+
+        alert("Enter valid amount");
+        return;
+
+    }
+
+    let worker = workers[selectedPaidWorker];
+
+    let hourlyRate = worker.wage / 8;
+
+    let salary =
+        (worker.presentDays * worker.wage) +
+        (worker.totalOT * hourlyRate);
+
+    let balance = salary - (worker.paid || 0);
+
+    if(amount > balance){
+
+        alert("Amount cannot be greater than Balance");
+        return;
+
+    }
+
+    worker.paid = (worker.paid || 0) + amount;
+
+    worker.paymentHistory.push({
+
+        amount: amount,
+
+        date: new Date().toLocaleString()
+
+    });
+
+    saveWorkers();
+
+    renderWorkers();
+
+    closePaidDialog();
 
 }
 
