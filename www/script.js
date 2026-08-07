@@ -459,14 +459,7 @@ function markDateHalfDay(){
 
     attendanceData[selectedDate].status = "half";
 
-    workers[selectedAttendanceWorker].attendance =
-        attendanceData;
-
-    saveWorkers();
-
-    renderCalendar();
-
-    closeDateAction();
+    updateAttendance();
 
 }
 
