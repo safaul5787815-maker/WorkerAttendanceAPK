@@ -836,6 +836,25 @@ function openSettings(){
         "settingsModal"
     ).style.display = "flex";
 
+    let btn =
+        document.getElementById("fingerprintBtn");
+
+    if(btn){
+
+        if(localStorage.getItem("fingerprintEnabled") === "true"){
+
+            btn.innerHTML =
+                "👆 Fingerprint Lock : ON";
+
+        }else{
+
+            btn.innerHTML =
+                "👆 Fingerprint Lock : OFF";
+
+        }
+
+    }
+
 }
 
 function closeSettings(){
@@ -1056,7 +1075,7 @@ function enablePinLock(){
 
 }
 
-function enableFingerprint(){
+function toggleFingerprint(){
 
     if(!window.Fingerprint){
 
@@ -1065,56 +1084,66 @@ function enableFingerprint(){
 
     }
 
-    Fingerprint.isAvailable(
+    let enabled =
+        localStorage.getItem("fingerprintEnabled") === "true";
 
-        function(){
+    // OFF → ON
+    if(!enabled){
+
+        Fingerprint.isAvailable(function(){
 
             Fingerprint.show({
 
                 title:"Enable Fingerprint",
-
                 subtitle:"Worker Attendance",
-
                 description:"Touch fingerprint sensor",
-
                 disableBackup:true
 
-            },
-
-            function(){
+            },function(){
 
                 localStorage.setItem(
                     "fingerprintEnabled",
                     "true"
                 );
 
-                alert(
-                    "Fingerprint Enabled Successfully"
-                );
+                document.getElementById("fingerprintBtn").innerHTML =
+                    "👆 Fingerprint Lock : ON";
+
+                alert("Fingerprint Enabled");
 
                 closeSettings();
 
-            },
+            },function(error){
 
-            function(error){
-
-                alert(
-                    "Fingerprint Failed\n" + error
-                );
+                alert("Fingerprint Failed\n"+error);
 
             });
 
-        },
+        },function(){
 
-        function(){
+            alert("Fingerprint not available");
 
-            alert(
-                "Fingerprint not available on this device"
-            );
+        });
+
+    }
+
+    // ON → OFF
+    else{
+
+        if(confirm("Disable Fingerprint Lock?")){
+
+            localStorage.removeItem("fingerprintEnabled");
+
+            document.getElementById("fingerprintBtn").innerHTML =
+                "👆 Fingerprint Lock : OFF";
+
+            alert("Fingerprint Disabled");
+
+            closeSettings();
 
         }
 
-    );
+    }
 
 }
 
