@@ -99,11 +99,21 @@ function checkPin(){
 
     }
 
-    if(pin===savedPin){
+if(pin===savedPin){
 
-        document.getElementById("pinModal").style.display="none";
+    document.getElementById("pinInput").blur();
 
-    }else{
+    document.getElementById("pinInput").value = "";
+
+    document.getElementById("pinModal").style.display = "none";
+
+    setTimeout(function(){
+
+        document.activeElement.blur();
+
+    },100);
+
+}else{
 
         alert("Wrong PIN");
 
