@@ -287,21 +287,15 @@ function closeAttendance(){
 function renderCalendar(){
 
     const grid=document.getElementById("calendarGrid");
-
     grid.innerHTML="";
 
     const days=["Sun","Mon","Tue","Wed","Thu","Fri","Sat"];
 
-    days.forEach(d=>{
-
+    days.forEach(day=>{
         let h=document.createElement("div");
-
         h.className="day-name";
-
-        h.innerHTML=d;
-
+        h.textContent=day;
         grid.appendChild(h);
-
     });
 
     const monthNames=[
@@ -310,28 +304,20 @@ function renderCalendar(){
         "September","October","November","December"
     ];
 
-    document.getElementById("calendarTitle").innerHTML=
+    document.getElementById("calendarTitle").textContent=
         monthNames[currentMonth]+" "+currentYear;
 
     let firstDay=new Date(currentYear,currentMonth,1).getDay();
-
-    let totalDays=new Date(
-        currentYear,
-        currentMonth+1,
-        0
-    ).getDate();
+    let totalDays=new Date(currentYear,currentMonth+1,0).getDate();
 
     for(let i=0;i<firstDay;i++){
-
         grid.appendChild(document.createElement("div"));
-
     }
 
+    let today=new Date();
+    today.setHours(0,0,0,0);
+
     for(let day=1;day<=totalDays;day++){
-
-        let box=document.createElement("div");
-
-        box.className="calendar-day";
 
         let dateKey=
             currentYear+"-"+
@@ -340,48 +326,64 @@ function renderCalendar(){
 
         let item=attendanceData[dateKey];
 
+        let box=document.createElement("div");
+        box.className="calendar-day";
+
+        if(item){
+
+            if(item.status==="present"){
+                box.style.background="#4CAF50";
+                box.style.color="#fff";
+            }
+
+            if(item.status==="absent"){
+                box.style.background="#F44336";
+                box.style.color="#fff";
+            }
+
+            if(item.status==="half"){
+                box.style.background="#FFD54F";
+                box.style.color="#000";
+            }
+
+        }
+
+        let html="<div>"+day+"</div>";
+
         if(item){
 
             if(item.status==="present")
-                box.classList.add("present-day");
+                html+="<small>P</small>";
 
             if(item.status==="absent")
-                box.classList.add("absent-day");
+                html+="<small>A</small>";
+
+            if(item.status==="half")
+                html+="<small>H</small>";
+
+            if(item.ot>0)
+                html+="<small>OT:"+item.ot+"h</small>";
 
         }
 
-        box.innerHTML=day;
+        box.innerHTML=html;
 
-        if(item && item.ot>0){
+        box.onclick=()=>{
 
-            box.innerHTML+=
-            "<small>OT:"+item.ot+"h</small>";
+            let selected=new Date(dateKey);
+            selected.setHours(0,0,0,0);
 
-        }
+            if(selected>today){
+                return;
+            }
 
-box.onclick=()=>{
+            selectedDate=dateKey;
 
-    let today = new Date();
-    today.setHours(0,0,0,0);
+            document.getElementById("selectedDateTitle").innerHTML=dateKey;
 
-    let selected = new Date(dateKey);
-    selected.setHours(0,0,0,0);
+            document.getElementById("dateActionModal").style.display="flex";
 
-    if(selected > today){
-        return;
-    }
-
-    selectedDate = dateKey;
-
-    document.getElementById(
-        "selectedDateTitle"
-    ).innerHTML = dateKey;
-
-    document.getElementById(
-        "dateActionModal"
-    ).style.display = "flex";
-
-};
+        };
 
         grid.appendChild(box);
 
@@ -447,6 +449,27 @@ function markDateAbsent(){
 
 }
 
+function markDateHalfDay(){
+
+    attendanceData[selectedDate] =
+        attendanceData[selectedDate] || {
+            status:"half",
+            ot:0
+        };
+
+    attendanceData[selectedDate].status = "half";
+
+    workers[selectedAttendanceWorker].attendance =
+        attendanceData;
+
+    saveWorkers();
+
+    renderCalendar();
+
+    closeDateAction();
+
+}
+
 function addDateOT(){
 
     let ot = prompt("Enter OT Hours");
@@ -478,23 +501,32 @@ function updateAttendance(){
     workers[selectedAttendanceWorker].attendance =
         attendanceData;
 
-    let present=0;
-    let totalOT=0;
+let present = 0;
+let halfDays = 0;
+let totalOT = 0;
 
-    Object.values(attendanceData).forEach(item=>{
+Object.values(attendanceData).forEach(item=>{
 
-        if(item.status==="present")
-            present++;
+    if(item.status==="present"){
+        present++;
+    }
 
-        totalOT += item.ot || 0;
+    if(item.status==="half"){
+        halfDays++;
+    }
 
-    });
+    totalOT += item.ot || 0;
 
-    workers[selectedAttendanceWorker].presentDays =
-        present;
+});
 
-    workers[selectedAttendanceWorker].totalOT =
-        totalOT;
+workers[selectedAttendanceWorker].presentDays =
+    present + (halfDays * 0.5);
+
+workers[selectedAttendanceWorker].halfDays =
+    halfDays;
+
+workers[selectedAttendanceWorker].totalOT =
+    totalOT;
 
     saveWorkers();
 
@@ -722,23 +754,29 @@ function downloadWorkerPDF(index, selectedMonth){
 
     });
 
-    let presentDays=0;
-    let totalOT=0;
+let presentDays = 0;
+let halfDays = 0;
+let totalOT = 0;
 
-    Object.values(attendance).forEach(item=>{
+Object.values(attendance).forEach(item=>{
 
-        if(item.status==="present")
-            presentDays++;
+    if(item.status==="present"){
+        presentDays++;
+    }
 
-        totalOT += item.ot || 0;
+    if(item.status==="half"){
+        halfDays++;
+    }
 
-    });
+    totalOT += item.ot || 0;
 
-    let hourlyRate = worker.wage / 8;
+});
 
-    let salary =
-        (presentDays * worker.wage) +
-        (totalOT * hourlyRate);
+let hourlyRate = worker.wage / 8;
+
+let salary =
+    ((presentDays + (halfDays * 0.5)) * worker.wage) +
+    (totalOT * hourlyRate);
 
 const monthNames = [
 "January","February","March","April",
@@ -807,19 +845,20 @@ doc.setFontSize(11);
 doc.text("Worker Name : " + worker.name,20,68);
 doc.text("Daily Rate  : Rs." + worker.wage,20,76);
 
-let absentDays =
-new Date(currentYear,currentMonth+1,0).getDate() - presentDays;
-
 doc.text("Present Days : " + presentDays,110,68);
-doc.text("Absent Days : " + absentDays,110,76);
+doc.text("Half Days : " + halfDays,110,76);
 
-doc.text("Total OT : " + totalOT + "h",20,84);
-doc.text("Total Salary : Rs." + Math.round(salary),110,84);
+doc.text("Absent Days : " + absentDays,20,84);
+doc.text("Total OT : " + totalOT + "h",110,84);
+
+doc.text("Total Salary : Rs." + Math.round(salary),20,92);
+
+doc.line(20,100,190,100);
 
 
-    doc.line(20,96,190,96);
+    doc.line(20,100,190,100);
 
-    let y=105;
+    let y=109;
 
 doc.setFont("helvetica","bold");
 doc.setFontSize(14);
@@ -917,17 +956,22 @@ if(item){
 doc.setFontSize(17);
 doc.setFont("helvetica","bold");
 
-    if(item.status==="present"){
+if(item.status==="present"){
 
-        doc.setTextColor(0,130,0);
-        doc.text("P", x+18, yy+6);
+    doc.setTextColor(0,130,0);
+    doc.text("P", x+18, yy+6);
 
-    }else{
+}else if(item.status==="half"){
 
-        doc.setTextColor(220,0,0);
-        doc.text("A", x+18, yy+6);
+    doc.setTextColor(255,170,0);
+    doc.text("H", x+18, yy+6);
 
-    }
+}else{
+
+    doc.setTextColor(220,0,0);
+    doc.text("A", x+18, yy+6);
+
+}
 
     if(item.ot>0){
 
