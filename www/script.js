@@ -778,6 +778,13 @@ let salary =
     ((presentDays + (halfDays * 0.5)) * worker.wage) +
     (totalOT * hourlyRate);
 
+let absentDays =
+    new Date(
+        parseInt(selectedMonth.split("-")[0]),
+        parseInt(selectedMonth.split("-")[1]),
+        0
+    ).getDate() - presentDays - halfDays;
+
 const monthNames = [
 "January","February","March","April",
 "May","June","July","August",
@@ -854,9 +861,6 @@ doc.text("Total OT : " + totalOT + "h",110,84);
 doc.text("Total Salary : Rs." + Math.round(salary),20,92);
 
 doc.line(20,100,190,100);
-
-
-    doc.line(20,100,190,100);
 
     let y=109;
 
@@ -1032,10 +1036,22 @@ doc.text(
 
 doc.setTextColor(0,0,0);
 // Create PDF Blob
-const pdfBlob = doc.output("blob");
-
 const fileName =
     worker.name + "_" + selectedMonth + ".pdf";
+
+// Browser
+if(!window.cordova){
+
+    doc.save(fileName);
+
+    closeMonthSelector();
+
+    return;
+
+}
+
+// Android
+const pdfBlob = doc.output("blob");
 
 window.resolveLocalFileSystemURL(
     cordova.file.cacheDirectory,
