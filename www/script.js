@@ -359,19 +359,29 @@ function renderCalendar(){
 
         }
 
-        box.onclick=()=>{
+box.onclick=()=>{
 
-            selectedDate=dateKey;
+    let today = new Date();
+    today.setHours(0,0,0,0);
 
-            document.getElementById(
-                "selectedDateTitle"
-            ).innerHTML=dateKey;
+    let selected = new Date(dateKey);
+    selected.setHours(0,0,0,0);
 
-            document.getElementById(
-                "dateActionModal"
-            ).style.display="flex";
+    if(selected > today){
+        return;
+    }
 
-        };
+    selectedDate = dateKey;
+
+    document.getElementById(
+        "selectedDateTitle"
+    ).innerHTML = dateKey;
+
+    document.getElementById(
+        "dateActionModal"
+    ).style.display = "flex";
+
+};
 
         grid.appendChild(box);
 
