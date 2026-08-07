@@ -13,6 +13,66 @@ let attendanceData = {};
 let currentYear = new Date().getFullYear();
 let currentMonth = new Date().getMonth();
 
+// PIN Lock
+
+let savedPin =
+    localStorage.getItem("appPin") || "";
+
+window.addEventListener("load",function(){
+
+    savedPin = localStorage.getItem("appPin") || "";
+
+    if(savedPin===""){
+        return;
+    }
+
+    document.getElementById("pinModal").style.display="flex";
+
+    document.getElementById("pinTitle").innerHTML =
+    "Enter PIN";
+
+});
+
+function checkPin(){
+
+    let pin =
+        document.getElementById("pinInput").value;
+
+    if(pin.length!=4){
+
+        alert("Enter 4 Digit PIN");
+        return;
+
+    }
+
+    if(savedPin===""){
+
+        localStorage.setItem("appPin",pin);
+
+        savedPin=pin;
+
+        alert("PIN Created");
+
+        document.getElementById("pinModal").style.display="none";
+
+        return;
+
+    }
+
+    if(pin===savedPin){
+
+        document.getElementById("pinModal").style.display="none";
+
+    }else{
+
+        alert("Wrong PIN");
+
+        document.getElementById("pinInput").value="";
+
+    }
+
+}
+
 function saveWorkers(){
     localStorage.setItem("workers", JSON.stringify(workers));
 }
@@ -727,6 +787,232 @@ function closeMonthSelector(){
     document.getElementById(
         "monthSelectorModal"
     ).style.display = "none";
+
+}
+
+function openSettings(){
+
+    document.getElementById(
+        "settingsModal"
+    ).style.display = "flex";
+
+}
+
+function closeSettings(){
+
+    document.getElementById(
+        "settingsModal"
+    ).style.display = "none";
+
+}
+
+function changePin(){
+
+    let oldPin = localStorage.getItem("appPin") || "";
+
+    let current = prompt("Enter Current PIN");
+
+    if(current === null) return;
+
+    if(current !== oldPin){
+
+        alert("Wrong PIN");
+        return;
+
+    }
+
+    let newPin = prompt("Enter New PIN");
+
+    if(newPin === null) return;
+
+    if(newPin.length < 4){
+
+        alert("PIN must be at least 4 digits");
+        return;
+
+    }
+
+    localStorage.setItem("appPin", newPin);
+
+    alert("PIN Changed Successfully");
+
+    closeSettings();
+
+}
+
+function removePin(){
+
+    let pin = localStorage.getItem("appPin") || "";
+
+    let current = prompt("Enter Current PIN");
+
+    if(current === null) return;
+
+    if(current !== pin){
+
+        alert("Wrong PIN");
+        return;
+
+    }
+
+    if(confirm("Remove PIN Lock?")){
+
+        localStorage.removeItem("appPin");
+
+        alert("PIN Removed Successfully");
+
+        closeSettings();
+
+    }
+
+}
+
+function backupData(){
+
+    let backup = {
+
+        workers: workers,
+
+        pin: localStorage.getItem("appPin") || ""
+
+    };
+
+    let text = JSON.stringify(backup, null, 2);
+
+    let blob = new Blob(
+        [text],
+        {type:"application/json"}
+    );
+
+    let link = document.createElement("a");
+
+    link.href = URL.createObjectURL(blob);
+
+    link.download = "WorkerAttendance_Backup.json";
+
+    link.click();
+
+    URL.revokeObjectURL(link.href);
+
+    closeSettings();
+
+}
+
+function restoreData(){
+
+    document.getElementById(
+        "restoreFile"
+    ).click();
+
+}
+
+function restoreFileSelected(event){
+
+    let file = event.target.files[0];
+
+    if(!file) return;
+
+    let reader = new FileReader();
+
+    reader.onload = function(e){
+
+        try{
+
+            let backup =
+                JSON.parse(e.target.result);
+
+            if(backup.workers){
+
+                workers = backup.workers;
+
+                localStorage.setItem(
+                    "workers",
+                    JSON.stringify(workers)
+                );
+
+            }
+
+            if(backup.pin){
+
+                localStorage.setItem(
+                    "appPin",
+                    backup.pin
+                );
+
+                savedPin = backup.pin;
+
+            }
+
+            saveWorkers();
+
+            renderWorkers();
+
+            alert("Backup Restored Successfully");
+
+            closeSettings();
+
+        }catch(err){
+
+            alert("Invalid Backup File");
+
+        }
+
+    };
+
+    reader.readAsText(file);
+
+}
+
+function aboutApp(){
+
+    alert(
+        "👷 Worker Attendance App\n\n" +
+        "Version : 3.0\n\n" +
+        "Developer : Safaul Ansari\n\n" +
+        "Features:\n" +
+        "✔ Worker Management\n" +
+        "✔ Attendance Calendar\n" +
+        "✔ Salary Calculation\n" +
+        "✔ Half Day\n" +
+        "✔ Overtime\n" +
+        "✔ PDF Report\n" +
+        "✔ Excel Export\n" +
+        "✔ PIN Lock\n" +
+        "✔ Backup & Restore\n\n" +
+        "© 2026"
+    );
+
+}
+
+function enablePinLock(){
+
+    let pin = localStorage.getItem("appPin");
+
+    if(pin){
+
+        alert("PIN Lock is already enabled");
+        return;
+
+    }
+
+    let newPin = prompt("Create 4 Digit PIN");
+
+    if(newPin === null) return;
+
+    if(newPin.length != 4){
+
+        alert("PIN must be exactly 4 digits");
+        return;
+
+    }
+
+    localStorage.setItem("appPin", newPin);
+
+    savedPin = newPin;
+
+    alert("PIN Lock Enabled Successfully");
+
+    closeSettings();
 
 }
 

@@ -16,11 +16,22 @@
 
 <div class="container">
 
-    <div class="profile">
-        <img src="profile.png" class="profile-img">
-    </div>
+<div class="top-bar">
 
     <h1>👷 Worker Attendance App</h1>
+
+<button class="top-menu-btn"
+        onclick="openSettings(event)">
+    Settings
+</button>
+
+</div>
+
+</div>
+
+<div class="profile">
+    <img src="profile.png" class="profile-img">
+</div>
 
     <div class="dashboard">
 
@@ -166,8 +177,81 @@
 
 </div>
 
+<!-- PIN LOCK -->
+
+<div id="pinModal" class="attendance-modal">
+
+    <div class="attendance-box">
+
+        <h2 id="pinTitle">Enter PIN</h2>
+
+        <input
+            id="pinInput"
+            type="password"
+            maxlength="4"
+            placeholder="4 Digit PIN">
+
+        <br><br>
+
+        <button onclick="checkPin()">
+            Unlock
+        </button>
+
+    </div>
+
+</div>
+
+<!-- Settings Modal -->
+
+<div id="settingsModal" class="attendance-modal">
+
+    <div class="attendance-box">
+
+        <h2>⚙️ Settings</h2>
+
+        <button onclick="enablePinLock()">
+            🔐 Enable PIN Lock
+        </button>
+
+        <button onclick="changePin()">
+            🔑 Change PIN
+        </button>
+
+        <button onclick="removePin()">
+            ❌ Remove PIN
+        </button>
+
+        <button onclick="backupData()">
+            💾 Backup Data
+        </button>
+
+        <button onclick="restoreData()">
+            📂 Restore Data
+        </button>
+
+        <button onclick="aboutApp()">
+            ℹ️ About App
+        </button>
+
+        <br>
+
+        <button onclick="closeSettings()">
+            Close
+        </button>
+
+    </div>
+
+</div>
+
 <script src="script.js"></script>
 <script src="cordova.js"></script>
+
+<input
+    type="file"
+    id="restoreFile"
+    accept=".json"
+    style="display:none"
+    onchange="restoreFileSelected(event)">
 
 </body>
 </html>
