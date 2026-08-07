@@ -101,17 +101,19 @@ function checkPin(){
 
 if(pin===savedPin){
 
-    document.getElementById("pinInput").blur();
+    let input = document.getElementById("pinInput");
 
-    document.getElementById("pinInput").value = "";
+    input.value = "";
+
+    input.blur();
+
+    if(window.Keyboard && Keyboard.hide){
+
+        Keyboard.hide();
+
+    }
 
     document.getElementById("pinModal").style.display = "none";
-
-    setTimeout(function(){
-
-        document.activeElement.blur();
-
-    },100);
 
 }else{
 
