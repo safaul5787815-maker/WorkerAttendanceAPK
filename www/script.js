@@ -1016,6 +1016,68 @@ function enablePinLock(){
 
 }
 
+function enableFingerprint(){
+
+    if(!window.Fingerprint){
+
+        alert("Fingerprint is available only in Android App");
+        return;
+
+    }
+
+    Fingerprint.isAvailable(
+
+        function(){
+
+            Fingerprint.show({
+
+                title:"Enable Fingerprint",
+
+                subtitle:"Worker Attendance",
+
+                description:"Touch fingerprint sensor",
+
+                disableBackup:true
+
+            },
+
+            function(){
+
+                localStorage.setItem(
+                    "fingerprintEnabled",
+                    "true"
+                );
+
+                alert(
+                    "Fingerprint Enabled Successfully"
+                );
+
+                closeSettings();
+
+            },
+
+            function(error){
+
+                alert(
+                    "Fingerprint Failed\n" + error
+                );
+
+            });
+
+        },
+
+        function(){
+
+            alert(
+                "Fingerprint not available on this device"
+            );
+
+        }
+
+    );
+
+}
+
 function downloadWorkerPDF(index, selectedMonth){
 
     const { jsPDF } = window.jspdf;
