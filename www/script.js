@@ -1127,24 +1127,112 @@ function backupData(){
 
     };
 
-    let text = JSON.stringify(backup, null, 2);
+    let text =
+        JSON.stringify(backup, null, 2);
 
-    let blob = new Blob(
-        [text],
-        {type:"application/json"}
-    );
+    let fileName =
+        "WorkerAttendance_Backup.json";
 
-    let link = document.createElement("a");
+    // Android APK
+    if(window.cordova && window.resolveLocalFileSystemURL){
 
-    link.href = URL.createObjectURL(blob);
+        let path =
+            cordova.file.externalRootDirectory +
+            "Download/";
 
-    link.download = "WorkerAttendance_Backup.json";
+        window.resolveLocalFileSystemURL(
+            path,
+            function(dir){
+
+                dir.getFile(
+                    fileName,
+                    {create:true},
+                    function(fileEntry){
+
+                        fileEntry.createWriter(
+                            function(writer){
+
+                                writer.onwriteend =
+                                function(){
+
+                                    alert(
+                                        "Backup saved successfully in Downloads"
+                                    );
+
+                                    closeSettings();
+
+                                };
+
+                                writer.onerror =
+                                function(error){
+
+                                    alert(
+                                        "Backup Save Error"
+                                    );
+
+                                };
+
+                                let blob =
+                                    new Blob(
+                                        [text],
+                                        {
+                                            type:
+                                            "application/json"
+                                        }
+                                    );
+
+                                writer.write(blob);
+
+                            }
+                        );
+
+                    },
+                    function(){
+
+                        alert(
+                            "Cannot create backup file"
+                        );
+
+                    }
+                );
+
+            },
+            function(){
+
+                alert(
+                    "Downloads folder not found"
+                );
+
+            }
+        );
+
+        return;
+
+    }
+
+    // Browser
+    let blob =
+        new Blob(
+            [text],
+            {
+                type:"application/json"
+            }
+        );
+
+    let link =
+        document.createElement("a");
+
+    link.href =
+        URL.createObjectURL(blob);
+
+    link.download =
+        fileName;
 
     link.click();
 
-    URL.revokeObjectURL(link.href);
-
-    closeSettings();
+    URL.revokeObjectURL(
+        link.href
+    );
 
 }
 
