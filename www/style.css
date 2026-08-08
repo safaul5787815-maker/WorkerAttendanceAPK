@@ -468,3 +468,40 @@ table td{
     font-weight:bold;
     cursor:pointer;
 }
+
+.paid-date-row{
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    gap:8px;
+    width:100%;
+}
+
+.paid-date-row{
+    display:flex;
+    flex-direction:row;
+    align-items:center;
+    justify-content:center;
+    gap:6px;
+    width:100%;
+}
+
+.paid-date-row input{
+    width:65px !important;
+    margin:10px 0 !important;
+    padding:12px 4px !important;
+    text-align:center;
+    box-sizing:border-box;
+}
+
+.paid-date-row input:last-of-type{
+    width:85px !important;
+}
+
+.paid-date-row span{
+    width:auto;
+    margin:0;
+    font-size:22px;
+    font-weight:bold;
+}
+

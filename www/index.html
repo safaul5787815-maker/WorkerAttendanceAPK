@@ -177,6 +177,26 @@
 
 </div>
 
+<!-- Payment Month Selector -->
+
+<div id="paymentMonthModal" class="attendance-modal">
+
+    <div class="attendance-box">
+
+        <h3>💵 Select Payment Month</h3>
+
+        <div id="paymentMonthList"></div>
+
+        <br>
+
+        <button onclick="closePaymentMonthSelector()">
+            Cancel
+        </button>
+
+    </div>
+
+</div>
+
 <!-- PIN LOCK -->
 
 <div id="pinModal" class="attendance-modal">
@@ -304,6 +324,39 @@
             type="number"
             inputmode="numeric"
             placeholder="Enter Amount">
+
+<div class="paid-date-row"
+     style="display:flex; flex-direction:row; align-items:center; justify-content:center; gap:6px;">
+
+    <input
+        id="paidDay"
+        type="number"
+        inputmode="numeric"
+        placeholder="DD"
+        maxlength="2"
+        style="width:65px !important; text-align:center; margin:10px 0;">
+
+    <span>/</span>
+
+    <input
+        id="paidMonth"
+        type="number"
+        inputmode="numeric"
+        placeholder="MM"
+        maxlength="2"
+        style="width:65px !important; text-align:center; margin:10px 0;">
+
+    <span>/</span>
+
+    <input
+        id="paidYear"
+        type="number"
+        inputmode="numeric"
+        placeholder="YYYY"
+        maxlength="4"
+        style="width:85px !important; text-align:center; margin:10px 0;">
+
+</div>
 
         <br><br>
 

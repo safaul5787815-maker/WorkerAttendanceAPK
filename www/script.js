@@ -366,7 +366,7 @@ function menuHistory(){
 
     document.getElementById("popupMenu").style.display="none";
 
-    showHistory(selectedWorker);
+    showPaymentMonthSelector(selectedWorker);
 
 }
 
@@ -719,7 +719,119 @@ function menuHistory(){
         "popupMenu"
     ).style.display="none";
 
-    showHistory(selectedWorker);
+    showPaymentMonthSelector(selectedWorker);
+
+}
+
+function showPaymentMonthSelector(index){
+
+    let worker = workers[index];
+
+    let months = {};
+
+    (worker.paymentHistory || []).forEach(function(item){
+
+        let key = item.date.substring(0,7);
+
+        months[key] = true;
+
+    });
+
+    let html = "";
+
+    const monthNames = [
+        "January","February","March","April",
+        "May","June","July","August",
+        "September","October","November","December"
+    ];
+
+    Object.keys(months).sort().reverse().forEach(function(key){
+
+        let p = key.split("-");
+
+        let title =
+            monthNames[Number(p[1]) - 1] +
+            " " +
+            p[0];
+
+        html += `
+<button onclick="showPaymentHistory(${index},'${key}')">
+${title}
+</button><br><br>`;
+
+    });
+
+    if(html === ""){
+
+        html = "<p>No payment history found.</p>";
+
+    }
+
+    document.getElementById(
+        "paymentMonthList"
+    ).innerHTML = html;
+
+    document.getElementById(
+        "paymentMonthModal"
+    ).style.display = "flex";
+
+}
+
+function showPaymentHistory(index, selectedMonth){
+
+    let worker = workers[index];
+
+    let payments = (worker.paymentHistory || []).filter(function(item){
+
+        return item.date.substring(0,7) === selectedMonth;
+
+    });
+
+    let text =
+        worker.name +
+        "\n\n💵 Payment History\n\n";
+
+    if(payments.length === 0){
+
+        text += "No payment found for this month.";
+
+    }else{
+
+        payments.forEach(function(item){
+
+            let parts = item.date.split("-");
+
+            let showDate =
+                parts[2] + " " +
+                [
+                    "Jan","Feb","Mar","Apr",
+                    "May","Jun","Jul","Aug",
+                    "Sep","Oct","Nov","Dec"
+                ][Number(parts[1]) - 1] +
+                " " +
+                parts[0];
+
+            text +=
+                showDate +
+                "   ₹" +
+                item.amount +
+                "\n";
+
+        });
+
+    }
+
+    closePaymentMonthSelector();
+
+    alert(text);
+
+}
+
+function closePaymentMonthSelector(){
+
+    document.getElementById(
+        "paymentMonthModal"
+    ).style.display = "none";
 
 }
 
@@ -974,6 +1086,17 @@ function openPaidDialog(index){
 
     document.getElementById("paidInput").value = "";
 
+let today = new Date();
+
+document.getElementById("paidDay").value =
+    String(today.getDate()).padStart(2,"0");
+
+document.getElementById("paidMonth").value =
+    String(today.getMonth() + 1).padStart(2,"0");
+
+document.getElementById("paidYear").value =
+    today.getFullYear();
+
     document.getElementById("paidModal").style.display = "flex";
 
     setTimeout(function(){
@@ -1011,6 +1134,45 @@ function savePaidAmount(){
 
     }
 
+let day =
+    document.getElementById("paidDay").value;
+
+let month =
+    document.getElementById("paidMonth").value;
+
+let year =
+    document.getElementById("paidYear").value;
+
+if(day === "" || month === "" || year === ""){
+
+    alert("Please enter payment date");
+    return;
+
+}
+
+day = Number(day);
+month = Number(month);
+year = Number(year);
+
+let selectedDate =
+    new Date(year, month - 1, day);
+
+if(
+    selectedDate.getFullYear() !== year ||
+    selectedDate.getMonth() !== month - 1 ||
+    selectedDate.getDate() !== day
+){
+
+    alert("Please enter a valid date");
+    return;
+
+}
+
+let paidDate =
+    year + "-" +
+    String(month).padStart(2,"0") + "-" +
+    String(day).padStart(2,"0");
+
     let worker = workers[selectedPaidWorker];
 
     let hourlyRate = worker.wage / 8;
@@ -1019,7 +1181,8 @@ function savePaidAmount(){
         (worker.presentDays * worker.wage) +
         (worker.totalOT * hourlyRate);
 
-    let balance = salary - (worker.paid || 0);
+    let balance =
+        salary - (worker.paid || 0);
 
     if(amount > balance){
 
@@ -1028,13 +1191,20 @@ function savePaidAmount(){
 
     }
 
-    worker.paid = (worker.paid || 0) + amount;
+    worker.paid =
+        (worker.paid || 0) + amount;
+
+    if(!worker.paymentHistory){
+
+        worker.paymentHistory = [];
+
+    }
 
     worker.paymentHistory.push({
 
         amount: amount,
 
-        date: new Date().toLocaleString()
+        date: paidDate
 
     });
 
