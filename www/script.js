@@ -781,19 +781,28 @@ function showPaymentHistory(index, selectedMonth){
 
     let worker = workers[index];
 
-    let payments = (worker.paymentHistory || []).filter(function(item){
+    let payments = (worker.paymentHistory || [])
+        .map(function(item, originalIndex){
 
-        return item.date.substring(0,7) === selectedMonth;
+            return {
+                ...item,
+                originalIndex: originalIndex
+            };
 
-    });
+        })
+        .filter(function(item){
 
-    let text =
-        worker.name +
-        "\n\n💵 Payment History\n\n";
+            return item.date.substring(0,7) === selectedMonth;
+
+        });
+
+    let html =
+        "<h2>💵 Payment History</h2>";
 
     if(payments.length === 0){
 
-        text += "No payment found for this month.";
+        html +=
+            "<p>No payment found for this month.</p>";
 
     }else{
 
@@ -811,19 +820,236 @@ function showPaymentHistory(index, selectedMonth){
                 " " +
                 parts[0];
 
-            text +=
-                showDate +
-                "   ₹" +
-                item.amount +
-                "\n";
+            html += `
+<div class="payment-history-item">
+
+    <div>
+        <strong>${showDate}</strong>
+        <br>
+        <span>₹${item.amount}</span>
+    </div>
+
+    <div>
+
+        <button
+            onclick="editPayment(${index},${item.originalIndex},'${selectedMonth}')">
+            ✏️
+        </button>
+
+        <button
+            onclick="deletePayment(${index},${item.originalIndex},'${selectedMonth}')">
+            🗑
+        </button>
+
+    </div>
+
+</div>
+`;
 
         });
 
     }
 
-    closePaymentMonthSelector();
+    html += `
+<br>
 
-    alert(text);
+<button onclick="closePaymentHistory()">
+    Close
+</button>
+`;
+
+document.getElementById(
+    "paymentMonthModal"
+).style.display = "none";
+
+document.getElementById(
+    "paymentHistoryContent"
+).innerHTML = html;
+
+document.getElementById(
+    "paymentHistoryModal"
+).style.display = "flex";
+
+}
+
+function closePaymentHistory(){
+
+    document.getElementById(
+        "paymentHistoryModal"
+    ).style.display = "none";
+
+}
+
+function editPayment(workerIndex, paymentIndex, selectedMonth){
+
+    let worker = workers[workerIndex];
+
+    let payment = worker.paymentHistory[paymentIndex];
+
+    let amount = prompt(
+        "Enter new payment amount",
+        payment.amount
+    );
+
+    if(amount === null){
+        return;
+    }
+
+    amount = Number(amount);
+
+    if(amount <= 0){
+
+        alert("Enter valid amount");
+        return;
+
+    }
+
+    let parts = payment.date.split("-");
+
+    let day = parts[2];
+    let month = parts[1];
+    let year = parts[0];
+
+    let newDate = prompt(
+        "Enter date DD/MM/YYYY",
+        day + "/" + month + "/" + year
+    );
+
+    if(newDate === null){
+        return;
+    }
+
+    let dateParts = newDate.split("/");
+
+    if(dateParts.length !== 3){
+
+        alert("Use DD/MM/YYYY format");
+        return;
+
+    }
+
+    let newDay = Number(dateParts[0]);
+    let newMonth = Number(dateParts[1]);
+    let newYear = Number(dateParts[2]);
+
+    let checkDate =
+        new Date(newYear, newMonth - 1, newDay);
+
+    if(
+        checkDate.getFullYear() !== newYear ||
+        checkDate.getMonth() !== newMonth - 1 ||
+        checkDate.getDate() !== newDay
+    ){
+
+        alert("Please enter a valid date");
+        return;
+
+    }
+
+    let newPaid =
+        (worker.paid || 0) -
+        Number(payment.amount) +
+        amount;
+
+    let hourlyRate = worker.wage / 8;
+
+    let salary =
+        (worker.presentDays * worker.wage) +
+        (worker.totalOT * hourlyRate);
+
+    if(newPaid > salary){
+
+        alert(
+            "Payment cannot be greater than Salary"
+        );
+
+        return;
+
+    }
+
+    payment.amount = amount;
+
+    payment.date =
+        newYear + "-" +
+        String(newMonth).padStart(2,"0") + "-" +
+        String(newDay).padStart(2,"0");
+
+    worker.paid = newPaid;
+
+saveWorkers();
+
+renderWorkers();
+
+document.getElementById(
+    "paymentHistoryModal"
+).style.display = "none";
+
+alert("Payment Updated Successfully");
+
+setTimeout(function(){
+
+    showPaymentHistory(
+        workerIndex,
+        selectedMonth
+    );
+
+}, 100);
+
+}
+
+function deletePayment(workerIndex, paymentIndex, selectedMonth){
+
+    let worker =
+        workers[workerIndex];
+
+    let payment =
+        worker.paymentHistory[paymentIndex];
+
+    if(!payment){
+        return;
+    }
+
+    let confirmDelete = confirm(
+        "Delete payment of ₹" +
+        payment.amount +
+        "?"
+    );
+
+    if(!confirmDelete){
+        return;
+    }
+
+    worker.paid =
+        (worker.paid || 0) -
+        Number(payment.amount);
+
+    if(worker.paid < 0){
+        worker.paid = 0;
+    }
+
+    worker.paymentHistory.splice(
+        paymentIndex,
+        1
+    );
+
+    saveWorkers();
+
+    renderWorkers();
+
+    document.getElementById(
+        "paymentHistoryModal"
+    ).style.display = "none";
+
+    alert("Payment Deleted Successfully");
+
+    setTimeout(function(){
+
+        showPaymentHistory(
+            workerIndex,
+            selectedMonth
+        );
+
+    }, 100);
 
 }
 
