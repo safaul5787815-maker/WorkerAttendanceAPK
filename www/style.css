@@ -608,3 +608,37 @@ table td{
 #paidModal .attendance-box > button:first-of-type{
     margin-left: auto !important;
 }
+
+/* Worker Name List */
+
+.worker-name-card{
+    background:#fff;
+    border-radius:10px;
+    padding:16px 18px;
+    margin:8px 0;
+    font-size:18px;
+    font-weight:bold;
+    box-shadow:0 2px 8px rgba(0,0,0,.12);
+    cursor:pointer;
+    width:100%;
+    box-sizing:border-box;
+}
+
+.worker-name-card:active{
+    transform:scale(.98);
+}
+
+.single-worker-view{
+    display:none;
+    width:100%;
+    box-sizing:border-box;
+}
+
+.single-worker-view .worker-card{
+    width:100%;
+    box-sizing:border-box;
+}
+
+.worker-back-btn{
+    margin-bottom:10px;
+}

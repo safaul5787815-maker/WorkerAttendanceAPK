@@ -168,64 +168,13 @@ function renderWorkers(){
         totalSalary += salary;
 
         list.innerHTML += `
-<div class="worker-card">
+<div class="worker-name-card"
+     onclick="openWorkerCard(${index})">
 
-    <div class="worker-header">
-<span class="worker-name">👷 ${worker.name}</span>
-
-        <button class="menu-btn"
-        onclick="showMenu(${index},event)">⋮</button>
-    </div>
-
-<div class="worker-info">
-
-    <div>
-        <span class="worker-label">💰 Daily Wage</span>
-        <span class="worker-value">Rs.${worker.wage}</span>
-    </div>
-
-    <div>
-        <span class="worker-label">📅 Present</span>
-        <span class="worker-value">${worker.presentDays}</span>
-    </div>
-
-    <div>
-        <span class="worker-label">🕒 OT</span>
-        <span class="worker-value">${worker.totalOT}h</span>
-    </div>
-
-    <div>
-        <span class="worker-label">💵 Salary</span>
-        <span class="worker-value">Rs.${Math.round(salary)}</span>
-    </div>
-
-<div>
-    <span class="worker-label">💸 Paid</span>
-    <span class="worker-value">
-        Rs.${worker.paid || 0}
-    </span>
-</div>
-
-<div>
-    <span class="worker-label">💰 Balance</span>
-    <span class="worker-value">
-        Rs.${Math.round(salary - (worker.paid || 0))}
-    </span>
-</div>
-
-<button class="attendance-btn"
-onclick="openPaidDialog(${index})">
-    💵 Paid
-</button>
+    👷 ${worker.name}
 
 </div>
-
-    <button class="attendance-btn"
-    onclick="openAttendance(${index})">
-        Attendance
-    </button>
-
-</div>`;
+`;
 
     });
 
@@ -234,6 +183,145 @@ onclick="openPaidDialog(${index})">
 
     document.getElementById("dashboardSalary").innerHTML =
         Math.round(totalSalary);
+
+}
+
+function openWorkerCard(index){
+
+    let worker = workers[index];
+
+    if(!worker.presentDays) worker.presentDays = 0;
+    if(!worker.totalOT) worker.totalOT = 0;
+    if(!worker.attendance) worker.attendance = {};
+
+    let hourlyRate = worker.wage / 8;
+
+    let salary =
+        (worker.presentDays * worker.wage) +
+        (worker.totalOT * hourlyRate);
+
+    let content =
+        document.getElementById("singleWorkerContent");
+
+    content.innerHTML = `
+
+<div class="worker-card">
+
+    <div class="worker-header">
+
+        <span class="worker-name">
+            👷 ${worker.name}
+        </span>
+
+        <button class="menu-btn"
+        onclick="event.stopPropagation(); showMenu(${index},event)">
+            ⋮
+        </button>
+
+    </div>
+
+    <div class="worker-info">
+
+        <div>
+            <span class="worker-label">💰 Daily Wage</span>
+            <span class="worker-value">
+                Rs.${worker.wage}
+            </span>
+        </div>
+
+        <div>
+            <span class="worker-label">📅 Present</span>
+            <span class="worker-value">
+                ${worker.presentDays}
+            </span>
+        </div>
+
+        <div>
+            <span class="worker-label">🕒 OT</span>
+            <span class="worker-value">
+                ${worker.totalOT}h
+            </span>
+        </div>
+
+        <div>
+            <span class="worker-label">💵 Salary</span>
+            <span class="worker-value">
+                Rs.${Math.round(salary)}
+            </span>
+        </div>
+
+        <div>
+            <span class="worker-label">💸 Paid</span>
+            <span class="worker-value">
+                Rs.${worker.paid || 0}
+            </span>
+        </div>
+
+        <div>
+            <span class="worker-label">💰 Balance</span>
+            <span class="worker-value">
+                Rs.${Math.round(
+                    salary - (worker.paid || 0)
+                )}
+            </span>
+        </div>
+
+        <button class="attendance-btn"
+        onclick="openPaidDialog(${index})">
+            💵 Paid
+        </button>
+
+    </div>
+
+    <button class="attendance-btn"
+    onclick="openAttendance(${index})">
+        Attendance
+    </button>
+
+</div>
+`;
+
+document.querySelector(
+    ".container"
+).style.display = "none";
+
+document.getElementById(
+    "dashboardView"
+).style.display = "none";
+
+document.getElementById(
+    "singleWorkerView"
+).style.display = "block";
+
+}
+
+function closeWorkerCard(){
+
+document.getElementById(
+    "singleWorkerView"
+).style.display = "none";
+
+document.querySelector(
+    ".container"
+).style.display = "block";
+
+document.getElementById(
+    "dashboardView"
+).style.display = "block";
+
+renderWorkers();
+
+}
+
+function refreshWorkerCard(index){
+
+    renderWorkers();
+
+    setTimeout(function(){
+
+        openWorkerCard(index);
+
+    },50);
 
 }
 
@@ -636,7 +724,7 @@ workers[selectedAttendanceWorker].totalOT =
 
     saveWorkers();
 
-    renderWorkers();
+    refreshWorkerCard(selectedAttendanceWorker);
 
     renderCalendar();
 
@@ -978,22 +1066,13 @@ function editPayment(workerIndex, paymentIndex, selectedMonth){
 
 saveWorkers();
 
-renderWorkers();
-
 document.getElementById(
     "paymentHistoryModal"
 ).style.display = "none";
 
+refreshWorkerCard(workerIndex);
+
 alert("Payment Updated Successfully");
-
-setTimeout(function(){
-
-    showPaymentHistory(
-        workerIndex,
-        selectedMonth
-    );
-
-}, 100);
 
 }
 
@@ -1032,24 +1111,15 @@ function deletePayment(workerIndex, paymentIndex, selectedMonth){
         1
     );
 
-    saveWorkers();
+saveWorkers();
 
-    renderWorkers();
+document.getElementById(
+    "paymentHistoryModal"
+).style.display = "none";
 
-    document.getElementById(
-        "paymentHistoryModal"
-    ).style.display = "none";
+refreshWorkerCard(workerIndex);
 
-    alert("Payment Deleted Successfully");
-
-    setTimeout(function(){
-
-        showPaymentHistory(
-            workerIndex,
-            selectedMonth
-        );
-
-    }, 100);
+alert("Payment Deleted Successfully");
 
 }
 
@@ -1436,7 +1506,7 @@ let paidDate =
 
     saveWorkers();
 
-    renderWorkers();
+    refreshWorkerCard(selectedPaidWorker);
 
     closePaidDialog();
 
