@@ -787,6 +787,18 @@ function deleteWorker(index){
 
     saveWorkers();
 
+    document.getElementById(
+        "singleWorkerView"
+    ).style.display = "none";
+
+    document.querySelector(
+        ".container"
+    ).style.display = "block";
+
+    document.getElementById(
+        "dashboardView"
+    ).style.display = "block";
+
     renderWorkers();
 
 }
