@@ -41,7 +41,6 @@
     <preference name="AndroidCompileSdkVersion" value="36" />
 
     <edit-config file="app/src/main/AndroidManifest.xml" mode="merge" target="/manifest">
-        <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" android:maxSdkVersion="28" />
         <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" android:maxSdkVersion="32" />
     </edit-config>
 
