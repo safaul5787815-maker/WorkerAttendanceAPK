@@ -1630,8 +1630,12 @@ function backupData(){
                         fileEntry.createWriter(
                             function(writer){
 
+                                let writeFailed = false;
+
                                 writer.onwriteend =
                                 function(){
+
+                                    if(writeFailed) return;
 
                                     alert(
                                         "Backup saved successfully in Downloads"
@@ -1643,6 +1647,8 @@ function backupData(){
 
                                 writer.onerror =
                                 function(error){
+
+                                    writeFailed = true;
 
                                     alert(
                                         "Backup Save Error"
