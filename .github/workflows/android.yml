@@ -34,6 +34,11 @@ jobs:
       - name: Add Android platform
         run: cordova platform add android
 
+      - name: Fix duplicate storage permission
+        run: |
+          sed -i '/android:maxSdkVersion="32" android:name="android.permission.WRITE_EXTERNAL_STORAGE"/d' \
+          platforms/android/app/src/main/AndroidManifest.xml
+
       - name: Build Debug APK
         run: cordova build android
 
