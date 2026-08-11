@@ -41,8 +41,7 @@ jobs:
 
       - name: Build Debug APK
         run: |
-          cd platforms/android
-          ./gradlew assembleDebug
+          ./platforms/android/tools/gradlew -p platforms/android assembleDebug
 
       - name: Upload APK
         uses: actions/upload-artifact@v4
