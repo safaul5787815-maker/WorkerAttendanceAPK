@@ -1595,7 +1595,7 @@ function removePin(){
 
 }
 
-async function backupData(){
+function backupData(){
 
     let backup = {
 
@@ -1612,52 +1612,77 @@ async function backupData(){
         "WorkerAttendance_Backup.json";
 
     // Android APK
-    if(
-        window.cordova &&
-        cordova.plugins &&
-        cordova.plugins.safMediastore
-    ){
+    if(window.cordova && window.resolveLocalFileSystemURL){
 
-        try{
+        let path =
+            cordova.file.externalRootDirectory +
+            "Download/";
 
-            let bytes =
-                new TextEncoder().encode(text);
+        window.resolveLocalFileSystemURL(
+            path,
+            function(dir){
 
-            let binary = "";
+                dir.getFile(
+                    fileName,
+                    {create:true},
+                    function(fileEntry){
 
-            for(let i = 0; i < bytes.length; i++){
+                        fileEntry.createWriter(
+                            function(writer){
 
-                binary +=
-                    String.fromCharCode(bytes[i]);
+                                writer.onwriteend =
+                                function(){
+
+                                    alert(
+                                        "Backup saved successfully in Downloads"
+                                    );
+
+                                    closeSettings();
+
+                                };
+
+                                writer.onerror =
+                                function(error){
+
+                                    alert(
+                                        "Backup Save Error"
+                                    );
+
+                                };
+
+                                let blob =
+                                    new Blob(
+                                        [text],
+                                        {
+                                            type:
+                                            "application/json"
+                                        }
+                                    );
+
+                                writer.write(blob);
+
+                            }
+                        );
+
+                    },
+                    function(){
+
+                        alert(
+                            "Cannot create backup file"
+                        );
+
+                    }
+                );
+
+            },
+            function(){
+
+                alert(
+                    "Downloads folder not found"
+                );
 
             }
-
-            let base64Data =
-                btoa(binary);
-
-            await cordova.plugins.safMediastore.writeFile({
-
-                data: base64Data,
-
-                filename: fileName
-
-            });
-
-            alert(
-                "Backup saved successfully in Downloads"
-            );
-
-            closeSettings();
-
-        }
-        catch(error){
-
-            alert(
-                "Backup Save Error\n" +
-                JSON.stringify(error)
-            );
-
-        }
+        );
 
         return;
 
