@@ -40,7 +40,9 @@ jobs:
           platforms/android/app/src/main/AndroidManifest.xml
 
       - name: Build Debug APK
-        run: cordova build android
+        run: |
+          cd platforms/android
+          ./gradlew assembleDebug
 
       - name: Upload APK
         uses: actions/upload-artifact@v4
