@@ -2236,48 +2236,50 @@ closeMonthSelector();
 
 }
 
-document.addEventListener("backbutton", function () {
+document.addEventListener("deviceready", function () {
 
-    // Popup menu खुला है तो पहले बंद करें
-    let popup = document.getElementById("popupMenu");
+    document.addEventListener("backbutton", function () {
 
-    if (popup && popup.style.display !== "none") {
-        popup.style.display = "none";
-        return;
-    }
+        let popup = document.getElementById("popupMenu");
 
-    // Settings modal खुला है तो पहले बंद करें
-    let settings = document.getElementById("settingsModal");
-
-    if (settings && settings.style.display !== "none") {
-        closeSettings();
-        return;
-    }
-
-    // Worker detail खुला है तो Dashboard पर जाएँ
-    let singleWorker = document.getElementById("singleWorkerView");
-
-    if (singleWorker && singleWorker.style.display !== "none") {
-
-        singleWorker.style.display = "none";
-
-        let container = document.querySelector(".container");
-
-        if (container) {
-            container.style.display = "block";
+        if (popup && popup.style.display !== "none") {
+            popup.style.display = "none";
+            return;
         }
 
-        let dashboard = document.getElementById("dashboardView");
+        let settings = document.getElementById("settingsModal");
 
-        if (dashboard) {
-            dashboard.style.display = "block";
+        if (settings && settings.style.display !== "none") {
+            closeSettings();
+            return;
         }
 
-        return;
-    }
+        let singleWorker = document.getElementById("singleWorkerView");
 
-    // Dashboard पर हैं तो app बंद करें
-    navigator.app.exitApp();
+        if (singleWorker && singleWorker.style.display !== "none") {
+
+            singleWorker.style.display = "none";
+
+            let container = document.querySelector(".container");
+
+            if (container) {
+                container.style.display = "block";
+            }
+
+            let dashboard = document.getElementById("dashboardView");
+
+            if (dashboard) {
+                dashboard.style.display = "block";
+            }
+
+            return;
+        }
+
+        if (navigator.app && navigator.app.exitApp) {
+            navigator.app.exitApp();
+        }
+
+    }, false);
 
 }, false);
 
