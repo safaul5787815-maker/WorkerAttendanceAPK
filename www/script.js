@@ -505,18 +505,44 @@ function renderCalendar(){
         "September","October","November","December"
     ];
 
+    // Today's date
+    let today=new Date();
+    today.setHours(0,0,0,0);
+
+    let todayYear=today.getFullYear();
+    let todayMonth=today.getMonth();
+    let todayDay=today.getDate();
+
+    // Future month ko current month par lock karo
+    if(
+        currentYear > todayYear ||
+        (
+            currentYear === todayYear &&
+            currentMonth > todayMonth
+        )
+    ){
+
+        currentYear=todayYear;
+        currentMonth=todayMonth;
+
+    }
+
     document.getElementById("calendarTitle").textContent=
         monthNames[currentMonth]+" "+currentYear;
 
-    let firstDay=new Date(currentYear,currentMonth,1).getDay();
-    let totalDays=new Date(currentYear,currentMonth+1,0).getDate();
+    let firstDay=
+        new Date(currentYear,currentMonth,1).getDay();
+
+    let totalDays=
+        new Date(currentYear,currentMonth+1,0).getDate();
 
     for(let i=0;i<firstDay;i++){
-        grid.appendChild(document.createElement("div"));
-    }
 
-    let today=new Date();
-    today.setHours(0,0,0,0);
+        grid.appendChild(
+            document.createElement("div")
+        );
+
+    }
 
     for(let day=1;day<=totalDays;day++){
 
@@ -525,26 +551,64 @@ function renderCalendar(){
             String(currentMonth+1).padStart(2,"0")+"-"+
             String(day).padStart(2,"0");
 
-        let item=attendanceData[dateKey];
+        let selectedDateObj=
+            new Date(currentYear,currentMonth,day);
+
+        selectedDateObj.setHours(0,0,0,0);
+
+        // Future date
+        let isFutureDate =
+            selectedDateObj > today;
 
         let box=document.createElement("div");
+
         box.className="calendar-day";
+
+        // --------------------------------
+        // Future date = completely blank
+        // --------------------------------
+        if(isFutureDate){
+
+            box.innerHTML="<div>"+day+"</div>";
+
+            box.style.background="";
+            box.style.color="";
+
+            box.onclick=null;
+
+            grid.appendChild(box);
+
+            continue;
+
+        }
+
+        // --------------------------------
+        // Past / Today attendance
+        // --------------------------------
+
+        let item=attendanceData[dateKey];
 
         if(item){
 
             if(item.status==="present"){
+
                 box.style.background="#4CAF50";
                 box.style.color="#fff";
+
             }
 
             if(item.status==="absent"){
+
                 box.style.background="#F44336";
                 box.style.color="#fff";
+
             }
 
             if(item.status==="half"){
+
                 box.style.background="#FFD54F";
                 box.style.color="#000";
+
             }
 
         }
@@ -571,18 +635,15 @@ function renderCalendar(){
 
         box.onclick=()=>{
 
-            let selected=new Date(dateKey);
-            selected.setHours(0,0,0,0);
-
-            if(selected>today){
-                return;
-            }
-
             selectedDate=dateKey;
 
-            document.getElementById("selectedDateTitle").innerHTML=dateKey;
+            document.getElementById(
+                "selectedDateTitle"
+            ).innerHTML=dateKey;
 
-            document.getElementById("dateActionModal").style.display="flex";
+            document.getElementById(
+                "dateActionModal"
+            ).style.display="flex";
 
         };
 
@@ -612,14 +673,35 @@ function prevMonth(){
 
 function nextMonth(){
 
+    let today=new Date();
+
+    let todayYear=today.getFullYear();
+    let todayMonth=today.getMonth();
+
+    // Future month me jane se roko
+    if(
+        currentYear > todayYear ||
+        (
+            currentYear === todayYear &&
+            currentMonth >= todayMonth
+        )
+    ){
+
+        return;
+
+    }
+
     currentMonth++;
 
     if(currentMonth>11){
+
         currentMonth=0;
         currentYear++;
+
     }
 
     renderCalendar();
+
 }
 
 function markDatePresent(){
