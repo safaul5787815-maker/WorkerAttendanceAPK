@@ -588,6 +588,27 @@ function renderCalendar(){
 
         let item=attendanceData[dateKey];
 
+let futureDate = new Date(currentYear,currentMonth,day);
+futureDate.setHours(0,0,0,0);
+
+if(futureDate > today){
+
+    let box=document.createElement("div");
+
+    box.className="calendar-day";
+
+    box.style.background="#eeeeee";
+    box.style.color="#aaaaaa";
+    box.style.opacity="0.7";
+    box.style.cursor="default";
+
+    box.innerHTML="<div>"+day+"</div>";
+
+    grid.appendChild(box);
+
+    continue;
+}
+
         if(item){
 
             if(item.status==="present"){
