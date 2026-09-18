@@ -76,6 +76,32 @@ jobs:
           android {
               signingConfigs {
                   release {
-                      if (signingPropertiesFile.exists()) {
-                          storeFile file(signingProperties['storeFile'])
-                          storePassword signingProperties['storePassword
+                      storeFile file(signingProperties['storeFile'])
+                      storePassword signingProperties['storePassword']
+                      keyAlias signingProperties['keyAlias']
+                      keyPassword signingProperties['keyPassword']
+                  }
+              }
+
+              buildTypes {
+                  release {
+                      signingConfig signingConfigs.release
+                  }
+              }
+          }
+          EOF
+
+      - name: Build signed Release APK
+        run: cordova build android --release
+
+      - name: Rename APK
+        run: |
+          mkdir -p release
+          cp platforms/android/app/build/outputs/apk/release/app-release.apk \
+             release/WorkerAttendance.apk
+
+      - name: Upload APK
+        uses: actions/upload-artifact@v4
+        with:
+          name: WorkerAttendance-APK
+          path: release/WorkerAttendance.apk
