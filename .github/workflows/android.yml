@@ -40,7 +40,7 @@ jobs:
 
       - name: Fix duplicate storage permission
         run: |
-          sed -i '/android:maxSdkVersion="32" android:name="android.permission.WRITE_EXTERNAL_STORAGE"/d' \
+          sed -i '/android.permission.WRITE_EXTERNAL_STORAGE/d' \
           platforms/android/app/src/main/AndroidManifest.xml
 
       - name: Decode release keystore
