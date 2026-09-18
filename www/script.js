@@ -597,10 +597,11 @@ if(futureDate > today){
 
     box.className="calendar-day";
 
-    box.style.background="#eeeeee";
-    box.style.color="#aaaaaa";
-    box.style.opacity="0.7";
-    box.style.cursor="default";
+    box.style.background="#f5f5f5";
+    box.style.color="#c8c8c8";
+    box.style.opacity="0.45";
+    box.style.cursor="not-allowed";
+    box.style.pointerEvents="none";
 
     box.innerHTML="<div>"+day+"</div>";
 
