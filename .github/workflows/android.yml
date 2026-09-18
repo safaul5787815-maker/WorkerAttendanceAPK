@@ -38,10 +38,14 @@ jobs:
       - name: Add Android platform
         run: cordova platform add android
 
-      - name: Fix duplicate storage permission
-        run: |
-          sed -i '/android.permission.WRITE_EXTERNAL_STORAGE/d' \
-          platforms/android/app/src/main/AndroidManifest.xml
+- name: Fix duplicate storage permission
+  run: |
+    sed -i '/WRITE_EXTERNAL_STORAGE/d' \
+    platforms/android/app/src/main/AndroidManifest.xml
+
+    echo "Remaining WRITE_EXTERNAL_STORAGE permissions:"
+    grep -n "WRITE_EXTERNAL_STORAGE" \
+    platforms/android/app/src/main/AndroidManifest.xml || true
 
       - name: Decode release keystore
         env:
