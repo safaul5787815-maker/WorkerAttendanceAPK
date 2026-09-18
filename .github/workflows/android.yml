@@ -49,50 +49,27 @@ jobs:
         run: |
           echo "$KEYSTORE_BASE64" | base64 --decode > "$RUNNER_TEMP/workerattendance-release.jks"
 
-      - name: Create release signing properties
+      - name: Create Cordova signing config
         env:
           KEYSTORE_PASSWORD: ${{ secrets.KEYSTORE_PASSWORD }}
           KEY_ALIAS: ${{ secrets.KEY_ALIAS }}
           KEY_PASSWORD: ${{ secrets.KEY_PASSWORD }}
         run: |
-          cat > platforms/android/release-signing.properties <<EOF
-          storeFile=$RUNNER_TEMP/workerattendance-release.jks
-          storePassword=$KEYSTORE_PASSWORD
-          keyAlias=$KEY_ALIAS
-          keyPassword=$KEY_PASSWORD
-          EOF
-
-      - name: Configure Gradle signing
-        run: |
-          cat >> platforms/android/build.gradle <<'EOF'
-
-          def signingPropertiesFile = file("release-signing.properties")
-          def signingProperties = new Properties()
-
-          if (signingPropertiesFile.exists()) {
-              signingProperties.load(new FileInputStream(signingPropertiesFile))
-          }
-
-          android {
-              signingConfigs {
-                  release {
-                      storeFile file(signingProperties['storeFile'])
-                      storePassword signingProperties['storePassword']
-                      keyAlias signingProperties['keyAlias']
-                      keyPassword signingProperties['keyPassword']
-                  }
+          cat > build.json <<EOF
+          {
+            "android": {
+              "release": {
+                "keystore": "$RUNNER_TEMP/workerattendance-release.jks",
+                "storePassword": "$KEYSTORE_PASSWORD",
+                "alias": "$KEY_ALIAS",
+                "password": "$KEY_PASSWORD"
               }
-
-              buildTypes {
-                  release {
-                      signingConfig signingConfigs.release
-                  }
-              }
+            }
           }
           EOF
 
       - name: Build signed Release APK
-        run: cordova build android --release
+        run: cordova build android --release --buildConfig=build.json
 
       - name: Rename APK
         run: |
