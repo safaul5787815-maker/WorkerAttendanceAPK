@@ -71,8 +71,20 @@ jobs:
           sed -i '/android.permission.WRITE_EXTERNAL_STORAGE/d' \
             platforms/android/app/src/main/AndroidManifest.xml
 
+      - name: Prepare Android
+        run: cordova prepare android
+
+      - name: Remove duplicate storage permission
+        run: |
+          sed -i '/WRITE_EXTERNAL_STORAGE/d' \
+            platforms/android/app/src/main/AndroidManifest.xml
+
+          echo "Remaining permission:"
+          grep -n "WRITE_EXTERNAL_STORAGE" \
+            platforms/android/app/src/main/AndroidManifest.xml || true
+
       - name: Build Release APK
-        run: cordova build android --release --buildConfig=build.json
+        run: cordova compile android --release --buildConfig=build.json
 
       - name: Prepare APK
         run: |
