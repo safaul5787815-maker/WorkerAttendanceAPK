@@ -37,6 +37,11 @@ jobs:
       - name: Add Android platform
         run: cordova platform add android
 
+- name: Fix duplicate storage permission
+  run: |
+    sed -i '/WRITE_EXTERNAL_STORAGE/d' \
+      platforms/android/app/src/main/AndroidManifest.xml
+
       - name: Fix duplicate storage permission
         run: |
           sed -i '/WRITE_EXTERNAL_STORAGE/d' \
