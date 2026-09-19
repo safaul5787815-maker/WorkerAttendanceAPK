@@ -37,10 +37,6 @@ jobs:
       - name: Add Android platform
         run: cordova platform add android
 
-      - name: Remove duplicate storage permission
-        run: |
-          sed -i '/WRITE_EXTERNAL_STORAGE/d' platforms/android/app/src/main/AndroidManifest.xml
-
       - name: Decode keystore
         env:
           KEYSTORE_BASE64: ${{ secrets.KEYSTORE_BASE64 }}
@@ -66,11 +62,6 @@ jobs:
           }
           EOF
 
-      - name: Remove duplicate storage permission
-        run: |
-          sed -i '/android.permission.WRITE_EXTERNAL_STORAGE/d' \
-            platforms/android/app/src/main/AndroidManifest.xml
-
       - name: Prepare Android
         run: cordova prepare android
 
@@ -86,24 +77,26 @@ jobs:
       - name: Build Release APK
         run: cordova compile android --release --buildConfig=build.json
 
-- name: Prepare APK
-  run: |
-    mkdir -p release
+      - name: Prepare APK
+        run: |
+          mkdir -p release
 
-    echo "=== APK files ==="
-    find platforms/android/app/build/outputs -type f \( -name "*.apk" -o -name "*.aab" \) -print
+          echo "=== APK files ==="
+          find platforms/android/app/build/outputs -type f \
+            -name "*.apk" -print
 
-    APK=$(find platforms/android/app/build/outputs/apk/release -type f -name "*.apk" | head -n 1)
+          APK=$(find platforms/android/app/build/outputs/apk/release \
+            -type f -name "*.apk" | head -n 1)
 
-    if [ -z "$APK" ]; then
-      echo "ERROR: Release APK not found"
-      exit 1
-    fi
+          if [ -z "$APK" ]; then
+            echo "ERROR: Release APK not found"
+            exit 1
+          fi
 
-    cp "$APK" release/WorkerAttendance.apk
+          cp "$APK" release/WorkerAttendance.apk
 
-    echo "APK copied:"
-    ls -lh release/WorkerAttendance.apk
+          echo "APK copied:"
+          ls -lh release/WorkerAttendance.apk
 
       - name: Upload APK
         uses: actions/upload-artifact@v4
