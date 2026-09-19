@@ -14,7 +14,7 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout source
+      - name: Checkout
         uses: actions/checkout@v4
 
       - name: Setup Java
@@ -23,41 +23,31 @@ jobs:
           distribution: temurin
           java-version: "17"
 
-      - name: Setup Node.js
+      - name: Setup Node
         uses: actions/setup-node@v4
         with:
           node-version: "20"
 
+      - name: Install dependencies
+        run: npm install
+
       - name: Install Cordova
         run: npm install -g cordova
-
-      - name: Install project dependencies
-        run: npm install
 
       - name: Add Android platform
         run: cordova platform add android
 
-- name: Fix duplicate storage permission
-  run: |
-    sed -i '/WRITE_EXTERNAL_STORAGE/d' \
-      platforms/android/app/src/main/AndroidManifest.xml
-
-      - name: Fix duplicate storage permission
+      - name: Remove duplicate storage permission
         run: |
-          sed -i '/WRITE_EXTERNAL_STORAGE/d' \
-            platforms/android/app/src/main/AndroidManifest.xml
+          sed -i '/WRITE_EXTERNAL_STORAGE/d' platforms/android/app/src/main/AndroidManifest.xml
 
-          echo "Remaining WRITE_EXTERNAL_STORAGE permissions:"
-          grep -n "WRITE_EXTERNAL_STORAGE" \
-            platforms/android/app/src/main/AndroidManifest.xml || true
-
-      - name: Decode release keystore
+      - name: Decode keystore
         env:
           KEYSTORE_BASE64: ${{ secrets.KEYSTORE_BASE64 }}
         run: |
           echo "$KEYSTORE_BASE64" | base64 --decode > "$RUNNER_TEMP/workerattendance-release.jks"
 
-      - name: Create Cordova signing config
+      - name: Create build config
         env:
           KEYSTORE_PASSWORD: ${{ secrets.KEYSTORE_PASSWORD }}
           KEY_ALIAS: ${{ secrets.KEY_ALIAS }}
@@ -76,10 +66,10 @@ jobs:
           }
           EOF
 
-      - name: Build signed Release APK
+      - name: Build Release APK
         run: cordova build android --release --buildConfig=build.json
 
-      - name: Rename APK
+      - name: Prepare APK
         run: |
           mkdir -p release
           cp platforms/android/app/build/outputs/apk/release/app-release.apk release/WorkerAttendance.apk
