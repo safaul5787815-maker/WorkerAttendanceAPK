@@ -56,7 +56,8 @@ jobs:
                 "keystore": "$RUNNER_TEMP/workerattendance-release.jks",
                 "storePassword": "$KEYSTORE_PASSWORD",
                 "alias": "$KEY_ALIAS",
-                "password": "$KEY_PASSWORD"
+                "password": "$KEY_PASSWORD",
+                "packageType": "apk"
               }
             }
           }
@@ -85,8 +86,25 @@ jobs:
           find platforms/android/app/build/outputs -type f \
             -name "*.apk" -print
 
-          APK=$(find platforms/android/app/build/outputs/apk/release \
-            -type f -name "*.apk" | head -n 1)
+      - name: Prepare APK
+        run: |
+          mkdir -p release
+
+          echo "=== APK files ==="
+          find platforms/android/app/build/outputs -type f -name "*.apk" -print
+
+          APK=$(find platforms/android/app/build/outputs -type f -name "*.apk" | head -n 1)
+
+          if [ -z "$APK" ]; then
+            echo "ERROR: Release APK not found"
+            find platforms/android/app/build/outputs -type f -print
+            exit 1
+          fi
+
+          cp "$APK" release/WorkerAttendance.apk
+
+          echo "APK copied:"
+          ls -lh release/WorkerAttendance.apk
 
           if [ -z "$APK" ]; then
             echo "ERROR: Release APK not found"
