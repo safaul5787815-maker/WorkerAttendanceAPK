@@ -86,10 +86,24 @@ jobs:
       - name: Build Release APK
         run: cordova compile android --release --buildConfig=build.json
 
-      - name: Prepare APK
-        run: |
-          mkdir -p release
-          cp platforms/android/app/build/outputs/apk/release/app-release.apk release/WorkerAttendance.apk
+- name: Prepare APK
+  run: |
+    mkdir -p release
+
+    echo "=== APK files ==="
+    find platforms/android/app/build/outputs -type f \( -name "*.apk" -o -name "*.aab" \) -print
+
+    APK=$(find platforms/android/app/build/outputs/apk/release -type f -name "*.apk" | head -n 1)
+
+    if [ -z "$APK" ]; then
+      echo "ERROR: Release APK not found"
+      exit 1
+    fi
+
+    cp "$APK" release/WorkerAttendance.apk
+
+    echo "APK copied:"
+    ls -lh release/WorkerAttendance.apk
 
       - name: Upload APK
         uses: actions/upload-artifact@v4
