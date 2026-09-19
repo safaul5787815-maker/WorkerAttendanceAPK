@@ -66,6 +66,11 @@ jobs:
           }
           EOF
 
+      - name: Remove duplicate storage permission
+        run: |
+          sed -i '/android.permission.WRITE_EXTERNAL_STORAGE/d' \
+            platforms/android/app/src/main/AndroidManifest.xml
+
       - name: Build Release APK
         run: cordova build android --release --buildConfig=build.json
 
