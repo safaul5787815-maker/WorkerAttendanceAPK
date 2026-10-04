@@ -145,6 +145,88 @@ function saveWorkers(){
     localStorage.setItem("workers", JSON.stringify(workers));
 }
 
+
+// ===============================
+// Monthly Salary Logic
+// ===============================
+
+function getMonthKey(dateString){
+    return String(dateString || "").substring(0,7);
+}
+
+function getCurrentMonthKey(){
+    let now = new Date();
+    return now.getFullYear() + "-" +
+        String(now.getMonth()+1).padStart(2,"0");
+}
+
+function getMonthSalary(worker, monthKey){
+
+    if(!worker.attendance) return 0;
+
+    let hourlyRate = Number(worker.wage || 0) / 8;
+    let salary = 0;
+
+    Object.keys(worker.attendance).forEach(function(dateKey){
+
+        if(getMonthKey(dateKey) !== monthKey) return;
+
+        let item = worker.attendance[dateKey] || {};
+
+        if(item.status === "present"){
+            salary += Number(worker.wage || 0);
+        }
+
+        if(item.status === "half"){
+            salary += Number(worker.wage || 0) * 0.5;
+        }
+
+        salary += Number(item.ot || 0) * hourlyRate;
+    });
+
+    return salary;
+}
+
+function getCompletedSalary(worker){
+
+    if(!worker.attendance) return 0;
+
+    let currentMonth = getCurrentMonthKey();
+    let months = {};
+
+    Object.keys(worker.attendance).forEach(function(dateKey){
+
+        let key = getMonthKey(dateKey);
+
+        if(key && key < currentMonth){
+            months[key] = true;
+        }
+
+    });
+
+    let total = 0;
+
+    Object.keys(months).forEach(function(key){
+        total += getMonthSalary(worker,key);
+    });
+
+    return total;
+}
+
+function getCurrentMonthEarnings(worker){
+    return getMonthSalary(
+        worker,
+        getCurrentMonthKey()
+    );
+}
+
+function getCurrentMonthName(){
+    return new Date().toLocaleString(
+        "en-US",
+        {month:"long"}
+    );
+}
+
 function renderWorkers(){
 
     let list = document.getElementById("workerList");
@@ -152,6 +234,7 @@ function renderWorkers(){
     list.innerHTML = "";
 
     let totalSalary = 0;
+    let totalCurrentEarnings = 0;
 
     workers.forEach((worker,index)=>{
 
@@ -159,13 +242,12 @@ function renderWorkers(){
         if(!worker.totalOT) worker.totalOT = 0;
         if(!worker.attendance) worker.attendance = {};
 
-        let hourlyRate = worker.wage / 8;
-
-        let salary =
-            (worker.presentDays * worker.wage) +
-            (worker.totalOT * hourlyRate);
+        let salary = getCompletedSalary(worker);
+        let currentEarnings =
+            getCurrentMonthEarnings(worker);
 
         totalSalary += salary;
+        totalCurrentEarnings += currentEarnings;
 
         list.innerHTML += `
 <div class="worker-name-card"
@@ -184,7 +266,18 @@ function renderWorkers(){
     document.getElementById("dashboardSalary").innerHTML =
         Math.round(totalSalary);
 
+    let currentEarningsElement =
+        document.getElementById("currentMonthEarnings");
+
+    if(currentEarningsElement){
+
+        currentEarningsElement.innerHTML =
+            Math.round(totalCurrentEarnings);
+
+    }
+
 }
+
 
 function openWorkerCard(index){
 
@@ -194,17 +287,24 @@ function openWorkerCard(index){
     if(!worker.totalOT) worker.totalOT = 0;
     if(!worker.attendance) worker.attendance = {};
 
-    let hourlyRate = worker.wage / 8;
+    let salary = getCompletedSalary(worker);
 
-    let salary =
-        (worker.presentDays * worker.wage) +
-        (worker.totalOT * hourlyRate);
+    let currentEarnings =
+        getCurrentMonthEarnings(worker);
+
+    let paid = worker.paid || 0;
+
+    let balance = salary - paid;
+
+    let monthName =
+        getCurrentMonthName();
 
     let content =
-        document.getElementById("singleWorkerContent");
+        document.getElementById(
+            "singleWorkerContent"
+        );
 
     content.innerHTML = `
-
 <div class="worker-card">
 
     <div class="worker-header">
@@ -223,46 +323,72 @@ function openWorkerCard(index){
     <div class="worker-info">
 
         <div>
-            <span class="worker-label">💰 Daily Wage</span>
+            <span class="worker-label">
+                💰 Daily Wage
+            </span>
+
             <span class="worker-value">
                 Rs.${worker.wage}
             </span>
         </div>
 
         <div>
-            <span class="worker-label">📅 Present</span>
+            <span class="worker-label">
+                📅 Present
+            </span>
+
             <span class="worker-value">
                 ${worker.presentDays}
             </span>
         </div>
 
         <div>
-            <span class="worker-label">🕒 OT</span>
+            <span class="worker-label">
+                🕒 OT
+            </span>
+
             <span class="worker-value">
                 ${worker.totalOT}h
             </span>
         </div>
 
         <div>
-            <span class="worker-label">💵 Salary</span>
+            <span class="worker-label">
+                💵 Salary
+            </span>
+
             <span class="worker-value">
                 Rs.${Math.round(salary)}
             </span>
         </div>
 
         <div>
-            <span class="worker-label">💸 Paid</span>
+            <span class="worker-label">
+                💸 Paid
+            </span>
+
             <span class="worker-value">
-                Rs.${worker.paid || 0}
+                Rs.${paid}
             </span>
         </div>
 
         <div>
-            <span class="worker-label">💰 Balance</span>
+            <span class="worker-label">
+                💰 Balance
+            </span>
+
             <span class="worker-value">
-                Rs.${Math.round(
-                    salary - (worker.paid || 0)
-                )}
+                Rs.${Math.round(balance)}
+            </span>
+        </div>
+
+        <div>
+            <span class="worker-label">
+                📅 ${monthName} Earnings
+            </span>
+
+            <span class="worker-value">
+                Rs.${Math.round(currentEarnings)}
             </span>
         </div>
 
@@ -281,19 +407,20 @@ function openWorkerCard(index){
 </div>
 `;
 
-document.querySelector(
-    ".container"
-).style.display = "none";
+    document.querySelector(
+        ".container"
+    ).style.display = "none";
 
-document.getElementById(
-    "dashboardView"
-).style.display = "none";
+    document.getElementById(
+        "dashboardView"
+    ).style.display = "none";
 
-document.getElementById(
-    "singleWorkerView"
-).style.display = "block";
+    document.getElementById(
+        "singleWorkerView"
+    ).style.display = "block";
 
 }
+
 
 function closeWorkerCard(){
 
@@ -1546,59 +1673,60 @@ function savePaidAmount(){
 
     }
 
-let day =
-    document.getElementById("paidDay").value;
+    let day =
+        document.getElementById("paidDay").value;
 
-let month =
-    document.getElementById("paidMonth").value;
+    let month =
+        document.getElementById("paidMonth").value;
 
-let year =
-    document.getElementById("paidYear").value;
+    let year =
+        document.getElementById("paidYear").value;
 
-if(day === "" || month === "" || year === ""){
+    if(day === "" || month === "" || year === ""){
 
-    alert("Please enter payment date");
-    return;
+        alert("Please enter payment date");
+        return;
 
-}
+    }
 
-day = Number(day);
-month = Number(month);
-year = Number(year);
+    day = Number(day);
+    month = Number(month);
+    year = Number(year);
 
-let selectedDate =
-    new Date(year, month - 1, day);
+    let selectedDate =
+        new Date(year, month - 1, day);
 
-if(
-    selectedDate.getFullYear() !== year ||
-    selectedDate.getMonth() !== month - 1 ||
-    selectedDate.getDate() !== day
-){
+    if(
+        selectedDate.getFullYear() !== year ||
+        selectedDate.getMonth() !== month - 1 ||
+        selectedDate.getDate() !== day
+    ){
 
-    alert("Please enter a valid date");
-    return;
+        alert("Please enter a valid date");
+        return;
 
-}
+    }
 
-let paidDate =
-    year + "-" +
-    String(month).padStart(2,"0") + "-" +
-    String(day).padStart(2,"0");
+    let paidDate =
+        year + "-" +
+        String(month).padStart(2,"0") + "-" +
+        String(day).padStart(2,"0");
 
-    let worker = workers[selectedPaidWorker];
-
-    let hourlyRate = worker.wage / 8;
+    let worker =
+        workers[selectedPaidWorker];
 
     let salary =
-        (worker.presentDays * worker.wage) +
-        (worker.totalOT * hourlyRate);
+        getCompletedSalary(worker);
 
     let balance =
         salary - (worker.paid || 0);
 
     if(amount > balance){
 
-        alert("Amount cannot be greater than Balance");
+        alert(
+            "Amount cannot be greater than completed Salary Balance"
+        );
+
         return;
 
     }
@@ -1622,11 +1750,14 @@ let paidDate =
 
     saveWorkers();
 
-    refreshWorkerCard(selectedPaidWorker);
+    refreshWorkerCard(
+        selectedPaidWorker
+    );
 
     closePaidDialog();
 
 }
+
 
 function changePin(){
 
