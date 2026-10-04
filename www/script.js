@@ -233,8 +233,8 @@ function renderWorkers(){
 
     list.innerHTML = "";
 
-    let totalSalary = 0;
     let totalCurrentEarnings = 0;
+    let balanceHTML = "";
 
     workers.forEach((worker,index)=>{
 
@@ -243,28 +243,62 @@ function renderWorkers(){
         if(!worker.attendance) worker.attendance = {};
 
         let salary = getCompletedSalary(worker);
+
         let currentEarnings =
             getCurrentMonthEarnings(worker);
 
-        totalSalary += salary;
+        let paid = Number(worker.paid || 0);
+
+        let balance = salary - paid;
+
         totalCurrentEarnings += currentEarnings;
 
+        balanceHTML += `
+        <div style="
+            display:flex;
+            justify-content:space-between;
+            align-items:center;
+            padding:10px 5px;
+            border-bottom:1px solid #ddd;
+            font-size:18px;
+            font-weight:500;
+        ">
+            <span>👷 ${worker.name}</span>
+            <span>₹ ${Math.round(balance)}</span>
+        </div>
+        `;
+
         list.innerHTML += `
-<div class="worker-name-card"
-     onclick="openWorkerCard(${index})">
+        <div class="worker-name-card"
+             onclick="openWorkerCard(${index})">
 
-    👷 ${worker.name}
+            👷 ${worker.name}
 
-</div>
-`;
+        </div>
+        `;
 
     });
 
     document.getElementById("totalWorkers").innerHTML =
         workers.length;
 
-    document.getElementById("dashboardSalary").innerHTML =
-        Math.round(totalSalary);
+    let balanceElement =
+        document.getElementById("workerBalances");
+
+    if(balanceElement){
+
+        balanceElement.innerHTML =
+            balanceHTML || "No workers";
+
+    }
+
+    let monthTitleElement =
+        document.getElementById("currentMonthEarningsTitle");
+
+    if(monthTitleElement){
+        monthTitleElement.innerHTML =
+            "📅 " + getCurrentMonthName() + " Earnings";
+    }
 
     let currentEarningsElement =
         document.getElementById("currentMonthEarnings");
@@ -275,9 +309,7 @@ function renderWorkers(){
             Math.round(totalCurrentEarnings);
 
     }
-
 }
-
 
 function openWorkerCard(index){
 
@@ -1993,7 +2025,7 @@ function aboutApp(){
 
     alert(
         "👷 Worker Attendance App\n\n" +
-        "Version : 3.0\n\n" +
+        "Version : 1.0.5\n\n" +
         "Developer : Safaul Ansari\n\n" +
         "Features:\n" +
         "✔ Worker Management\n" +
