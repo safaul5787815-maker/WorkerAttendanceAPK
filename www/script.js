@@ -621,6 +621,10 @@ function openAttendance(index){
 
     selectedAttendanceWorker=index;
 
+    let today = new Date();
+    currentYear = today.getFullYear();
+    currentMonth = today.getMonth();
+
     attendanceData=
         workers[index].attendance || {};
 
@@ -2025,7 +2029,7 @@ function aboutApp(){
 
     alert(
         "👷 Worker Attendance App\n\n" +
-        "Version : 1.0.5\n\n" +
+        "Version : 1.0.6\n\n" +
         "Developer : Safaul Ansari\n\n" +
         "Features:\n" +
         "✔ Worker Management\n" +
