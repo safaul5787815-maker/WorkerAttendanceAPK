@@ -2029,7 +2029,7 @@ function aboutApp(){
 
     alert(
         "👷 Worker Attendance App\n\n" +
-        "Version : 1.0.8\n\n" +
+        "Version : 1.0.9\n\n" +
         "Developer : Safaul Ansari\n\n" +
         "Features:\n" +
         "✔ Worker Management\n" +
@@ -2565,6 +2565,8 @@ function hideMainViews(){
     let dashboard = document.getElementById("dashboardView");
     let workerView = document.getElementById("singleWorkerView");
     let salaryView = document.getElementById("salaryView");
+    let workersView = document.getElementById("workersView");
+    let attendanceView = document.getElementById("attendanceView");
 
     if(dashboard){
         dashboard.style.display = "none";
@@ -2576,6 +2578,14 @@ function hideMainViews(){
 
     if(salaryView){
         salaryView.style.display = "none";
+    }
+
+    if(workersView){
+        workersView.style.display = "none";
+    }
+
+    if(attendanceView){
+        attendanceView.style.display = "none";
     }
 }
 
