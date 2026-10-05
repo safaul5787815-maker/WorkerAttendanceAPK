@@ -646,3 +646,143 @@ body{
     text-align:center;
     color:#777;
 }
+
+/* ================================
+   WORKERS SCREEN
+================================ */
+
+.workers-view{
+    display:none;
+    max-width:900px;
+    margin:auto;
+    padding:20px 16px 90px;
+}
+
+.workers-header{
+    background:#1976d2;
+    color:#fff;
+    padding:20px;
+    border-radius:16px;
+    margin-bottom:15px;
+    box-shadow:0 3px 12px rgba(0,0,0,.12);
+}
+
+.workers-header h2{
+    margin:0 0 5px;
+    font-size:24px;
+}
+
+.workers-header p{
+    margin:0;
+    font-size:13px;
+    opacity:.9;
+}
+
+.workers-add-box{
+    background:#fff;
+    padding:16px;
+    border-radius:16px;
+    margin-bottom:15px;
+    box-shadow:0 2px 10px rgba(0,0,0,.08);
+}
+
+.workers-add-box input{
+    width:100%;
+    box-sizing:border-box;
+    margin-bottom:10px;
+}
+
+.workers-add-box button{
+    width:100%;
+    background:#1976d2;
+    color:#fff;
+    border:none;
+    padding:13px;
+    border-radius:12px;
+    font-size:15px;
+}
+
+
+/* ================================
+   ATTENDANCE SCREEN
+================================ */
+
+.attendance-view{
+    display:none;
+    max-width:900px;
+    margin:auto;
+    padding:20px 16px 90px;
+}
+
+.attendance-screen-header{
+    background:#1976d2;
+    color:#fff;
+    padding:20px;
+    border-radius:16px;
+    margin-bottom:15px;
+    box-shadow:0 3px 12px rgba(0,0,0,.12);
+}
+
+.attendance-screen-header h2{
+    margin:0 0 5px;
+    font-size:24px;
+}
+
+.attendance-screen-header p{
+    margin:0;
+    font-size:13px;
+    opacity:.9;
+}
+
+.attendance-worker-list{
+    display:flex;
+    flex-direction:column;
+    gap:10px;
+}
+
+.attendance-worker-card{
+    background:#fff;
+    border-radius:16px;
+    padding:16px;
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    box-shadow:0 2px 10px rgba(0,0,0,.08);
+    border:1px solid #edf0f5;
+}
+
+.attendance-worker-name{
+    font-size:17px;
+    font-weight:600;
+}
+
+.attendance-worker-wage{
+    font-size:12px;
+    color:#777;
+    margin-top:4px;
+}
+
+.attendance-open-btn{
+    background:#1976d2;
+    color:#fff;
+    border:none;
+    padding:10px 14px;
+    border-radius:10px;
+    font-size:13px;
+}
+
+
+/* ================================
+   ACTIVE BOTTOM NAV
+================================ */
+
+.bottom-nav button.active{
+    color:#1976d2;
+    background:#eaf3ff;
+    font-weight:600;
+}
+
+.bottom-nav button.active span{
+    font-weight:700;
+}
+
