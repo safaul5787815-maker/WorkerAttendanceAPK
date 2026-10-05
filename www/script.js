@@ -2029,7 +2029,7 @@ function aboutApp(){
 
     alert(
         "👷 Worker Attendance App\n\n" +
-        "Version : 1.0.6\n\n" +
+        "Version : 1.0.7\n\n" +
         "Developer : Safaul Ansari\n\n" +
         "Features:\n" +
         "✔ Worker Management\n" +
@@ -2554,3 +2554,161 @@ document.addEventListener("deviceready", function () {
 
 }, false);
 
+
+
+/* ================================
+   MODERN BOTTOM NAVIGATION
+================================ */
+
+function hideMainViews(){
+
+    let dashboard = document.getElementById("dashboardView");
+    let workerView = document.getElementById("singleWorkerView");
+
+    if(dashboard){
+        dashboard.style.display = "none";
+    }
+
+    if(workerView){
+        workerView.style.display = "none";
+    }
+}
+
+function showHome(){
+
+    hideMainViews();
+
+    let dashboard = document.getElementById("dashboardView");
+
+    if(dashboard){
+        dashboard.style.display = "block";
+    }
+
+    window.scrollTo(0,0);
+}
+
+function showWorkers(){
+
+    hideMainViews();
+
+    let dashboard = document.getElementById("dashboardView");
+
+    if(dashboard){
+        dashboard.style.display = "block";
+    }
+
+    let workerList = document.getElementById("workerList");
+
+    if(workerList){
+        workerList.scrollIntoView({
+            behavior:"smooth",
+            block:"start"
+        });
+    }
+}
+
+function showAttendance(){
+
+    hideMainViews();
+
+    let dashboard = document.getElementById("dashboardView");
+
+    if(dashboard){
+        dashboard.style.display = "block";
+    }
+
+    let workerList = document.getElementById("workerList");
+
+    if(workerList){
+        workerList.scrollIntoView({
+            behavior:"smooth",
+            block:"start"
+        });
+    }
+
+    if(typeof workers !== "undefined" && workers.length === 0){
+        alert("पहले Worker add करें।");
+        return;
+    }
+
+    if(typeof workers !== "undefined" && workers.length === 1){
+        openAttendance(0);
+    }
+}
+
+function showSalary(){
+
+    hideMainViews();
+
+    let salaryView = document.getElementById("salaryView");
+
+    if(!salaryView){
+        return;
+    }
+
+    salaryView.style.display = "block";
+
+    let list = document.getElementById("salaryWorkerList");
+
+    if(!list){
+        return;
+    }
+
+    list.innerHTML = "";
+
+    if(typeof workers === "undefined" || workers.length === 0){
+
+        list.innerHTML = `
+            <div class="salary-empty">
+                👷 No workers added yet
+            </div>
+        `;
+
+        return;
+    }
+
+    workers.forEach(function(worker){
+
+        let salary = 0;
+
+        if(typeof getCompletedSalary === "function"){
+            salary = getCompletedSalary(worker);
+        }
+
+        let paid = Number(worker.paid || 0);
+        let balance = salary - paid;
+
+        list.innerHTML += `
+            <div class="salary-worker-card">
+
+                <div class="salary-worker-top">
+                    <div>
+                        <div class="salary-worker-name">
+                            👷 ${worker.name}
+                        </div>
+
+                        <div class="salary-worker-wage">
+                            Daily Wage: ₹${Number(worker.wage || 0)}
+                        </div>
+                    </div>
+                </div>
+
+                <div class="salary-row">
+                    <span>Salary</span>
+                    <strong>₹ ${Math.round(salary)}</strong>
+                </div>
+
+                <div class="salary-row">
+                    <span>Paid</span>
+                    <strong>₹ ${Math.round(paid)}</strong>
+                </div>
+
+                <div class="salary-row salary-balance">
+                    <span>Balance</span>
+                    <strong>₹ ${Math.round(balance)}</strong>
+                </div>
+
+            </div>
+        `;
+    });
+}

@@ -6,8 +6,10 @@
 }
 
 body{
-    background:#f2f2f2;
-    padding:20px;
+    background:#f5f7fb;
+    color:#202124;
+    padding:0;
+    min-height:100vh;
 }
 
 .container{
@@ -15,40 +17,122 @@ body{
     margin:auto;
 }
 
-h1{
-    margin:0;
-    color:#1976d2;
-    font-size:52px;
+/* TOP APP BAR */
+
+.top-bar{
+    position:sticky;
+    top:0;
+    z-index:1000;
+    background:#1976d2;
+    color:#fff;
+    min-height:64px;
+    padding:10px 16px;
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    box-shadow:0 2px 8px rgba(0,0,0,.18);
 }
+
+.top-bar h1{
+    color:#fff;
+    font-size:21px;
+    font-weight:600;
+}
+
+.top-menu-btn{
+    background:rgba(255,255,255,.15);
+    color:#fff;
+    border:1px solid rgba(255,255,255,.3);
+    border-radius:20px;
+    padding:8px 14px;
+    font-size:13px;
+}
+
+/* PROFILE */
 
 .profile{
     text-align:center;
-    margin-top:15px;
+    padding:22px 0 12px;
 }
 
 .profile-img{
-    width:100px;
-    height:100px;
+    width:78px;
+    height:78px;
     border-radius:50%;
-    border:3px solid #2196F3;
+    border:3px solid #2196f3;
     object-fit:cover;
+    box-shadow:0 3px 10px rgba(0,0,0,.15);
 }
+
+/* DASHBOARD */
+
+.dashboard{
+    display:grid;
+    grid-template-columns:repeat(3,1fr);
+    gap:12px;
+    padding:12px 16px;
+    margin-bottom:8px;
+}
+
+.card{
+    background:#fff;
+    color:#202124;
+    padding:18px 12px;
+    border-radius:16px;
+    text-align:center;
+    box-shadow:0 2px 10px rgba(0,0,0,.08);
+    border:1px solid #edf0f5;
+}
+
+.card h3{
+    font-size:13px;
+    color:#777;
+    margin-bottom:8px;
+    font-weight:500;
+}
+
+.card h2{
+    color:#1976d2;
+    font-size:24px;
+    font-weight:700;
+}
+
+/* WORKER BALANCE */
+
+#workerBalances{
+    text-align:left;
+    font-size:14px;
+}
+
+#workerBalances div{
+    padding:9px 3px !important;
+    font-size:14px !important;
+}
+
+/* ADD WORKER */
 
 .box{
     background:#fff;
-    padding:20px;
-    border-radius:12px;
-    box-shadow:0 2px 10px rgba(0,0,0,.15);
-    margin-bottom:20px;
+    margin:10px 16px 18px;
+    padding:18px;
+    border-radius:16px;
+    box-shadow:0 2px 10px rgba(0,0,0,.08);
 }
 
 input{
     width:100%;
-    padding:12px;
-    margin:10px 0;
-    border:1px solid #ccc;
-    border-radius:8px;
+    padding:13px 14px;
+    margin:7px 0;
+    border:1px solid #d8dde6;
+    border-radius:10px;
     font-size:16px;
+    outline:none;
+    background:#fafbfc;
+}
+
+input:focus{
+    border-color:#1976d2;
+    background:#fff;
 }
 
 .btns{
@@ -56,102 +140,97 @@ input{
     gap:10px;
     flex-wrap:wrap;
     justify-content:center;
+    margin-top:8px;
 }
 
 button{
     background:#1976d2;
     color:#fff;
     border:none;
-    border-radius:7px;
-    padding:8px 12px;
+    border-radius:10px;
+    padding:10px 15px;
     cursor:pointer;
-    font-size:13px;
+    font-size:14px;
+    font-weight:500;
+}
+
+button:active{
+    transform:scale(.97);
 }
 
 button:hover{
     background:#1259a7;
 }
 
-.dashboard{
-    display:flex;
-    gap:15px;
-    flex-wrap:wrap;
-    margin-bottom:20px;
+/* WORKER LIST */
+
+.worker-cards{
+    padding:0 16px 90px;
 }
 
-.card{
-    flex:1;
-    min-width:180px;
-    background:#2196F3;
-    color:#fff;
-    padding:15px;
-    border-radius:10px;
-    text-align:center;
-}
-
-table{
-    width:100%;
-    border-collapse:collapse;
+.worker-name-card{
     background:#fff;
-    border-radius:10px;
-    overflow:hidden;
-    box-shadow:0 2px 10px rgba(0,0,0,.15);
-}
-
-table th{
-    background:#1976d2;
-    color:#fff;
-    padding:12px;
-    text-align:center;
-}
-
-table td{
-    padding:10px;
-    border-bottom:1px solid #eee;
-    text-align:center;
-}
-
-.action-cell{
+    min-height:62px;
+    margin-bottom:9px;
+    padding:18px 16px;
+    border-radius:14px;
     display:flex;
-    justify-content:center;
     align-items:center;
-    gap:8px;
+    font-size:17px;
+    font-weight:500;
+    box-shadow:0 2px 8px rgba(0,0,0,.07);
+    border:1px solid #edf0f5;
+    cursor:pointer;
 }
 
-.menu-btn{
-    width:34px;
-    height:34px;
-    border-radius:50%;
-    padding:0;
-    font-size:20px;
-    font-weight:bold;
+.worker-name-card:active{
+    transform:scale(.99);
+    background:#f3f7ff;
 }
+
+/* SINGLE WORKER */
+
+.single-worker-view{
+    display:none;
+    padding:16px;
+    padding-bottom:90px;
+}
+
+.worker-back-btn{
+    margin-bottom:15px;
+    border-radius:20px;
+}
+
+/* POPUP MENU */
 
 .popup-menu{
     display:none;
     position:fixed;
-    min-width:170px;
-    max-width:170px;
+    min-width:175px;
+    max-width:200px;
     background:#fff;
-    border-radius:10px;
-    box-shadow:0 4px 12px rgba(0,0,0,.25);
+    border-radius:14px;
+    box-shadow:0 5px 20px rgba(0,0,0,.22);
     z-index:9999;
     overflow:hidden;
 }
 
 .popup-menu div{
-    padding:12px;
+    padding:14px 16px;
     cursor:pointer;
     border-bottom:1px solid #eee;
+    font-size:14px;
 }
 
 .popup-menu div:hover{
-    background:#f5f5f5;
+    background:#f5f7fa;
 }
 
 .popup-menu div:last-child{
     border-bottom:none;
 }
+
+/* ATTENDANCE MODAL */
 
 .attendance-modal{
     display:none;
@@ -160,19 +239,22 @@ table td{
     left:0;
     width:100%;
     height:100%;
-    background:rgba(0,0,0,.5);
+    background:rgba(0,0,0,.55);
     justify-content:center;
     align-items:center;
     z-index:10000;
+    padding:12px;
 }
 
 .attendance-box{
-    width:95%;
-    max-width:420px;
+    width:100%;
+    max-width:430px;
+    max-height:94vh;
+    overflow-y:auto;
     background:#fff;
-    border-radius:12px;
-    padding:20px;
-    box-shadow:0 4px 15px rgba(0,0,0,.3);
+    border-radius:20px;
+    padding:18px;
+    box-shadow:0 5px 25px rgba(0,0,0,.3);
 }
 
 .calendar-header{
@@ -182,6 +264,11 @@ table td{
     margin-bottom:15px;
 }
 
+.calendar-header h2,
+.calendar-header h3{
+    color:#1976d2;
+}
+
 .calendar-header button{
     width:40px;
     height:40px;
@@ -189,23 +276,26 @@ table td{
     padding:0;
 }
 
+/* CALENDAR */
+
 #calendarGrid{
     display:grid;
     grid-template-columns:repeat(7,1fr);
-    gap:6px;
+    gap:5px;
 }
 
 .day-name{
     text-align:center;
     font-weight:bold;
     color:#1976d2;
-    padding:8px 0;
+    padding:7px 0;
+    font-size:12px;
 }
 
 .calendar-day{
-    height:52px;
-    background:#f5f5f5;
-    border-radius:8px;
+    min-height:52px;
+    background:#f4f6f9;
+    border-radius:9px;
     display:flex;
     flex-direction:column;
     justify-content:center;
@@ -213,20 +303,25 @@ table td{
     gap:2px;
     cursor:pointer;
     font-weight:bold;
+    font-size:14px;
+}
+
+.calendar-day:active{
+    transform:scale(.94);
 }
 
 .present-day{
-    background:#4CAF50;
+    background:#4caf50;
     color:#fff;
 }
 
 .absent-day{
-    background:#F44336;
+    background:#f44336;
     color:#fff;
 }
 
 .half-day{
-    background:#FFC107 !important;
+    background:#ffc107 !important;
     color:#000 !important;
     display:flex !important;
     flex-direction:column !important;
@@ -248,397 +343,306 @@ table td{
     color:#fff;
 }
 
+/* TABLES */
+
+table{
+    width:100%;
+    border-collapse:collapse;
+    background:#fff;
+    border-radius:12px;
+    overflow:hidden;
+    box-shadow:0 2px 10px rgba(0,0,0,.08);
+}
+
+table th{
+    background:#1976d2;
+    color:#fff;
+    padding:12px;
+    text-align:center;
+    font-size:13px;
+}
+
+table td{
+    padding:10px;
+    border-bottom:1px solid #eee;
+    text-align:center;
+    font-size:13px;
+}
+
+.action-cell{
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    gap:8px;
+}
+
+.menu-btn{
+    width:36px;
+    height:36px;
+    border-radius:50%;
+    padding:0;
+    font-size:20px;
+    font-weight:bold;
+}
+
+/* MOBILE */
+
 @media(max-width:600px){
 
+    .top-bar{
+        min-height:58px;
+        padding:9px 13px;
+    }
+
+    .top-bar h1{
+        font-size:18px;
+    }
+
+    .top-menu-btn{
+        padding:7px 11px;
+        font-size:12px;
+    }
+
     .dashboard{
-        flex-direction:column;
+        grid-template-columns:1fr 1fr;
+        gap:10px;
+        padding:10px 12px;
+    }
+
+    .card{
+        padding:15px 9px;
+    }
+
+    .card:last-child{
+        grid-column:1 / -1;
+    }
+
+    .card h2{
+        font-size:22px;
+    }
+
+    .profile{
+        padding-top:18px;
+    }
+
+    .profile-img{
+        width:72px;
+        height:72px;
+    }
+
+    .box{
+        margin:8px 12px 15px;
+    }
+
+    .worker-cards{
+        padding-left:12px;
+        padding-right:12px;
+    }
+
+    .worker-name-card{
+        min-height:60px;
+        font-size:16px;
     }
 
     .btns{
         flex-direction:column;
     }
 
-    button{
+    .btns button{
         width:100%;
     }
 
-    table{
-        font-size:13px;
+    .attendance-box{
+        padding:15px;
     }
 
+    #calendarGrid{
+        gap:4px;
+    }
+
+    .calendar-day{
+        min-height:46px;
+        font-size:13px;
+    }
 }
 
-.worker-card{
-    background:#fff;
-    border-radius:18px;
-    padding:18px;
-    margin:15px 0;
-    box-shadow:0 6px 16px rgba(0,0,0,.15);
+/* EXTRA SMALL PHONES */
+
+@media(max-width:380px){
+
+    .top-bar h1{
+        font-size:16px;
+    }
+
+    .dashboard{
+        grid-template-columns:1fr;
+    }
+
+    .card:last-child{
+        grid-column:auto;
+    }
+
+    .calendar-day{
+        min-height:42px;
+        font-size:12px;
+    }
 }
 
-.worker-header{
-    display:flex;
-    justify-content:space-between;
-    align-items:center;
-    margin-bottom:15px;
-}
 
-.worker-name{
-    font-size:26px;
-    font-weight:700;
-}
+/* ================================
+   BOTTOM NAVIGATION
+================================ */
 
-.worker-info div{
-    display:flex;
-    justify-content:space-between;
-    align-items:center;
-    padding:12px 0;
-    border-bottom:1px solid #e8e8e8;
-    font-size:18px;
-}
-
-.worker-label{
-    font-weight:700;
-    color:#333;
-}
-
-.worker-value{
-    font-weight:700;
-    color:#0d47a1;
-}
-
-.attendance-btn{
-    width:100%;
-    margin-top:18px;
-    padding:12px;
-    border:none;
-    border-radius:12px;
-    background:#1565c0;
-    color:#fff;
-    font-size:18px;
-    font-weight:bold;
-}
-
-.menu-btn{
-    width:42px;
-    height:42px;
-    border:none;
-    border-radius:50%;
-    background:#1565c0;
-    color:#fff;
-    font-size:22px;
-}
-
-/* Force Modern Worker Card */
-
-.worker-name{
-    font-size:24px !important;
-    font-weight:700 !important;
-    color:#222 !important;
-}
-
-.worker-info div{
-    display:flex !important;
-    justify-content:space-between !important;
-    align-items:center !important;
-    padding:14px 0 !important;
-    border-bottom:1px solid #e6e6e6 !important;
-    font-size:17px !important;
-}
-
-.worker-label{
-    font-weight:700 !important;
-}
-
-.worker-value{
-    font-weight:700 !important;
-    color:#1565c0 !important;
-}
-
-.attendance-btn{
-    width:100% !important;
-    padding:14px !important;
-    font-size:17px !important;
-    font-weight:bold !important;
-    border-radius:14px !important;
-}
-
-.menu-btn{
-    width:42px !important;
-    height:42px !important;
-    font-size:24px !important;
-    border-radius:50% !important;
-}
-
-.half-day{
-    background:#FFD54F !important;
-    color:#000 !important;
-}
-
-#settingsFab{
+.bottom-nav{
     position:fixed;
-    inset:auto 15px auto auto;
-    top:15px;
-
-    width:50px;
-    height:50px;
-
-    display:flex;
-    justify-content:center;
-    align-items:center;
-
-    background:#1976d2;
-    color:#fff;
-
-    border-radius:50%;
-    font-size:26px;
-
-    z-index:99999;
-    box-shadow:0 4px 10px rgba(0,0,0,.3);
-}
-
-.app-header{
-    display:flex;
-    align-items:center;
-    justify-content:space-between;
+    left:50%;
+    bottom:0;
+    transform:translateX(-50%);
     width:100%;
-    margin:20px 0;
-}
-
-/* ===========================
-   APP BAR
-=========================== */
-
-.app-bar{
+    max-width:900px;
+    height:68px;
+    background:#ffffff;
     display:flex;
-    justify-content:space-between;
     align-items:center;
-
-    background:#1976d2;
-
-    color:#fff;
-
-    padding:12px 15px;
-
-    border-radius:12px;
-
-    margin-bottom:18px;
+    justify-content:space-around;
+    padding:6px 8px;
+    border-top:1px solid #e4e7ec;
+    box-shadow:0 -3px 15px rgba(0,0,0,.10);
+    z-index:9998;
 }
 
-.app-title{
-    font-size:22px;
-    font-weight:bold;
-
+.bottom-nav button{
     flex:1;
-}
-
-.app-menu{
-    font-size:30px;
-    font-weight:bold;
-
-    cursor:pointer;
-
-    padding:0 8px;
-
-    user-select:none;
-}
-
-.top-bar{
-    display:flex;
-    justify-content:space-between;
-    align-items:center;
-    margin-bottom:15px;
-}
-
-.top-bar h1{
-    margin:0;
-    color:#1976d2;
-    font-size:42px;
-    flex:1;
-}
-
-.top-menu-btn{
-    width:140px;
-    height:50px;
+    height:56px;
+    background:transparent;
+    color:#70757a;
     border:none;
-    border-radius:10px;
-    background:#1565c0;
-    color:#fff;
-    font-size:20px;
-    font-weight:bold;
-    cursor:pointer;
-}
-
-.paid-date-row{
+    border-radius:12px;
     display:flex;
+    flex-direction:column;
     align-items:center;
     justify-content:center;
-    gap:8px;
-    width:100%;
+    gap:3px;
+    padding:4px;
+    font-size:21px;
 }
 
-.paid-date-row{
-    display:flex;
-    flex-direction:row;
-    align-items:center;
-    justify-content:center;
-    gap:6px;
-    width:100%;
+.bottom-nav button span{
+    font-size:11px;
+    font-weight:500;
 }
 
-.paid-date-row input{
-    width:65px !important;
-    margin:10px 0 !important;
-    padding:12px 4px !important;
-    text-align:center;
-    box-sizing:border-box;
+.bottom-nav button:hover{
+    background:#f1f6ff;
+    color:#1976d2;
 }
 
-.paid-date-row input:last-of-type{
-    width:85px !important;
+.bottom-nav button:active{
+    transform:scale(.94);
 }
 
-.paid-date-row span{
-    width:auto;
-    margin:0;
-    font-size:22px;
-    font-weight:bold;
+/* Space so content is not hidden behind navigation */
+
+body{
+    padding-bottom:78px;
 }
 
-/* ==============================
-   Payment History
-   Small Edit / Delete Buttons
-   ============================== */
+@media(max-width:600px){
 
-.payment-history-item{
-    display:flex;
-    justify-content:space-between;
-    align-items:center;
-    gap:10px;
-    padding:12px 0;
-    border-bottom:1px solid #ddd;
+    .bottom-nav{
+        height:66px;
+        border-radius:18px 18px 0 0;
+    }
+
+    .bottom-nav button{
+        height:54px;
+        font-size:20px;
+    }
+
+    .bottom-nav button span{
+        font-size:10px;
+    }
 }
 
-.payment-history-item > div:first-child{
-    flex:1;
-}
+/* ================================
+   SALARY SCREEN
+================================ */
 
-.payment-history-item > div:last-child{
-    display:flex;
-    gap:6px;
-    flex-shrink:0;
-}
-
-.payment-history-item button{
-    width:70px !important;
-    min-width:70px !important;
-    max-width:70px !important;
-
-    height:42px !important;
-
-    margin:0 !important;
-    padding:4px !important;
-
-    font-size:14px !important;
-    border-radius:8px !important;
-
-    background:white !important;
-}
-
-/* Edit */
-.payment-history-item button:first-child{
-    border:2px solid #0878d1 !important;
-    color:#0878d1 !important;
-}
-
-/* Delete */
-.payment-history-item button:last-child{
-    border:2px solid #e53935 !important;
-    color:#e53935 !important;
-}
-
-/* ===== Small Popup Buttons ===== */
-
-/* Edit / Delete buttons */
-#paymentHistoryContent .payment-history-item button{
-    width:42px !important;
-    min-width:42px !important;
-    max-width:42px !important;
-
-    height:34px !important;
-    padding:4px !important;
-    margin:2px !important;
-
-    font-size:16px !important;
-}
-
-/* Payment history row */
-.payment-history-item{
-    display:flex;
-    align-items:center;
-    justify-content:space-between;
-    gap:8px;
-    margin:8px 0;
-}
-
-/* Paid Amount popup buttons */
-
-#paidModal button{
-    width:auto !important;
-    min-width:70px !important;
-    padding:7px 12px !important;
-    margin:4px 0 4px 10px !important;
-    font-size:13px !important;
-    border-radius:6px !important;
-}
-
-#paidModal .attendance-box{
-    text-align:center;
-}
-
-#paidModal button{
-    width:auto !important;
-    min-width:70px !important;
-    padding:7px 12px !important;
-    margin:4px 0 4px 10px !important;
-    font-size:13px !important;
-    border-radius:6px !important;
-}
-
-#paidModal .attendance-box > button:first-of-type{
-    margin-left: auto !important;
-}
-
-/* Worker Name List */
-
-.worker-name-card{
-    background:#fff;
-    border-radius:10px;
-    padding:16px 18px;
-    margin:8px 0;
-    font-size:18px;
-    font-weight:bold;
-    box-shadow:0 2px 8px rgba(0,0,0,.12);
-    cursor:pointer;
-    width:100%;
-    box-sizing:border-box;
-}
-
-.worker-name-card:active{
-    transform:scale(.98);
-}
-
-.single-worker-view{
+.salary-view{
     display:none;
-    width:100%;
-    box-sizing:border-box;
+    max-width:900px;
+    margin:auto;
+    padding:20px 16px 90px;
 }
 
-.single-worker-view .worker-card{
-    width:100%;
-    box-sizing:border-box;
+.salary-header{
+    background:#1976d2;
+    color:#fff;
+    padding:20px;
+    border-radius:16px;
+    margin-bottom:15px;
+    box-shadow:0 3px 12px rgba(0,0,0,.12);
 }
 
-.worker-back-btn{
-    margin-bottom:10px;
+.salary-header h2{
+    font-size:24px;
+    margin-bottom:5px;
+}
+
+.salary-header p{
+    font-size:13px;
+    opacity:.9;
+}
+
+.salary-worker-card{
+    background:#fff;
+    border-radius:16px;
+    padding:16px;
+    margin-bottom:12px;
+    box-shadow:0 2px 10px rgba(0,0,0,.08);
+    border:1px solid #edf0f5;
+}
+
+.salary-worker-top{
+    margin-bottom:12px;
+}
+
+.salary-worker-name{
+    font-size:18px;
+    font-weight:600;
+}
+
+.salary-worker-wage{
+    color:#777;
+    font-size:12px;
+    margin-top:4px;
+}
+
+.salary-row{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    padding:10px 0;
+    border-top:1px solid #eee;
+    font-size:14px;
+}
+
+.salary-row strong{
+    font-size:16px;
+}
+
+.salary-balance{
+    color:#1976d2;
+}
+
+.salary-balance strong{
+    font-size:19px;
+}
+
+.salary-empty{
+    background:#fff;
+    padding:30px;
+    border-radius:16px;
+    text-align:center;
+    color:#777;
 }
