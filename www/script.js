@@ -578,13 +578,7 @@ function openWorkerCard(index){
                     💵 Paid
                 </button>
 
-                <button
-                    class="attendance-btn"
-                    style="flex:1;"
-                    onclick="openAttendance(${index})"
-                >
-                    📅 Attendance
-                </button>
+
 
 
                 <button
@@ -1332,15 +1326,11 @@ function menuHistory(){
 function showPaymentMonthSelector(index){
 
     let worker = workers[index];
-
     let months = {};
 
     (worker.paymentHistory || []).forEach(function(item){
-
         let key = item.date.substring(0,7);
-
         months[key] = true;
-
     });
 
     let html = "";
@@ -1361,26 +1351,30 @@ function showPaymentMonthSelector(index){
             p[0];
 
         html += `
-<button onclick="showPaymentHistory(${index},'${key}')">
-${title}
-</button><br><br>`;
+<button class="modern-month-card"
+        onclick="showPaymentHistory(${index},'${key}')">
+    <span class="modern-month-icon">📜</span>
+    <span class="modern-month-info">
+        <strong>${title}</strong>
+        <small>Payment History</small>
+    </span>
+    <span class="modern-month-arrow">›</span>
+</button>`;
 
     });
 
     if(html === ""){
-
-        html = "<p>No payment history found.</p>";
-
+        html = `
+<div class="modern-month-empty">
+    <div>📜</div>
+    <strong>No payment history</strong>
+    <span>No payment records are available yet.</span>
+</div>`;
     }
 
-    document.getElementById(
-        "paymentMonthList"
-    ).innerHTML = html;
+    document.getElementById("paymentMonthList").innerHTML = html;
 
-    document.getElementById(
-        "paymentMonthModal"
-    ).style.display = "flex";
-
+    document.getElementById("paymentMonthModal").style.display = "flex";
 }
 
 function showPaymentHistory(index, selectedMonth){
@@ -1809,56 +1803,61 @@ ${title}
 
 function closeMonthSelector(){
 
-    document.getElementById(
-        "monthSelectorModal"
-    ).style.display = "none";
+function showMonthSelector(index){
 
-}
+    let worker = workers[index];
+    let months = {};
 
-function openSettings(){
+    Object.keys(worker.attendance || {}).forEach(function(date){
 
-    document.getElementById(
-        "settingsModal"
-    ).style.display = "flex";
+        let key = date.substring(0,7);
+        months[key] = true;
 
-    let btn =
-        document.getElementById("fingerprintBtn");
+    });
 
-    if(btn){
+    let html = "";
 
-        if(localStorage.getItem("fingerprintEnabled") === "true"){
+    const monthNames = [
+        "January","February","March","April",
+        "May","June","July","August",
+        "September","October","November","December"
+    ];
 
-            btn.innerHTML =
-                "👆 Fingerprint Lock : ON";
+    Object.keys(months).sort().reverse().forEach(function(key){
 
-        }else{
+        let p = key.split("-");
 
-            btn.innerHTML =
-                "👆 Fingerprint Lock : OFF";
+        let title =
+            monthNames[Number(p[1]) - 1] +
+            " " +
+            p[0];
 
-        }
+        html += `
+<button class="modern-month-card"
+        onclick="downloadWorkerPDF(${index},'${key}')">
+    <span class="modern-month-icon">📄</span>
+    <span class="modern-month-info">
+        <strong>${title}</strong>
+        <small>Attendance Report PDF</small>
+    </span>
+    <span class="modern-month-arrow">›</span>
+</button>`;
 
+    });
+
+    if(html === ""){
+        html = `
+<div class="modern-month-empty">
+    <div>📄</div>
+    <strong>No attendance found</strong>
+    <span>No attendance records are available yet.</span>
+</div>`;
     }
 
+    document.getElementById("monthList").innerHTML = html;
+
+    document.getElementById("monthSelectorModal").style.display = "flex";
 }
-
-function closeSettings(){
-
-    document.getElementById(
-        "settingsModal"
-    ).style.display = "none";
-
-}
-
-function openPinManager(title, callback){
-
-    document.getElementById("pinManagerTitle").innerHTML = title;
-
-    let input = document.getElementById("pinManagerInput");
-
-    input.value = "";
-
-    document.getElementById("pinManagerModal").style.display = "flex";
 
     setTimeout(function(){
 
@@ -2268,7 +2267,7 @@ function aboutApp(){
 
     alert(
         "👷 Worker Attendance App\n\n" +
-        "Version : 1.0.14\n\n" +
+        "Version : 1.0.15\n\n" +
         "Developer : Safaul Ansari\n\n" +
         "Features:\n" +
         "✔ Worker Management\n" +
@@ -3239,9 +3238,6 @@ function renderAttendanceScreen(){
 
                 <button
                     class="attendance-open-btn"
-                    onclick="openAttendance(${index})">
-                    Open
-                </button>
 
             </div>
         `;
