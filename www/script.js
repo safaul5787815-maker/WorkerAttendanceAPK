@@ -315,161 +315,384 @@ function openWorkerCard(index){
 
     let worker = workers[index];
 
-    if(!worker.presentDays) worker.presentDays = 0;
-    if(!worker.totalOT) worker.totalOT = 0;
-    if(!worker.attendance) worker.attendance = {};
+    if(!worker.attendance){
+        worker.attendance = {};
+    }
 
-    let salary = getCompletedSalary(worker);
+    let present = 0;
+    let half = 0;
+    let totalOT = 0;
+
+    Object.keys(worker.attendance).forEach(function(dateKey){
+
+        let item = worker.attendance[dateKey] || {};
+
+        if(item.status === "present"){
+            present++;
+        }
+
+        if(item.status === "half"){
+            half++;
+        }
+
+        totalOT += Number(item.ot || 0);
+
+    });
+
+    worker.presentDays = present + (half * 0.5);
+    worker.halfDays = half;
+    worker.totalOT = totalOT;
+
+    let completedSalary =
+        typeof getCompletedSalary === "function"
+            ? getCompletedSalary(worker)
+            : 0;
 
     let currentEarnings =
-        getCurrentMonthEarnings(worker);
+        typeof getCurrentMonthEarnings === "function"
+            ? getCurrentMonthEarnings(worker)
+            : 0;
 
-    let paid = worker.paid || 0;
+    let paid = Number(worker.paid || 0);
 
-    let balance = salary - paid;
+    let balance = completedSalary - paid;
 
-    let monthName =
-        getCurrentMonthName();
+    let initials =
+        String(worker.name || "?")
+        .trim()
+        .charAt(0)
+        .toUpperCase();
 
     let content =
-        document.getElementById(
-            "singleWorkerContent"
-        );
+        document.getElementById("singleWorkerContent");
+
+    if(!content){
+        return;
+    }
 
     content.innerHTML = `
-<div class="worker-card">
 
-    <div class="worker-header">
+        <div style="
+            background:#ffffff;
+            border-radius:20px;
+            padding:20px;
+            box-shadow:0 4px 18px rgba(0,0,0,.10);
+            margin:10px 0 20px;
+        ">
 
-        <span class="worker-name">
-            👷 ${worker.name}
-        </span>
+            <div style="
+                display:flex;
+                align-items:center;
+                gap:14px;
+                margin-bottom:20px;
+            ">
 
-        <button class="menu-btn"
-        onclick="event.stopPropagation(); showMenu(${index},event)">
-            ⋮
-        </button>
+                <div style="
+                    width:62px;
+                    height:62px;
+                    min-width:62px;
+                    border-radius:50%;
+                    background:#e8f2ff;
+                    color:#1976d2;
+                    display:flex;
+                    align-items:center;
+                    justify-content:center;
+                    font-size:25px;
+                    font-weight:700;
+                ">
+                    ${initials}
+                </div>
 
-    </div>
+                <div style="flex:1;">
 
-    <div class="worker-info">
+                    <div style="
+                        font-size:22px;
+                        font-weight:700;
+                        color:#222;
+                    ">
+                        ${worker.name}
+                    </div>
 
-        <div>
-            <span class="worker-label">
-                💰 Daily Wage
-            </span>
+                    <div style="
+                        font-size:13px;
+                        color:#777;
+                        margin-top:4px;
+                    ">
+                        Daily Wage ₹${Number(worker.wage || 0)}
+                    </div>
 
-            <span class="worker-value">
-                Rs.${worker.wage}
-            </span>
+                </div>
+
+                <button
+                    class="menu-btn"
+                    onclick="event.stopPropagation(); showMenu(${index},event)"
+                    style="
+                        width:42px;
+                        height:42px;
+                        border-radius:50%;
+                    "
+                >
+                    ⋮
+                </button>
+
+            </div>
+
+
+            <div style="
+                display:grid;
+                grid-template-columns:repeat(2,1fr);
+                gap:10px;
+                margin-bottom:18px;
+            ">
+
+                <div style="
+                    background:#eaf7ee;
+                    border-radius:14px;
+                    padding:14px;
+                ">
+                    <div style="font-size:12px;color:#666;">
+                        Present
+                    </div>
+                    <div style="
+                        font-size:22px;
+                        font-weight:700;
+                        color:#159447;
+                        margin-top:4px;
+                    ">
+                        ${present}
+                    </div>
+                </div>
+
+
+                <div style="
+                    background:#fff7df;
+                    border-radius:14px;
+                    padding:14px;
+                ">
+                    <div style="font-size:12px;color:#666;">
+                        Half Day
+                    </div>
+                    <div style="
+                        font-size:22px;
+                        font-weight:700;
+                        color:#b77900;
+                        margin-top:4px;
+                    ">
+                        ${half}
+                    </div>
+                </div>
+
+
+                <div style="
+                    background:#eef4ff;
+                    border-radius:14px;
+                    padding:14px;
+                ">
+                    <div style="font-size:12px;color:#666;">
+                        OT Hours
+                    </div>
+                    <div style="
+                        font-size:22px;
+                        font-weight:700;
+                        color:#1976d2;
+                        margin-top:4px;
+                    ">
+                        ${totalOT}h
+                    </div>
+                </div>
+
+
+                <div style="
+                    background:#fff0f0;
+                    border-radius:14px;
+                    padding:14px;
+                ">
+                    <div style="font-size:12px;color:#666;">
+                        Paid
+                    </div>
+                    <div style="
+                        font-size:22px;
+                        font-weight:700;
+                        color:#d93025;
+                        margin-top:4px;
+                    ">
+                        ₹${Math.round(paid)}
+                    </div>
+                </div>
+
+            </div>
+
+
+            <div style="
+                border-top:1px solid #eee;
+                padding-top:15px;
+            ">
+
+                <div style="
+                    display:flex;
+                    justify-content:space-between;
+                    padding:10px 0;
+                ">
+                    <span>💰 Completed Salary</span>
+                    <strong>
+                        ₹${Math.round(completedSalary)}
+                    </strong>
+                </div>
+
+                <div style="
+                    display:flex;
+                    justify-content:space-between;
+                    padding:10px 0;
+                ">
+                    <span>🔵 Balance</span>
+                    <strong style="color:#1976d2;">
+                        ₹${Math.round(balance)}
+                    </strong>
+                </div>
+
+                <div style="
+                    display:flex;
+                    justify-content:space-between;
+                    padding:10px 0;
+                ">
+                    <span>📅 ${getCurrentMonthName()} Earnings</span>
+                    <strong style="color:#8a5a00;">
+                        ₹${Math.round(currentEarnings)}
+                    </strong>
+                </div>
+
+            </div>
+
+
+            <div style="
+                display:flex;
+                gap:10px;
+                margin-top:15px;
+            ">
+
+                <button
+                    class="attendance-btn"
+                    style="flex:1;"
+                    onclick="openPaidDialog(${index})"
+                >
+                    💵 Paid
+                </button>
+
+                <button
+                    class="attendance-btn"
+                    style="flex:1;"
+                    onclick="openAttendance(${index})"
+                >
+                    📅 Attendance
+                </button>
+
+            </div>
+
         </div>
+    `;
 
-        <div>
-            <span class="worker-label">
-                📅 Present
-            </span>
 
-            <span class="worker-value">
-                ${worker.presentDays}
-            </span>
-        </div>
+    document.querySelector(".container").style.display = "none";
 
-        <div>
-            <span class="worker-label">
-                🕒 OT
-            </span>
+    let dashboard =
+        document.getElementById("dashboardView");
 
-            <span class="worker-value">
-                ${worker.totalOT}h
-            </span>
-        </div>
+    if(dashboard){
+        dashboard.style.display = "none";
+    }
 
-        <div>
-            <span class="worker-label">
-                💵 Salary
-            </span>
+    let workersView =
+        document.getElementById("workersView");
 
-            <span class="worker-value">
-                Rs.${Math.round(salary)}
-            </span>
-        </div>
+    if(workersView){
+        workersView.style.display = "none";
+    }
 
-        <div>
-            <span class="worker-label">
-                💸 Paid
-            </span>
+    let attendanceView =
+        document.getElementById("attendanceView");
 
-            <span class="worker-value">
-                Rs.${paid}
-            </span>
-        </div>
+    if(attendanceView){
+        attendanceView.style.display = "none";
+    }
 
-        <div>
-            <span class="worker-label">
-                💰 Balance
-            </span>
+    let salaryView =
+        document.getElementById("salaryView");
 
-            <span class="worker-value">
-                Rs.${Math.round(balance)}
-            </span>
-        </div>
+    if(salaryView){
+        salaryView.style.display = "none";
+    }
 
-        <div>
-            <span class="worker-label">
-                📅 ${monthName} Earnings
-            </span>
+    let bottomNav =
+        document.querySelector(".bottom-nav");
 
-            <span class="worker-value">
-                Rs.${Math.round(currentEarnings)}
-            </span>
-        </div>
-
-        <button class="attendance-btn"
-        onclick="openPaidDialog(${index})">
-            💵 Paid
-        </button>
-
-    </div>
-
-    <button class="attendance-btn"
-    onclick="openAttendance(${index})">
-        Attendance
-    </button>
-
-</div>
-`;
-
-    document.querySelector(
-        ".container"
-    ).style.display = "none";
-
-    document.getElementById(
-        "dashboardView"
-    ).style.display = "none";
+    if(bottomNav){
+        bottomNav.style.display = "none";
+    }
 
     document.getElementById(
         "singleWorkerView"
     ).style.display = "block";
 
-}
+    window.scrollTo(0,0);
 
+}
 
 function closeWorkerCard(){
 
-document.getElementById(
-    "singleWorkerView"
-).style.display = "none";
+    let singleWorker =
+        document.getElementById("singleWorkerView");
 
-document.querySelector(
-    ".container"
-).style.display = "block";
+    if(singleWorker){
+        singleWorker.style.display = "none";
+    }
 
-document.getElementById(
-    "dashboardView"
-).style.display = "block";
+    let container =
+        document.querySelector(".container");
 
-renderWorkers();
+    if(container){
+        container.style.display = "block";
+    }
 
+    let dashboard =
+        document.getElementById("dashboardView");
+
+    if(dashboard){
+        dashboard.style.display = "none";
+    }
+
+    let workersView =
+        document.getElementById("workersView");
+
+    if(workersView){
+        workersView.style.display = "block";
+    }
+
+    let attendanceView =
+        document.getElementById("attendanceView");
+
+    if(attendanceView){
+        attendanceView.style.display = "none";
+    }
+
+    let salaryView =
+        document.getElementById("salaryView");
+
+    if(salaryView){
+        salaryView.style.display = "none";
+    }
+
+    let bottomNav =
+        document.querySelector(".bottom-nav");
+
+    if(bottomNav){
+        bottomNav.style.display = "flex";
+    }
+
+    setActiveNav("navWorkers");
+
+    renderWorkersScreen();
+
+    window.scrollTo(0,0);
 }
 
 function refreshWorkerCard(index){
@@ -2029,7 +2252,7 @@ function aboutApp(){
 
     alert(
         "👷 Worker Attendance App\n\n" +
-        "Version : 1.0.10\n\n" +
+        "Version : 1.0.11\n\n" +
         "Developer : Safaul Ansari\n\n" +
         "Features:\n" +
         "✔ Worker Management\n" +
@@ -2511,50 +2734,45 @@ document.addEventListener("deviceready", function () {
 
     document.addEventListener("backbutton", function () {
 
-        let popup = document.getElementById("popupMenu");
+        let popup =
+            document.getElementById("popupMenu");
 
-        if (popup && popup.style.display !== "none") {
+        if (popup &&
+            popup.style.display !== "none") {
+
             popup.style.display = "none";
             return;
         }
 
-        let settings = document.getElementById("settingsModal");
+        let settings =
+            document.getElementById("settingsModal");
 
-        if (settings && settings.style.display !== "none") {
+        if (settings &&
+            settings.style.display !== "none") {
+
             closeSettings();
             return;
         }
 
-        let singleWorker = document.getElementById("singleWorkerView");
+        let singleWorker =
+            document.getElementById("singleWorkerView");
 
-        if (singleWorker && singleWorker.style.display !== "none") {
+        if (singleWorker &&
+            singleWorker.style.display !== "none") {
 
-            singleWorker.style.display = "none";
-
-            let container = document.querySelector(".container");
-
-            if (container) {
-                container.style.display = "block";
-            }
-
-            let dashboard = document.getElementById("dashboardView");
-
-            if (dashboard) {
-                dashboard.style.display = "block";
-            }
-
+            closeWorkerCard();
             return;
         }
 
-        if (navigator.app && navigator.app.exitApp) {
+        if (navigator.app &&
+            navigator.app.exitApp) {
+
             navigator.app.exitApp();
         }
 
     }, false);
 
-}, false);
-
-
+});
 
 /* ================================
    MODERN BOTTOM NAVIGATION
