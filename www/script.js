@@ -586,6 +586,22 @@ function openWorkerCard(index){
                     📅 Attendance
                 </button>
 
+
+                <button
+                    class="attendance-btn"
+                    style="flex:1;"
+                    onclick="showPaymentMonthSelector(${index})"
+                >
+                    📜 History
+                </button>
+
+                <button
+                    class="attendance-btn"
+                    style="flex:1;"
+                    onclick="showMonthSelector(${index})"
+                >
+                    📄 PDF
+                </button>
             </div>
 
         </div>
@@ -2252,7 +2268,7 @@ function aboutApp(){
 
     alert(
         "👷 Worker Attendance App\n\n" +
-        "Version : 1.0.12\n\n" +
+        "Version : 1.0.14\n\n" +
         "Developer : Safaul Ansari\n\n" +
         "Features:\n" +
         "✔ Worker Management\n" +
