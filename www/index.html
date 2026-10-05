@@ -90,16 +90,51 @@
 
 <!-- Workers View -->
 <div id="workersView" class="workers-view">
-    <div class="workers-header">
-        <h2>👷 Workers</h2>
-        <p>Manage your workers</p>
+
+    <div class="workers-header modern-workers-header">
+        <div>
+            <h2>👷 Workers</h2>
+            <p>Manage your workers easily</p>
+        </div>
     </div>
-    <div class="workers-add-box">
-        <input type="text" id="workerName2" placeholder="Worker Name">
-        <input type="number" id="workerWage2" placeholder="Daily Wage">
-        <button onclick="addWorkerFromWorkers()">➕ Add Worker</button>
+
+    <div class="workers-search-box">
+        <span>🔍</span>
+        <input
+            type="text"
+            id="workerSearch"
+            placeholder="Search workers..."
+            oninput="searchWorkers()">
     </div>
-    <div id="workersScreenList" class="worker-cards"></div>
+
+    <div id="workersScreenList"
+         class="modern-workers-list">
+    </div>
+
+    <button
+        class="modern-add-worker-btn"
+        onclick="document.getElementById('workerName2').focus()">
+        ＋ Add Worker
+    </button>
+
+    <div class="workers-add-box modern-add-box">
+
+        <input
+            type="text"
+            id="workerName2"
+            placeholder="Worker Name">
+
+        <input
+            type="number"
+            id="workerWage2"
+            placeholder="Daily Wage">
+
+        <button onclick="addWorkerFromWorkers()">
+            Save Worker
+        </button>
+
+    </div>
+
 </div>
 
 <!-- Attendance View -->

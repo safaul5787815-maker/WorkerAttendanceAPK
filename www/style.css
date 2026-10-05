@@ -786,3 +786,165 @@ body{
     font-weight:700;
 }
 
+
+/* =================================
+   MODERN WORKERS SCREEN
+================================= */
+
+.modern-workers-header{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    min-height:105px;
+}
+
+.modern-workers-header h2{
+    font-size:28px;
+    margin:0 0 6px;
+}
+
+.modern-workers-header p{
+    font-size:15px;
+}
+
+.workers-search-box{
+    height:52px;
+    background:#fff;
+    border:1px solid #e4e8ef;
+    border-radius:14px;
+    display:flex;
+    align-items:center;
+    gap:10px;
+    padding:0 15px;
+    margin-bottom:14px;
+    box-shadow:0 2px 8px rgba(0,0,0,.06);
+    box-sizing:border-box;
+}
+
+.workers-search-box span{
+    font-size:19px;
+}
+
+.workers-search-box input{
+    flex:1;
+    border:none;
+    outline:none;
+    background:transparent;
+    margin:0;
+    padding:0;
+    font-size:16px;
+}
+
+.modern-workers-list{
+    display:flex;
+    flex-direction:column;
+    gap:10px;
+}
+
+.modern-worker-card{
+    background:#fff;
+    min-height:76px;
+    border-radius:16px;
+    padding:12px 12px;
+    display:flex;
+    align-items:center;
+    gap:12px;
+    box-sizing:border-box;
+    box-shadow:0 2px 10px rgba(0,0,0,.07);
+    border:1px solid #edf0f5;
+    cursor:pointer;
+    transition:.15s;
+}
+
+.modern-worker-card:active{
+    transform:scale(.98);
+}
+
+.worker-avatar{
+    width:52px;
+    height:52px;
+    min-width:52px;
+    border-radius:50%;
+    background:#e8f2ff;
+    color:#1976d2;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    font-size:21px;
+    font-weight:700;
+}
+
+.modern-worker-info{
+    flex:1;
+    min-width:0;
+}
+
+.modern-worker-name{
+    font-size:17px;
+    font-weight:600;
+    color:#222;
+    white-space:nowrap;
+    overflow:hidden;
+    text-overflow:ellipsis;
+}
+
+.modern-worker-stats{
+    margin-top:5px;
+    font-size:12px;
+    color:#777;
+}
+
+.modern-worker-balance{
+    color:#159447;
+    font-size:15px;
+    font-weight:700;
+    white-space:nowrap;
+}
+
+.modern-worker-arrow{
+    color:#777;
+    font-size:28px;
+    line-height:1;
+}
+
+.workers-empty{
+    background:#fff;
+    border-radius:16px;
+    padding:40px 20px;
+    text-align:center;
+    color:#777;
+    box-shadow:0 2px 10px rgba(0,0,0,.06);
+}
+
+.workers-empty h3{
+    color:#333;
+    margin:10px 0 5px;
+}
+
+.workers-empty p{
+    margin:0;
+}
+
+.modern-add-worker-btn{
+    position:fixed;
+    right:22px;
+    bottom:86px;
+    z-index:9997;
+    border:none;
+    background:#1976d2;
+    color:#fff;
+    border-radius:28px;
+    padding:14px 20px;
+    font-size:15px;
+    font-weight:600;
+    box-shadow:0 4px 14px rgba(25,118,210,.35);
+}
+
+.modern-add-worker-btn:active{
+    transform:scale(.95);
+}
+
+.modern-add-box{
+    margin-top:15px;
+}
+

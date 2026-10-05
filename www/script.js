@@ -2029,7 +2029,7 @@ function aboutApp(){
 
     alert(
         "👷 Worker Attendance App\n\n" +
-        "Version : 1.0.9\n\n" +
+        "Version : 1.0.10\n\n" +
         "Developer : Safaul Ansari\n\n" +
         "Features:\n" +
         "✔ Worker Management\n" +
@@ -2771,16 +2771,136 @@ function addWorkerFromWorkers(){
 
 function renderWorkersScreen(){
 
-    let source = document.getElementById("workerList");
-    let target = document.getElementById("workersScreenList");
+    let target =
+        document.getElementById("workersScreenList");
 
-    if(!source || !target){
+    if(!target){
         return;
     }
 
-    target.innerHTML = source.innerHTML;
-}
+    target.innerHTML = "";
 
+    if(typeof workers === "undefined" || workers.length === 0){
+
+        target.innerHTML = `
+            <div class="salary-empty">
+                👷 No workers added yet
+            </div>
+        `;
+
+        return;
+    }
+
+    workers.forEach(function(worker,index){
+
+        if(!worker.attendance){
+            worker.attendance = {};
+        }
+
+        let present = 0;
+        let half = 0;
+        let ot = 0;
+
+        Object.keys(worker.attendance).forEach(function(dateKey){
+
+            let item =
+                worker.attendance[dateKey] || {};
+
+            if(item.status === "present"){
+                present++;
+            }
+
+            if(item.status === "half"){
+                half++;
+            }
+
+            ot += Number(item.ot || 0);
+        });
+
+        let salary =
+            typeof getCompletedSalary === "function"
+                ? getCompletedSalary(worker)
+                : 0;
+
+        let paid = Number(worker.paid || 0);
+
+        let balance = salary - paid;
+
+        let initials =
+            String(worker.name || "?")
+            .trim()
+            .charAt(0)
+            .toUpperCase();
+
+        target.innerHTML += `
+            <div class="worker-name-card"
+                 onclick="openWorkerCard(${index})">
+
+                <div style="
+                    display:flex;
+                    align-items:center;
+                    gap:12px;
+                    width:100%;
+                ">
+
+                    <div style="
+                        width:48px;
+                        height:48px;
+                        min-width:48px;
+                        border-radius:50%;
+                        background:#e8f2ff;
+                        color:#1976d2;
+                        display:flex;
+                        align-items:center;
+                        justify-content:center;
+                        font-size:20px;
+                        font-weight:700;
+                    ">
+                        ${initials}
+                    </div>
+
+                    <div style="flex:1;">
+
+                        <div style="
+                            font-size:17px;
+                            font-weight:600;
+                        ">
+                            ${worker.name || "Unnamed Worker"}
+                        </div>
+
+                        <div style="
+                            font-size:12px;
+                            color:#777;
+                            margin-top:4px;
+                        ">
+                            ${present} Present
+                            ${half ? " · " + half + " Half" : ""}
+                            · ${ot} OT
+                        </div>
+
+                    </div>
+
+                    <div style="
+                        text-align:right;
+                        font-weight:700;
+                        color:#159447;
+                    ">
+                        ₹ ${Math.round(balance)}
+                    </div>
+
+                    <div style="
+                        font-size:26px;
+                        color:#777;
+                    ">
+                        ›
+                    </div>
+
+                </div>
+
+            </div>
+        `;
+    });
+}
 
 /* ================================
    ATTENDANCE SCREEN
