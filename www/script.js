@@ -1383,26 +1383,47 @@ function showPaymentHistory(index, selectedMonth){
 
     let payments = (worker.paymentHistory || [])
         .map(function(item, originalIndex){
-
             return {
                 ...item,
                 originalIndex: originalIndex
             };
-
         })
         .filter(function(item){
-
             return item.date.substring(0,7) === selectedMonth;
-
         });
 
-    let html =
-        "<h2>💵 Payment History</h2>";
+    let monthParts = selectedMonth.split("-");
+
+    const monthNames = [
+        "January","February","March","April",
+        "May","June","July","August",
+        "September","October","November","December"
+    ];
+
+    let monthTitle =
+        monthNames[Number(monthParts[1]) - 1] +
+        " " +
+        monthParts[0];
+
+    let html = `
+        <div class="modern-payment-header">
+            <div class="modern-payment-icon">💵</div>
+            <div>
+                <h2>Payment History</h2>
+                <span>${monthTitle}</span>
+            </div>
+        </div>
+    `;
 
     if(payments.length === 0){
 
-        html +=
-            "<p>No payment found for this month.</p>";
+        html += `
+            <div class="modern-payment-empty">
+                <div>💵</div>
+                <strong>No payment found</strong>
+                <span>No payment records are available for this month.</span>
+            </div>
+        `;
 
     }else{
 
@@ -1411,7 +1432,8 @@ function showPaymentHistory(index, selectedMonth){
             let parts = item.date.split("-");
 
             let showDate =
-                parts[2] + " " +
+                parts[2] +
+                " " +
                 [
                     "Jan","Feb","Mar","Apr",
                     "May","Jun","Jul","Aug",
@@ -1421,54 +1443,65 @@ function showPaymentHistory(index, selectedMonth){
                 parts[0];
 
             html += `
-<div class="payment-history-item">
+                <div class="modern-payment-card">
 
-    <div>
-        <strong>${showDate}</strong>
-        <br>
-        <span>₹${item.amount}</span>
-    </div>
+                    <div class="modern-payment-date">
+                        <div class="modern-payment-date-icon">
+                            📅
+                        </div>
 
-    <div>
+                        <div class="modern-payment-date-info">
+                            <strong>${showDate}</strong>
+                            <small>Payment received</small>
+                        </div>
+                    </div>
 
-        <button
-            onclick="editPayment(${index},${item.originalIndex},'${selectedMonth}')">
-            ✏️
-        </button>
+                    <div class="modern-payment-amount">
+                        ₹${Number(item.amount || 0)}
+                    </div>
 
-        <button
-            onclick="deletePayment(${index},${item.originalIndex},'${selectedMonth}')">
-            🗑
-        </button>
+                    <div class="modern-payment-actions">
 
-    </div>
+                        <button
+                            class="modern-payment-edit"
+                            onclick="editPayment(${index},${item.originalIndex},'${selectedMonth}')">
+                            ✏️ Edit
+                        </button>
 
-</div>
-`;
+                        <button
+                            class="modern-payment-delete"
+                            onclick="deletePayment(${index},${item.originalIndex},'${selectedMonth}')">
+                            🗑 Delete
+                        </button>
+
+                    </div>
+
+                </div>
+            `;
 
         });
 
     }
 
     html += `
-<br>
+        <button
+            class="modern-payment-close"
+            onclick="closePaymentHistory()">
+            Close
+        </button>
+    `;
 
-<button onclick="closePaymentHistory()">
-    Close
-</button>
-`;
+    document.getElementById(
+        "paymentMonthModal"
+    ).style.display = "none";
 
-document.getElementById(
-    "paymentMonthModal"
-).style.display = "none";
+    document.getElementById(
+        "paymentHistoryContent"
+    ).innerHTML = html;
 
-document.getElementById(
-    "paymentHistoryContent"
-).innerHTML = html;
-
-document.getElementById(
-    "paymentHistoryModal"
-).style.display = "flex";
+    document.getElementById(
+        "paymentHistoryModal"
+    ).style.display = "flex";
 
 }
 
@@ -1753,59 +1786,6 @@ function menuPDF(){
 function showMonthSelector(index){
 
     let worker = workers[index];
-
-    let months = {};
-
-    Object.keys(worker.attendance || {}).forEach(date=>{
-
-        let key = date.substring(0,7);
-
-        months[key]=true;
-
-    });
-
-    let html="";
-
-    const monthNames=[
-        "January","February","March","April",
-        "May","June","July","August",
-        "September","October","November","December"
-    ];
-
-    Object.keys(months).sort().forEach(key=>{
-
-        let p=key.split("-");
-
-        let title=
-            monthNames[Number(p[1])-1]
-            +" "+
-            p[0];
-
-        html += `
-<button onclick="downloadWorkerPDF(${index},'${key}')">
-${title}
-</button><br><br>`;
-    });
-
-    if(html===""){
-
-        html="<p>No attendance found.</p>";
-
-    }
-
-    document.getElementById("monthList").innerHTML=html;
-
-    document.getElementById(
-        "monthSelectorModal"
-    ).style.display="flex";
-
-}
-
-function closeMonthSelector(){
-
-function showMonthSelector(index){
-
-    let worker = workers[index];
     let months = {};
 
     Object.keys(worker.attendance || {}).forEach(function(date){
@@ -1835,43 +1815,48 @@ function showMonthSelector(index){
         html += `
 <button class="modern-month-card"
         onclick="downloadWorkerPDF(${index},'${key}')">
+
     <span class="modern-month-icon">📄</span>
+
     <span class="modern-month-info">
         <strong>${title}</strong>
         <small>Attendance Report PDF</small>
     </span>
+
     <span class="modern-month-arrow">›</span>
+
 </button>`;
 
     });
 
     if(html === ""){
+
         html = `
 <div class="modern-month-empty">
     <div>📄</div>
     <strong>No attendance found</strong>
     <span>No attendance records are available yet.</span>
 </div>`;
+
     }
 
     document.getElementById("monthList").innerHTML = html;
 
-    document.getElementById("monthSelectorModal").style.display = "flex";
-}
-
-    setTimeout(function(){
-
-        input.focus();
-
-    },100);
-
-    document.getElementById("pinManagerOk").onclick = function(){
-
-        callback(input.value);
-
-    };
+    document.getElementById(
+        "monthSelectorModal"
+    ).style.display = "flex";
 
 }
+
+
+function closeMonthSelector(){
+
+    document.getElementById(
+        "monthSelectorModal"
+    ).style.display = "none";
+
+}
+
 
 function closePinManager(){
 
@@ -2267,7 +2252,7 @@ function aboutApp(){
 
     alert(
         "👷 Worker Attendance App\n\n" +
-        "Version : 1.0.15\n\n" +
+        "Version : 1.0.16\n\n" +
         "Developer : Safaul Ansari\n\n" +
         "Features:\n" +
         "✔ Worker Management\n" +
@@ -2386,6 +2371,46 @@ function toggleFingerprint(){
 
     }
 
+}
+
+function openSettings(event){
+
+    if(event){
+        event.stopPropagation();
+    }
+
+    let modal = document.getElementById("settingsModal");
+
+    if(!modal){
+        return;
+    }
+
+    modal.style.display = "flex";
+
+    let fingerprintBtn =
+        document.getElementById("fingerprintBtn");
+
+    if(fingerprintBtn){
+
+        let enabled =
+            localStorage.getItem("fingerprintEnabled") === "true";
+
+        fingerprintBtn.innerHTML =
+            enabled
+                ? "👆 Fingerprint Lock : ON"
+                : "👆 Fingerprint Lock : OFF";
+    }
+}
+
+function closeSettings(){
+
+    let modal = document.getElementById("settingsModal");
+
+    if(!modal){
+        return;
+    }
+
+    modal.style.display = "none";
 }
 
 function downloadWorkerPDF(index, selectedMonth){
@@ -3238,16 +3263,16 @@ function renderAttendanceScreen(){
 
                 <button
                     class="attendance-open-btn"
+                    onclick="openAttendance(${index})">
+                    Open
+                </button>
 
             </div>
         `;
+
     });
+
 }
-
-
-/* ================================
-   BOTTOM NAV ACTIVE STATE
-================================ */
 
 function setActiveNav(id){
 
