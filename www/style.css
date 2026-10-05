@@ -948,3 +948,639 @@ body{
     margin-top:15px;
 }
 
+
+/* ===== Modern Attendance Screen ===== */
+
+.attendance-view{
+    max-width:900px;
+    margin:auto;
+    padding:20px 16px 95px;
+}
+
+.attendance-screen-header{
+    background:#1976d2;
+    color:#fff;
+    padding:22px 20px;
+    border-radius:18px;
+    margin-bottom:16px;
+    box-shadow:0 4px 14px rgba(25,118,210,.20);
+}
+
+.attendance-screen-header h2{
+    margin:0 0 5px;
+    font-size:26px;
+    font-weight:700;
+}
+
+.attendance-screen-header p{
+    margin:0;
+    font-size:14px;
+    opacity:.9;
+}
+
+.attendance-worker-list{
+    display:flex;
+    flex-direction:column;
+    gap:10px;
+}
+
+.attendance-worker-card{
+    background:#fff;
+    min-height:76px;
+    padding:13px 14px;
+    border-radius:16px;
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    gap:12px;
+    border:1px solid #edf0f5;
+    box-shadow:0 2px 10px rgba(0,0,0,.07);
+    transition:.15s;
+}
+
+.attendance-worker-card:active{
+    transform:scale(.98);
+}
+
+.attendance-worker-name{
+    font-size:17px;
+    font-weight:600;
+    color:#222;
+}
+
+.attendance-worker-wage{
+    margin-top:5px;
+    font-size:12px;
+    color:#777;
+}
+
+.attendance-open-btn{
+    min-width:76px;
+    padding:10px 14px;
+    border-radius:12px;
+    font-size:14px;
+    font-weight:600;
+}
+
+
+/* ===== Modern Home Dashboard ===== */
+
+#dashboardView{
+    max-width:900px;
+    margin:auto;
+    padding-bottom:95px;
+}
+
+#dashboardView .profile{
+    padding:22px 16px 14px;
+    text-align:left;
+    display:flex;
+    align-items:center;
+    gap:14px;
+}
+
+#dashboardView .profile::after{
+    content:"Worker Attendance";
+    font-size:22px;
+    font-weight:700;
+    color:#202124;
+}
+
+#dashboardView .profile-img{
+    width:58px;
+    height:58px;
+    min-width:58px;
+    border:3px solid #1976d2;
+    box-shadow:0 3px 12px rgba(25,118,210,.18);
+}
+
+#dashboardView .dashboard{
+    grid-template-columns:repeat(2,1fr);
+    gap:12px;
+    padding:8px 16px;
+}
+
+#dashboardView .dashboard .card{
+    min-height:105px;
+    display:flex;
+    flex-direction:column;
+    justify-content:center;
+    text-align:left;
+    padding:17px;
+    border-radius:18px;
+}
+
+#dashboardView .dashboard .card:first-child{
+    grid-column:span 2;
+    background:linear-gradient(135deg,#1976d2,#42a5f5);
+    color:#fff;
+}
+
+#dashboardView .dashboard .card:first-child h3,
+#dashboardView .dashboard .card:first-child h2{
+    color:#fff;
+}
+
+#dashboardView .dashboard .card:first-child h2{
+    font-size:32px;
+}
+
+#dashboardView .dashboard .card h3{
+    font-size:13px;
+    margin-bottom:7px;
+}
+
+#dashboardView .dashboard .card h2{
+    font-size:25px;
+}
+
+#dashboardView .box{
+    margin:14px 16px;
+    padding:17px;
+    border-radius:18px;
+}
+
+#dashboardView .box::before{
+    content:"Add New Worker";
+    display:block;
+    font-size:18px;
+    font-weight:700;
+    margin-bottom:10px;
+    color:#222;
+}
+
+#dashboardView .box input{
+    background:#f7f9fc;
+    border-radius:12px;
+}
+
+#dashboardView .btns button{
+    width:100%;
+    padding:13px;
+    border-radius:13px;
+    font-size:15px;
+    font-weight:600;
+}
+
+#dashboardView .worker-cards{
+    padding:0 16px 20px;
+}
+
+@media(max-width:380px){
+
+    #dashboardView .dashboard{
+        grid-template-columns:1fr;
+    }
+
+    #dashboardView .dashboard .card:first-child{
+        grid-column:span 1;
+    }
+
+}
+
+
+/* ===== Modern Salary Screen ===== */
+
+.salary-view{
+    max-width:900px;
+    margin:auto;
+    padding:20px 16px 95px;
+}
+
+.salary-header{
+    background:linear-gradient(135deg,#1976d2,#42a5f5);
+    color:#fff;
+    padding:23px 20px;
+    border-radius:18px;
+    margin-bottom:16px;
+    box-shadow:0 4px 14px rgba(25,118,210,.20);
+}
+
+.salary-header h2{
+    margin:0 0 5px;
+    font-size:27px;
+}
+
+.salary-header p{
+    margin:0;
+    font-size:14px;
+    opacity:.9;
+}
+
+.salary-worker-card{
+    background:#fff;
+    border-radius:17px;
+    padding:17px;
+    margin-bottom:12px;
+    border:1px solid #edf0f5;
+    box-shadow:0 2px 10px rgba(0,0,0,.07);
+}
+
+.salary-worker-top{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    gap:10px;
+    padding-bottom:13px;
+    margin-bottom:5px;
+    border-bottom:1px solid #edf0f5;
+}
+
+.salary-worker-name{
+    font-size:17px;
+    font-weight:700;
+    color:#222;
+}
+
+.salary-worker-wage{
+    font-size:12px;
+    color:#777;
+    text-align:right;
+}
+
+.salary-row{
+    min-height:43px;
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    gap:10px;
+    border-bottom:1px solid #f0f2f5;
+    font-size:14px;
+    color:#666;
+}
+
+.salary-row:last-child{
+    border-bottom:none;
+}
+
+.salary-row strong{
+    font-size:16px;
+    color:#222;
+}
+
+.salary-row.salary-balance{
+    margin:6px -4px;
+    padding:4px 8px;
+    border-radius:10px;
+    background:#eef7ff;
+    border-bottom:none;
+}
+
+.salary-row.salary-balance span,
+.salary-row.salary-balance strong{
+    color:#1976d2;
+}
+
+.salary-row.salary-current{
+    margin-top:5px;
+    padding-top:5px;
+    border-bottom:none;
+}
+
+.salary-row.salary-current span,
+.salary-row.salary-current strong{
+    color:#159447;
+}
+
+.salary-empty{
+    background:#fff;
+    border-radius:17px;
+    padding:42px 20px;
+    text-align:center;
+    color:#777;
+    border:1px solid #edf0f5;
+    box-shadow:0 2px 10px rgba(0,0,0,.06);
+}
+
+.salary-empty::first-line{
+    font-size:16px;
+}
+
+@media(max-width:380px){
+
+    .salary-worker-top{
+        align-items:flex-start;
+        flex-direction:column;
+    }
+
+    .salary-worker-wage{
+        text-align:left;
+    }
+
+}
+
+
+/* ===== Modern Worker Profile ===== */
+
+.single-worker-view{
+    max-width:900px;
+    margin:auto;
+    padding:16px 16px 95px;
+    background:#f5f7fb;
+    min-height:100vh;
+}
+
+.worker-back-btn{
+    background:#fff;
+    color:#1976d2;
+    border:1px solid #e1e6ee;
+    border-radius:22px;
+    padding:9px 16px;
+    font-weight:600;
+    box-shadow:0 2px 7px rgba(0,0,0,.06);
+}
+
+.single-worker-view > #singleWorkerContent > div{
+    margin-top:10px !important;
+    border-radius:20px !important;
+    border:1px solid #edf0f5;
+}
+
+.single-worker-view #singleWorkerContent > div > div:first-child{
+    padding-bottom:16px;
+}
+
+.single-worker-view .menu-btn{
+    background:#f1f5fa !important;
+    color:#555 !important;
+    border:1px solid #e1e6ee !important;
+    font-size:22px !important;
+}
+
+.single-worker-view .attendance-btn{
+    min-height:48px;
+    border-radius:13px !important;
+    font-weight:600;
+    box-shadow:none !important;
+}
+
+.single-worker-view #singleWorkerContent strong{
+    font-size:17px;
+}
+
+.single-worker-view #singleWorkerContent span{
+    color:#666;
+}
+
+@media(max-width:380px){
+
+    .single-worker-view{
+        padding-left:12px;
+        padding-right:12px;
+    }
+
+    .single-worker-view #singleWorkerContent > div{
+        padding:16px !important;
+    }
+
+}
+
+
+/* ===== Modern Modal System ===== */
+
+.attendance-modal{
+    background:rgba(15,23,42,.58) !important;
+    backdrop-filter:blur(4px);
+    -webkit-backdrop-filter:blur(4px);
+    padding:14px !important;
+}
+
+.attendance-box{
+    width:100%;
+    max-width:430px;
+    max-height:90vh;
+    overflow-y:auto;
+    background:#fff;
+    border:1px solid rgba(255,255,255,.7);
+    border-radius:22px;
+    padding:20px;
+    box-shadow:0 18px 50px rgba(0,0,0,.25);
+    animation:modalSlideUp .18s ease-out;
+}
+
+.attendance-box h2{
+    font-size:21px;
+    color:#202124;
+    margin:0 0 16px;
+}
+
+.attendance-box h3{
+    font-size:18px;
+    color:#202124;
+    margin:0 0 15px;
+}
+
+.attendance-box input{
+    background:#f7f9fc;
+    border:1px solid #dfe4eb;
+    border-radius:12px;
+    padding:13px 14px;
+}
+
+.attendance-box input:focus{
+    background:#fff;
+    border-color:#1976d2;
+    box-shadow:0 0 0 3px rgba(25,118,210,.10);
+}
+
+.attendance-box button{
+    min-height:44px;
+    border-radius:12px;
+    font-weight:600;
+}
+
+@keyframes modalSlideUp{
+    from{
+        opacity:0;
+        transform:translateY(15px) scale(.98);
+    }
+    to{
+        opacity:1;
+        transform:translateY(0) scale(1);
+    }
+}
+
+/* Settings */
+
+#settingsModal .attendance-box button{
+    width:100%;
+    margin:5px 0;
+    text-align:left;
+    padding:12px 14px;
+    background:#f5f8fc;
+    color:#263238;
+    border:1px solid #e7ebf0;
+}
+
+#settingsModal .attendance-box button:hover{
+    background:#eaf3ff;
+    color:#1976d2;
+}
+
+#settingsModal .attendance-box button:last-child{
+    text-align:center;
+    background:#1976d2;
+    color:#fff;
+    border:none;
+}
+
+/* Paid dialog */
+
+#paidModal .attendance-box > button{
+    min-width:110px;
+}
+
+#paidModal .paid-date-row{
+    background:#f7f9fc;
+    border-radius:13px;
+    padding:5px;
+}
+
+/* PIN dialogs */
+
+#pinModal .attendance-box,
+#pinManagerModal .attendance-box{
+    text-align:center;
+}
+
+#pinInput,
+#pinManagerInput{
+    text-align:center;
+    letter-spacing:8px;
+    font-size:22px;
+    font-weight:700;
+}
+
+/* Payment history */
+
+#paymentHistoryModal .attendance-box{
+    max-width:450px;
+}
+
+/* Calendar/date dialogs */
+
+#attendanceModal .attendance-box,
+#dateActionModal .attendance-box,
+#monthSelectorModal .attendance-box,
+#paymentMonthModal .attendance-box{
+    border-radius:22px;
+}
+
+@media(max-width:380px){
+
+    .attendance-box{
+        padding:16px;
+        border-radius:20px;
+    }
+
+}
+
+
+/* ===== Final App Navigation Polish ===== */
+
+.top-bar{
+    min-height:64px;
+    padding:8px 14px;
+    background:linear-gradient(135deg,#1976d2,#2196f3);
+    border-bottom-left-radius:0;
+    border-bottom-right-radius:0;
+    box-shadow:0 3px 12px rgba(25,118,210,.22);
+}
+
+.top-bar h1{
+    font-size:19px;
+    font-weight:700;
+    letter-spacing:-.2px;
+}
+
+.top-menu-btn{
+    min-height:40px;
+    padding:8px 14px;
+    border-radius:20px;
+    background:rgba(255,255,255,.16);
+    border:1px solid rgba(255,255,255,.35);
+    font-weight:600;
+}
+
+/* Bottom navigation */
+
+.bottom-nav{
+    height:72px;
+    padding:6px 10px;
+    background:rgba(255,255,255,.97);
+    border-top:1px solid #e7ebf0;
+    box-shadow:0 -5px 20px rgba(0,0,0,.08);
+    backdrop-filter:blur(10px);
+    -webkit-backdrop-filter:blur(10px);
+}
+
+.bottom-nav button{
+    max-width:100px;
+    height:58px;
+    border-radius:15px;
+    color:#7b8188;
+    transition:.15s;
+}
+
+.bottom-nav button.active{
+    background:#eaf3ff;
+    color:#1976d2;
+}
+
+.bottom-nav button span{
+    font-size:11px;
+    margin-top:1px;
+}
+
+.bottom-nav button:active{
+    transform:scale(.92);
+}
+
+/* Popup menu */
+
+.popup-menu{
+    min-width:175px;
+    background:#fff !important;
+    border:1px solid #e7ebf0;
+    border-radius:15px !important;
+    padding:6px !important;
+    box-shadow:0 10px 30px rgba(0,0,0,.18) !important;
+    overflow:hidden;
+}
+
+.popup-menu div{
+    padding:13px 14px !important;
+    border-radius:10px;
+    font-size:14px;
+    color:#30343b;
+    font-weight:500;
+}
+
+.popup-menu div:active{
+    background:#eaf3ff;
+    color:#1976d2;
+}
+
+/* General touch feedback */
+
+button,
+.modern-worker-card,
+.worker-name-card{
+    -webkit-tap-highlight-color:transparent;
+}
+
+/* Better mobile spacing */
+
+@media(max-width:600px){
+
+    .top-bar h1{
+        font-size:18px;
+    }
+
+    .top-menu-btn{
+        font-size:12px;
+        padding:8px 12px;
+    }
+
+}
+

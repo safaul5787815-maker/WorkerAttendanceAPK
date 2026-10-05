@@ -3001,8 +3001,10 @@ function renderWorkersScreen(){
     if(typeof workers === "undefined" || workers.length === 0){
 
         target.innerHTML = `
-            <div class="salary-empty">
-                👷 No workers added yet
+            <div class="workers-empty">
+                <div style="font-size:48px;">👷</div>
+                <h3>No workers yet</h3>
+                <p>Add your first worker to start tracking attendance.</p>
             </div>
         `;
 
@@ -3040,9 +3042,11 @@ function renderWorkersScreen(){
                 ? getCompletedSalary(worker)
                 : 0;
 
-        let paid = Number(worker.paid || 0);
+        let paid =
+            Number(worker.paid || 0);
 
-        let balance = salary - paid;
+        let balance =
+            salary - paid;
 
         let initials =
             String(worker.name || "?")
@@ -3051,78 +3055,39 @@ function renderWorkersScreen(){
             .toUpperCase();
 
         target.innerHTML += `
-            <div class="worker-name-card"
+            <div class="modern-worker-card"
                  onclick="openWorkerCard(${index})">
 
-                <div style="
-                    display:flex;
-                    align-items:center;
-                    gap:12px;
-                    width:100%;
-                ">
+                <div class="worker-avatar">
+                    ${initials}
+                </div>
 
-                    <div style="
-                        width:48px;
-                        height:48px;
-                        min-width:48px;
-                        border-radius:50%;
-                        background:#e8f2ff;
-                        color:#1976d2;
-                        display:flex;
-                        align-items:center;
-                        justify-content:center;
-                        font-size:20px;
-                        font-weight:700;
-                    ">
-                        ${initials}
+                <div class="modern-worker-info">
+
+                    <div class="modern-worker-name">
+                        ${worker.name || "Unnamed Worker"}
                     </div>
 
-                    <div style="flex:1;">
-
-                        <div style="
-                            font-size:17px;
-                            font-weight:600;
-                        ">
-                            ${worker.name || "Unnamed Worker"}
-                        </div>
-
-                        <div style="
-                            font-size:12px;
-                            color:#777;
-                            margin-top:4px;
-                        ">
-                            ${present} Present
-                            ${half ? " · " + half + " Half" : ""}
-                            · ${ot} OT
-                        </div>
-
+                    <div class="modern-worker-stats">
+                        ${present} Present
+                        ${half ? " · " + half + " Half" : ""}
+                        · ${ot} OT
                     </div>
 
-                    <div style="
-                        text-align:right;
-                        font-weight:700;
-                        color:#159447;
-                    ">
-                        ₹ ${Math.round(balance)}
-                    </div>
+                </div>
 
-                    <div style="
-                        font-size:26px;
-                        color:#777;
-                    ">
-                        ›
-                    </div>
+                <div class="modern-worker-balance">
+                    ₹${Math.round(balance)}
+                </div>
 
+                <div class="modern-worker-arrow">
+                    ›
                 </div>
 
             </div>
         `;
     });
 }
-
-/* ================================
-   ATTENDANCE SCREEN
-================================ */
 
 function renderAttendanceScreen(){
 
