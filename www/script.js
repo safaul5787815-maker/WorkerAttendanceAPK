@@ -2987,6 +2987,101 @@ function addWorkerFromWorkers(){
     renderWorkersScreen();
 }
 
+function openAddWorkerModal(){
+
+    let modal =
+        document.getElementById("addWorkerModal");
+
+    if(!modal){
+        return;
+    }
+
+    modal.style.display = "flex";
+
+    let nameInput =
+        document.getElementById("workerNameModal");
+
+    if(nameInput){
+        nameInput.value = "";
+        setTimeout(function(){
+            nameInput.focus();
+        },100);
+    }
+
+    let wageInput =
+        document.getElementById("workerWageModal");
+
+    if(wageInput){
+        wageInput.value = "";
+    }
+}
+
+function closeAddWorkerModal(){
+
+    let modal =
+        document.getElementById("addWorkerModal");
+
+    if(modal){
+        modal.style.display = "none";
+    }
+}
+
+function saveWorkerFromModal(){
+
+    let nameInput =
+        document.getElementById("workerNameModal");
+
+    let wageInput =
+        document.getElementById("workerWageModal");
+
+    let name =
+        String(nameInput ? nameInput.value : "")
+        .trim();
+
+    let wage =
+        Number(wageInput ? wageInput.value : 0);
+
+    if(!name){
+        alert("Please enter worker name");
+        if(nameInput){
+            nameInput.focus();
+        }
+        return;
+    }
+
+    if(!wage || wage <= 0){
+        alert("Please enter a valid daily wage");
+        if(wageInput){
+            wageInput.focus();
+        }
+        return;
+    }
+
+    let nameField =
+        document.getElementById("name");
+
+    let wageField =
+        document.getElementById("wage");
+
+    if(!nameField || !wageField){
+        alert("Unable to add worker");
+        return;
+    }
+
+    nameField.value = name;
+    wageField.value = wage;
+
+    addWorker();
+
+    closeAddWorkerModal();
+
+    renderWorkersScreen();
+
+    if(typeof renderDashboard === "function"){
+        renderDashboard();
+    }
+}
+
 function renderWorkersScreen(){
 
     let target =

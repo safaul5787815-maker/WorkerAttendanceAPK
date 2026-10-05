@@ -113,31 +113,56 @@
 
     <button
         class="modern-add-worker-btn"
-        onclick="document.getElementById('workerName2').focus()">
-        ＋ Add Worker
-    </button>
-
-    <div class="workers-add-box modern-add-box">
-
-        <input
-            type="text"
-            id="workerName2"
-            placeholder="Worker Name">
-
-        <input
-            type="number"
-            id="workerWage2"
-            placeholder="Daily Wage">
-
-        <button onclick="addWorkerFromWorkers()">
-            Save Worker
-        </button>
-
-    </div>
+        onclick="openAddWorkerModal()">
+    ＋ Add Worker
+</button>
 
 </div>
-
 <!-- Attendance View -->
+<!-- Add Worker Modal -->
+<div id="addWorkerModal" class="attendance-modal">
+  <div class="attendance-box add-worker-modal-box">
+
+    <div class="add-worker-modal-header">
+      <div>
+        <h2>Add Worker</h2>
+        <p>Add a new worker to your list</p>
+      </div>
+      <button class="add-worker-close-btn"
+              onclick="closeAddWorkerModal()">×</button>
+    </div>
+
+    <div class="add-worker-field">
+      <label>Worker Name</label>
+      <input type="text"
+             id="workerNameModal"
+             placeholder="Enter worker name"
+             autocomplete="off">
+    </div>
+
+    <div class="add-worker-field">
+      <label>Daily Wage</label>
+      <input type="number"
+             id="workerWageModal"
+             placeholder="Enter daily wage"
+             inputmode="numeric">
+    </div>
+
+    <div class="add-worker-modal-actions">
+      <button class="add-worker-cancel-btn"
+              onclick="closeAddWorkerModal()">
+        Cancel
+      </button>
+
+      <button class="add-worker-save-btn"
+              onclick="saveWorkerFromModal()">
+        Save Worker
+      </button>
+    </div>
+
+  </div>
+</div>
+
 <div id="attendanceView" class="attendance-view">
     <div class="attendance-screen-header">
         <h2>📅 Attendance</h2>
