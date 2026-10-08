@@ -2558,7 +2558,7 @@ function aboutApp(){
 
     alert(
         "👷 Worker Attendance App\n\n" +
-        "Version : 1.0.18\n\n" +
+        "Version : 1.0.19\n\n" +
         "Developer : Safaul Ansari\n\n" +
         "Features:\n" +
         "✔ Worker Management\n" +
@@ -3515,43 +3515,54 @@ function saveWorkerFromModal(){
         document.getElementById("workerWageModal");
 
     let name =
-        String(nameInput ? nameInput.value : "")
-        .trim();
+        String(nameInput ? nameInput.value : "").trim();
 
     let wage =
         Number(wageInput ? wageInput.value : 0);
 
     if(!name){
+
         alert("Please enter worker name");
+
         if(nameInput){
             nameInput.focus();
         }
+
         return;
     }
 
     if(!wage || wage <= 0){
+
         alert("Please enter a valid daily wage");
+
         if(wageInput){
             wageInput.focus();
         }
+
         return;
     }
 
-    let nameField =
-        document.getElementById("name");
+    workers.push({
 
-    let wageField =
-        document.getElementById("wage");
+        name:name,
+        wage:wage,
+        presentDays:0,
+        totalOT:0,
+        paid:0,
+        paymentHistory:[],
+        attendance:{}
 
-    if(!nameField || !wageField){
-        alert("Unable to add worker");
-        return;
+    });
+
+    saveWorkers();
+
+    if(nameInput){
+        nameInput.value = "";
     }
 
-    nameField.value = name;
-    wageField.value = wage;
-
-    addWorker();
+    if(wageInput){
+        wageInput.value = "";
+    }
 
     closeAddWorkerModal();
 
@@ -3560,6 +3571,7 @@ function saveWorkerFromModal(){
     if(typeof renderDashboard === "function"){
         renderDashboard();
     }
+
 }
 
 function renderWorkersScreen(){
