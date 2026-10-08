@@ -73,59 +73,6 @@
         </div>
 
 
-        <div class="modern-home-stat-card modern-stat-earnings">
-
-            <div class="modern-stat-icon">
-                💰
-            </div>
-
-            <div class="modern-stat-info">
-                <span id="currentMonthEarningsTitle">
-                    Current Month
-                </span>
-                <strong>
-                    ₹<span id="currentMonthEarnings">0</span>
-                </strong>
-            </div>
-
-        </div>
-
-
-        <div class="modern-home-stat-card modern-stat-balance">
-
-            <div class="modern-stat-icon">
-                💵
-            </div>
-
-            <div class="modern-stat-info">
-                <span>Total Balance</span>
-                <strong>
-                    ₹<span id="homeTotalBalance">0</span>
-                </strong>
-            </div>
-
-        </div>
-
-
-        <div class="modern-home-stat-card modern-stat-days">
-
-            <div class="modern-stat-icon">
-                📅
-            </div>
-
-            <div class="modern-stat-info">
-                <span>Working Days</span>
-                <strong id="homeWorkingDays">0</strong>
-            </div>
-
-        </div>
-
-    </div>
-
-
-    <div class="modern-home-section-header">
-
-        <div>
 
 <!-- SELECTED WORKER STATS -->
 
@@ -185,74 +132,28 @@
 
 
     <div class="modern-home-actions">
-
-        <button
-            class="modern-home-action"
+    <button class="modern-home-action"
             onclick="openAddWorkerModal()">
+        <div class="modern-action-icon">＋</div>
+        <div>
+            <strong>Add Worker</strong>
+            <span>Add a new worker</span>
+        </div>
+        <b>›</b>
+    </button>
 
-            <div class="modern-action-icon">＋</div>
-
-            <div>
-                <strong>Add Worker</strong>
-                <span>Add a new worker</span>
-            </div>
-
-            <b>›</b>
-
-        </button>
-
-
-        <button
-            class="modern-home-action"
+    <button class="modern-home-action"
             onclick="showAttendance()">
+        <div class="modern-action-icon">📅</div>
+        <div>
+            <strong>Attendance</strong>
+            <span>Mark daily attendance</span>
+        </div>
+        <b>›</b>
+    </button>
+</div>
 
-            <div class="modern-action-icon">📅</div>
-
-            <div>
-                <strong>Attendance</strong>
-                <span>Mark daily attendance</span>
-            </div>
-
-            <b>›</b>
-
-        </button>
-
-
-        <button
-            class="modern-home-action"
-            onclick="showSalary()">
-
-            <div class="modern-action-icon">💰</div>
-
-            <div>
-                <strong>Salary</strong>
-                <span>View completed salary</span>
-            </div>
-
-            <b>›</b>
-
-        </button>
-
-
-        <button
-            class="modern-home-action"
-            onclick="showWorkers()">
-
-            <div class="modern-action-icon">👷</div>
-
-            <div>
-                <strong>Workers</strong>
-                <span>Manage worker details</span>
-            </div>
-
-            <b>›</b>
-
-        </button>
-
-    </div>
-
-
-    <div class="modern-home-section-header modern-worker-overview-title">
+<div class="modern-home-section-header modern-worker-overview-title">
 
         <div>
             <h3>Worker Overview</h3>
@@ -431,9 +332,10 @@
 
         <br>
 
-        <button onclick="closeAttendance()">
-            Close
-        </button>
+        <button class="modern-save-attendance-btn"
+        onclick="saveAttendanceAndClose()">
+    ✓ Save Attendance
+</button>
 
     </div>
 
@@ -524,9 +426,9 @@
         </div>
 
         <button class="modern-save-attendance-btn"
-                onclick="saveDateOT()">
-            ✓ Save Attendance
-        </button>
+        onclick="confirmDateAttendance()">
+    OK
+</button>
 
         <button class="modern-close-attendance-btn"
                 onclick="closeDateAction()">

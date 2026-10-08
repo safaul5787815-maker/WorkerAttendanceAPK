@@ -1549,53 +1549,41 @@ function updateModernAttendanceStatus(status){
 
 
 function markDatePresent(){
-
     attendanceData[selectedDate] =
         attendanceData[selectedDate] || {
-            status:"present",
+            status:"",
             ot:0
         };
 
-    attendanceData[selectedDate].status="present";
-
-    saveAttendanceWithoutClosing();
-
+    attendanceData[selectedDate].status = "present";
     updateModernAttendanceStatus("present");
-
+    updateModernOTHint();
 }
 
 
 function markDateAbsent(){
-
     attendanceData[selectedDate] =
         attendanceData[selectedDate] || {
-            status:"absent",
+            status:"",
             ot:0
         };
 
-    attendanceData[selectedDate].status="absent";
-
-    saveAttendanceWithoutClosing();
-
+    attendanceData[selectedDate].status = "absent";
     updateModernAttendanceStatus("absent");
-
+    updateModernOTHint();
 }
 
 
 function markDateHalfDay(){
-
     attendanceData[selectedDate] =
         attendanceData[selectedDate] || {
-            status:"half",
+            status:"",
             ot:0
         };
 
-    attendanceData[selectedDate].status="half";
-
-    saveAttendanceWithoutClosing();
-
+    attendanceData[selectedDate].status = "half";
     updateModernAttendanceStatus("half");
-
+    updateModernOTHint();
 }
 
 
@@ -1705,6 +1693,96 @@ function saveAttendanceWithoutClosing(){
     renderCalendar();
 
 }
+
+
+function confirmDateAttendance(){
+
+    if(!selectedDate){
+        return;
+    }
+
+    let input = document.getElementById("dateOTInput");
+    let ot = Number(input ? input.value : 0);
+
+    if(isNaN(ot) || ot < 0){
+        alert("Please enter valid OT hours");
+        return;
+    }
+
+    ot = Math.round(ot * 2) / 2;
+
+    attendanceData[selectedDate] =
+        attendanceData[selectedDate] || {
+            status:"",
+            ot:0
+        };
+
+    attendanceData[selectedDate].ot = ot;
+
+    if(!attendanceData[selectedDate].status){
+        attendanceData[selectedDate].status = "present";
+    }
+
+    updateAttendance();
+    closeDateAction();
+    renderCalendar();
+}
+
+
+function saveAttendanceAndClose(){
+
+    if(selectedAttendanceWorker < 0){
+        return;
+    }
+
+    workers[selectedAttendanceWorker].attendance =
+        attendanceData;
+
+    let present = 0;
+    let halfDays = 0;
+    let totalOT = 0;
+
+    Object.values(attendanceData).forEach(function(item){
+
+        if(item.status === "present"){
+            present++;
+        }
+
+        if(item.status === "half"){
+            halfDays++;
+        }
+
+        totalOT += Number(item.ot || 0);
+    });
+
+    workers[selectedAttendanceWorker].presentDays =
+        present + (halfDays * 0.5);
+
+    workers[selectedAttendanceWorker].halfDays =
+        halfDays;
+
+    workers[selectedAttendanceWorker].totalOT =
+        totalOT;
+
+    saveWorkers();
+
+    renderCalendar();
+
+    let calendar =
+        document.getElementById("attendanceModal");
+
+    if(calendar){
+        calendar.style.display = "none";
+    }
+
+    let dateModal =
+        document.getElementById("dateActionModal");
+
+    if(dateModal){
+        dateModal.style.display = "none";
+    }
+}
+
 
 function closeDateAction(){
 
@@ -2726,7 +2804,7 @@ function aboutApp(){
 
     alert(
         "👷 Worker Attendance App\n\n" +
-        "Version : 1.0.20\n\n" +
+        "Version : 1.0.21\n\n" +
         "Developer : Safaul Ansari\n\n" +
         "Features:\n" +
         "✔ Worker Management\n" +
