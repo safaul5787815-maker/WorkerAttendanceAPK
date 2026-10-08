@@ -2237,3 +2237,414 @@ button,
         gap:6px;
     }
 }
+
+
+/* =========================================================
+   PREMIUM MODERN HOME DASHBOARD
+========================================================= */
+
+.modern-home-hero{
+    margin:16px 14px 14px;
+    padding:18px;
+    border-radius:24px;
+    background:linear-gradient(135deg,#087fe5,#08a8ee);
+    color:#fff;
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    gap:12px;
+    box-shadow:0 8px 24px rgba(0,120,220,.20);
+}
+
+.modern-home-profile{
+    display:flex;
+    align-items:center;
+    gap:13px;
+    min-width:0;
+}
+
+.modern-home-avatar{
+    width:58px;
+    height:58px;
+    min-width:58px;
+    border-radius:50%;
+    background:#fff;
+    padding:3px;
+    box-sizing:border-box;
+    box-shadow:0 3px 12px rgba(0,0,0,.16);
+}
+
+.modern-home-avatar img{
+    width:100%;
+    height:100%;
+    border-radius:50%;
+    object-fit:cover;
+}
+
+.modern-home-welcome{
+    min-width:0;
+}
+
+.modern-home-welcome span{
+    display:block;
+    font-size:12px;
+    opacity:.88;
+    margin-bottom:3px;
+}
+
+.modern-home-welcome h2{
+    margin:0;
+    font-size:20px;
+    font-weight:750;
+    letter-spacing:-.2px;
+}
+
+.modern-home-welcome p{
+    margin:4px 0 0;
+    font-size:12px;
+    opacity:.88;
+}
+
+.modern-home-date{
+    flex:none;
+    padding:9px 11px;
+    border-radius:13px;
+    background:rgba(255,255,255,.16);
+    border:1px solid rgba(255,255,255,.22);
+    font-size:12px;
+    white-space:nowrap;
+}
+
+
+/* STATS */
+
+.modern-home-stats{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:11px;
+    padding:0 14px;
+}
+
+.modern-home-stat-card{
+    min-height:92px;
+    padding:15px;
+    box-sizing:border-box;
+    border-radius:20px;
+    background:#fff;
+    border:1px solid #edf0f5;
+    box-shadow:0 4px 16px rgba(30,50,80,.07);
+    display:flex;
+    align-items:center;
+    gap:12px;
+}
+
+.modern-stat-icon{
+    width:43px;
+    height:43px;
+    min-width:43px;
+    border-radius:14px;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    font-size:21px;
+    background:#eef6ff;
+}
+
+.modern-stat-info{
+    min-width:0;
+    display:flex;
+    flex-direction:column;
+    gap:5px;
+}
+
+.modern-stat-info span{
+    color:#777f89;
+    font-size:11px;
+    line-height:1.2;
+}
+
+.modern-stat-info strong{
+    color:#171a1f;
+    font-size:21px;
+    font-weight:750;
+    line-height:1.1;
+    white-space:nowrap;
+}
+
+.modern-stat-earnings .modern-stat-info strong{
+    color:#0781d8;
+}
+
+.modern-stat-balance .modern-stat-info strong{
+    color:#159447;
+}
+
+.modern-stat-days .modern-stat-info strong{
+    color:#7b55c7;
+}
+
+
+/* SECTION HEADER */
+
+.modern-home-section-header{
+    margin:23px 16px 10px;
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+}
+
+.modern-home-section-header h3{
+    margin:0;
+    font-size:17px;
+    color:#20242a;
+    font-weight:750;
+}
+
+.modern-home-section-header p{
+    margin:4px 0 0;
+    color:#858b93;
+    font-size:11px;
+}
+
+
+/* QUICK ACTIONS */
+
+.modern-home-actions{
+    display:flex;
+    flex-direction:column;
+    gap:9px;
+    padding:0 14px;
+}
+
+.modern-home-action{
+    width:100%;
+    min-height:66px;
+    padding:10px 13px;
+    border-radius:17px;
+    background:#fff;
+    color:#202124;
+    border:1px solid #edf0f5;
+    box-shadow:0 3px 12px rgba(30,50,80,.055);
+    display:flex;
+    align-items:center;
+    gap:12px;
+    text-align:left;
+    box-sizing:border-box;
+}
+
+.modern-home-action:active{
+    transform:scale(.985);
+    background:#f7fbff;
+}
+
+.modern-action-icon{
+    width:42px;
+    height:42px;
+    min-width:42px;
+    border-radius:13px;
+    background:#edf6ff;
+    color:#087ed1;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    font-size:21px;
+}
+
+.modern-home-action > div:nth-child(2){
+    flex:1;
+    min-width:0;
+    display:flex;
+    flex-direction:column;
+    gap:3px;
+}
+
+.modern-home-action strong{
+    font-size:14px;
+    font-weight:700;
+}
+
+.modern-home-action span{
+    font-size:11px;
+    color:#858b93;
+}
+
+.modern-home-action b{
+    font-size:25px;
+    font-weight:400;
+    color:#a0a6ad;
+}
+
+
+/* WORKER OVERVIEW */
+
+.modern-worker-overview-title{
+    margin-top:25px;
+}
+
+.modern-home-worker-list{
+    padding:0 14px;
+    display:flex;
+    flex-direction:column;
+    gap:9px;
+}
+
+.modern-home-worker-card{
+    min-height:72px;
+    padding:11px 12px;
+    border-radius:18px;
+    background:#fff;
+    border:1px solid #edf0f5;
+    box-shadow:0 3px 12px rgba(30,50,80,.055);
+    display:flex;
+    align-items:center;
+    gap:11px;
+    box-sizing:border-box;
+}
+
+.modern-home-worker-card:active{
+    transform:scale(.985);
+}
+
+.modern-home-worker-avatar{
+    width:43px;
+    height:43px;
+    min-width:43px;
+    border-radius:14px;
+    background:#eaf4ff;
+    color:#087ed1;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    font-size:18px;
+    font-weight:750;
+}
+
+.modern-home-worker-info{
+    flex:1;
+    min-width:0;
+    display:flex;
+    flex-direction:column;
+    gap:4px;
+}
+
+.modern-home-worker-info strong{
+    font-size:14px;
+    font-weight:700;
+    color:#25282d;
+    overflow:hidden;
+    text-overflow:ellipsis;
+    white-space:nowrap;
+}
+
+.modern-home-worker-info span{
+    font-size:10px;
+    color:#858b93;
+}
+
+.modern-home-worker-money{
+    text-align:right;
+    display:flex;
+    flex-direction:column;
+    gap:3px;
+}
+
+.modern-home-worker-money small{
+    font-size:9px;
+    color:#858b93;
+}
+
+.modern-home-worker-money strong{
+    font-size:14px;
+    color:#159447;
+}
+
+.modern-home-worker-arrow{
+    color:#a0a6ad;
+    font-size:24px;
+    line-height:1;
+}
+
+
+/* EMPTY */
+
+.modern-home-empty{
+    margin:0 14px 20px;
+    padding:28px 18px;
+    border-radius:20px;
+    background:#fff;
+    border:1px solid #edf0f5;
+    box-shadow:0 3px 12px rgba(30,50,80,.055);
+    align-items:center;
+    flex-direction:column;
+    text-align:center;
+}
+
+.modern-home-empty > div{
+    width:54px;
+    height:54px;
+    border-radius:50%;
+    background:#edf6ff;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    font-size:26px;
+    margin-bottom:9px;
+}
+
+.modern-home-empty strong{
+    font-size:16px;
+    color:#292d33;
+}
+
+.modern-home-empty span{
+    margin-top:5px;
+    color:#858b93;
+    font-size:11px;
+}
+
+.modern-home-empty button{
+    margin-top:15px;
+    padding:11px 18px;
+    border-radius:12px;
+    background:#087ed1;
+    color:#fff;
+    border:none;
+    font-weight:650;
+}
+
+
+/* SMALL PHONES */
+
+@media(max-width:380px){
+
+    .modern-home-hero{
+        margin-left:11px;
+        margin-right:11px;
+        padding:15px;
+    }
+
+    .modern-home-welcome h2{
+        font-size:18px;
+    }
+
+    .modern-home-avatar{
+        width:52px;
+        height:52px;
+        min-width:52px;
+    }
+
+    .modern-home-stat-card{
+        padding:12px;
+    }
+
+    .modern-stat-icon{
+        width:38px;
+        height:38px;
+        min-width:38px;
+    }
+
+    .modern-stat-info strong{
+        font-size:18px;
+    }
+
+}

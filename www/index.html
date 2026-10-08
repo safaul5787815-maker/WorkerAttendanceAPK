@@ -29,62 +29,209 @@
 
 </div>
 
+
 <div id="dashboardView">
 
-<div class="profile">
-    <img src="profile.png" class="profile-img">
-</div>
+    <div class="modern-home-hero">
 
-    <div class="dashboard">
+        <div class="modern-home-profile">
 
-        <div class="card">
-            <h3>Total Workers</h3>
-            <h2 id="totalWorkers">0</h2>
+            <div class="modern-home-avatar">
+                <img src="profile.png" alt="Profile">
+            </div>
+
+            <div class="modern-home-welcome">
+                <span>Welcome back 👋</span>
+                <h2>Worker Attendance</h2>
+                <p>Manage your workers easily</p>
+            </div>
+
         </div>
 
-        <div class="card">
-    <h3>Worker Balance</h3>
-    <div id="workerBalances">
-        No workers
-    </div>
-</div>
-
-<div class="card">
-    <h3 id="currentMonthEarningsTitle">📅 Current Month Earnings</h3>
-    <h2>₹ <span id="currentMonthEarnings">0</span></h2>
-</div>
-
-    </div>
-
-    <div class="box">
-
-        <input
-            type="text"
-            id="name"
-            placeholder="Worker Name">
-
-        <input
-            type="number"
-            id="wage"
-            placeholder="Daily Wage">
-
-        <div class="btns">
-
-            <button onclick="addWorker()">
-                ➕ Add Worker
-            </button>
-
-
-
+        <div class="modern-home-date" id="modernHomeDate">
+            📅
         </div>
 
     </div>
 
 
+    <div class="modern-home-stats">
 
-<div id="workerList" class="worker-cards">
+        <div class="modern-home-stat-card modern-stat-workers">
 
-</div>
+            <div class="modern-stat-icon">
+                👷
+            </div>
+
+            <div class="modern-stat-info">
+                <span>Total Workers</span>
+                <strong id="totalWorkers">0</strong>
+            </div>
+
+        </div>
+
+
+        <div class="modern-home-stat-card modern-stat-earnings">
+
+            <div class="modern-stat-icon">
+                💰
+            </div>
+
+            <div class="modern-stat-info">
+                <span id="currentMonthEarningsTitle">
+                    Current Month
+                </span>
+                <strong>
+                    ₹<span id="currentMonthEarnings">0</span>
+                </strong>
+            </div>
+
+        </div>
+
+
+        <div class="modern-home-stat-card modern-stat-balance">
+
+            <div class="modern-stat-icon">
+                💵
+            </div>
+
+            <div class="modern-stat-info">
+                <span>Total Balance</span>
+                <strong>
+                    ₹<span id="homeTotalBalance">0</span>
+                </strong>
+            </div>
+
+        </div>
+
+
+        <div class="modern-home-stat-card modern-stat-days">
+
+            <div class="modern-stat-icon">
+                📅
+            </div>
+
+            <div class="modern-stat-info">
+                <span>Working Days</span>
+                <strong id="homeWorkingDays">0</strong>
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <div class="modern-home-section-header">
+
+        <div>
+            <h3>Quick Actions</h3>
+            <p>Manage attendance and workers</p>
+        </div>
+
+    </div>
+
+
+    <div class="modern-home-actions">
+
+        <button
+            class="modern-home-action"
+            onclick="openAddWorkerModal()">
+
+            <div class="modern-action-icon">＋</div>
+
+            <div>
+                <strong>Add Worker</strong>
+                <span>Add a new worker</span>
+            </div>
+
+            <b>›</b>
+
+        </button>
+
+
+        <button
+            class="modern-home-action"
+            onclick="showAttendance()">
+
+            <div class="modern-action-icon">📅</div>
+
+            <div>
+                <strong>Attendance</strong>
+                <span>Mark daily attendance</span>
+            </div>
+
+            <b>›</b>
+
+        </button>
+
+
+        <button
+            class="modern-home-action"
+            onclick="showSalary()">
+
+            <div class="modern-action-icon">💰</div>
+
+            <div>
+                <strong>Salary</strong>
+                <span>View completed salary</span>
+            </div>
+
+            <b>›</b>
+
+        </button>
+
+
+        <button
+            class="modern-home-action"
+            onclick="showWorkers()">
+
+            <div class="modern-action-icon">👷</div>
+
+            <div>
+                <strong>Workers</strong>
+                <span>Manage worker details</span>
+            </div>
+
+            <b>›</b>
+
+        </button>
+
+    </div>
+
+
+    <div class="modern-home-section-header modern-worker-overview-title">
+
+        <div>
+            <h3>Worker Overview</h3>
+            <p>Your current worker balances</p>
+        </div>
+
+    </div>
+
+
+    <div id="homeWorkerOverview"
+         class="modern-home-worker-list">
+
+    </div>
+
+
+    <div class="modern-home-empty"
+         id="homeEmptyState"
+         style="display:none;">
+
+        <div>👷</div>
+
+        <strong>No workers yet</strong>
+
+        <span>
+            Add your first worker to start tracking attendance.
+        </span>
+
+        <button onclick="openAddWorkerModal()">
+            ＋ Add Worker
+        </button>
+
+    </div>
 
 </div>
 

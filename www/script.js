@@ -229,79 +229,163 @@ function getCurrentMonthName(){
 
 function renderWorkers(){
 
-    let list = document.getElementById("workerList");
+    let totalWorkersElement =
+        document.getElementById("totalWorkers");
 
-    list.innerHTML = "";
+    let currentEarningsElement =
+        document.getElementById("currentMonthEarnings");
+
+    let currentMonthTitle =
+        document.getElementById("currentMonthEarningsTitle");
+
+    let totalBalanceElement =
+        document.getElementById("homeTotalBalance");
+
+    let workingDaysElement =
+        document.getElementById("homeWorkingDays");
+
+    let overview =
+        document.getElementById("homeWorkerOverview");
+
+    let emptyState =
+        document.getElementById("homeEmptyState");
+
+
+    if(totalWorkersElement){
+        totalWorkersElement.innerHTML = workers.length;
+    }
+
 
     let totalCurrentEarnings = 0;
-    let balanceHTML = "";
+    let totalBalance = 0;
+    let totalWorkingDays = 0;
 
-    workers.forEach((worker,index)=>{
 
-        if(!worker.presentDays) worker.presentDays = 0;
-        if(!worker.totalOT) worker.totalOT = 0;
-        if(!worker.attendance) worker.attendance = {};
+    if(overview){
+        overview.innerHTML = "";
+    }
 
-        let salary = getCompletedSalary(worker);
+
+    workers.forEach(function(worker,index){
+
+        if(!worker.attendance){
+            worker.attendance = {};
+        }
+
+        if(!worker.presentDays){
+            worker.presentDays = 0;
+        }
+
+        if(!worker.totalOT){
+            worker.totalOT = 0;
+        }
+
+
+        let completedSalary =
+            getCompletedSalary(worker);
 
         let currentEarnings =
             getCurrentMonthEarnings(worker);
 
-        let paid = Number(worker.paid || 0);
+        let paid =
+            Number(worker.paid || 0);
 
-        let balance = salary - paid;
+        let balance =
+            completedSalary - paid;
 
-        totalCurrentEarnings += currentEarnings;
 
-        balanceHTML += `
-        <div style="
-            display:flex;
-            justify-content:space-between;
-            align-items:center;
-            padding:10px 5px;
-            border-bottom:1px solid #ddd;
-            font-size:18px;
-            font-weight:500;
-        ">
-            <span>👷 ${worker.name}</span>
-            <span>₹ ${Math.round(balance)}</span>
-        </div>
-        `;
+        totalCurrentEarnings +=
+            currentEarnings;
 
-        list.innerHTML += `
-        <div class="worker-name-card"
-             onclick="openWorkerCard(${index})">
+        totalBalance +=
+            balance;
 
-            👷 ${worker.name}
 
-        </div>
-        `;
+        let currentMonth =
+            getCurrentMonthKey();
+
+        let workingDays = 0;
+
+        Object.keys(worker.attendance).forEach(function(dateKey){
+
+            if(getMonthKey(dateKey) !== currentMonth){
+                return;
+            }
+
+            let item =
+                worker.attendance[dateKey] || {};
+
+            if(item.status === "present"){
+                workingDays += 1;
+            }
+
+            if(item.status === "half"){
+                workingDays += 0.5;
+            }
+
+        });
+
+
+        totalWorkingDays +=
+            workingDays;
+
+
+        let initials =
+            String(worker.name || "?")
+            .trim()
+            .charAt(0)
+            .toUpperCase();
+
+
+        if(overview){
+
+            overview.innerHTML += `
+
+                <div
+                    class="modern-home-worker-card"
+                    onclick="openWorkerCard(${index})">
+
+                    <div class="modern-home-worker-avatar">
+                        ${initials}
+                    </div>
+
+
+                    <div class="modern-home-worker-info">
+
+                        <strong>
+                            ${worker.name || "Unnamed Worker"}
+                        </strong>
+
+                        <span>
+                            Daily Wage ₹${Number(worker.wage || 0)}
+                        </span>
+
+                    </div>
+
+
+                    <div class="modern-home-worker-money">
+
+                        <small>Balance</small>
+
+                        <strong>
+                            ₹${Math.round(balance)}
+                        </strong>
+
+                    </div>
+
+
+                    <div class="modern-home-worker-arrow">
+                        ›
+                    </div>
+
+                </div>
+
+            `;
+
+        }
 
     });
 
-    document.getElementById("totalWorkers").innerHTML =
-        workers.length;
-
-    let balanceElement =
-        document.getElementById("workerBalances");
-
-    if(balanceElement){
-
-        balanceElement.innerHTML =
-            balanceHTML || "No workers";
-
-    }
-
-    let monthTitleElement =
-        document.getElementById("currentMonthEarningsTitle");
-
-    if(monthTitleElement){
-        monthTitleElement.innerHTML =
-            "📅 " + getCurrentMonthName() + " Earnings";
-    }
-
-    let currentEarningsElement =
-        document.getElementById("currentMonthEarnings");
 
     if(currentEarningsElement){
 
@@ -309,6 +393,72 @@ function renderWorkers(){
             Math.round(totalCurrentEarnings);
 
     }
+
+
+    if(currentMonthTitle){
+
+        currentMonthTitle.innerHTML =
+            getCurrentMonthName() + " Earnings";
+
+    }
+
+
+    if(totalBalanceElement){
+
+        totalBalanceElement.innerHTML =
+            Math.round(totalBalance);
+
+    }
+
+
+    if(workingDaysElement){
+
+        workingDaysElement.innerHTML =
+            Number.isInteger(totalWorkingDays)
+                ? totalWorkingDays
+                : totalWorkingDays.toFixed(1);
+
+    }
+
+
+    if(emptyState){
+
+        emptyState.style.display =
+            workers.length === 0
+                ? "flex"
+                : "none";
+
+    }
+
+    if(overview){
+
+        overview.style.display =
+            workers.length === 0
+                ? "none"
+                : "flex";
+
+    }
+
+
+    let dateElement =
+        document.getElementById("modernHomeDate");
+
+    if(dateElement){
+
+        let now = new Date();
+
+        dateElement.innerHTML =
+            "📅 " +
+            now.toLocaleDateString(
+                "en-US",
+                {
+                    day:"numeric",
+                    month:"short"
+                }
+            );
+
+    }
+
 }
 
 function openWorkerCard(index){
@@ -1126,12 +1276,16 @@ function openDateAction(dateKey){
 
     selectedDate = dateKey;
 
-    let item = attendanceData[selectedDate] || {
-        status:"",
-        ot:0
-    };
+    let item = attendanceData[dateKey];
 
-    let parts = selectedDate.split("-");
+    if(!item){
+        item = {
+            status:"",
+            ot:0
+        };
+    }
+
+    let parts = dateKey.split("-");
 
     let monthNames = [
         "January","February","March","April",
@@ -1144,21 +1298,31 @@ function openDateAction(dateKey){
         monthNames[Number(parts[1])-1] + " " +
         parts[0];
 
-    document.getElementById("selectedDateTitle").innerHTML =
-        displayDate;
+    document.getElementById(
+        "selectedDateTitle"
+    ).innerHTML = displayDate;
 
-    let input = document.getElementById("dateOTInput");
+    let input =
+        document.getElementById("dateOTInput");
 
     if(input){
-        input.value = Number(item.ot || 0);
+        input.value =
+            item.ot !== undefined && item.ot !== null
+                ? Number(item.ot)
+                : 0;
     }
 
-    updateModernAttendanceStatus(item.status || "");
+    updateModernAttendanceStatus(
+        item.status || ""
+    );
+
     updateModernOTHint();
 
-    document.getElementById("dateActionModal").style.display = "flex";
-}
+    document.getElementById(
+        "dateActionModal"
+    ).style.display = "flex";
 
+}
 
 function updateModernAttendanceStatus(status){
 
@@ -1335,40 +1499,42 @@ function updateAttendance(){
     workers[selectedAttendanceWorker].attendance =
         attendanceData;
 
-let present = 0;
-let halfDays = 0;
-let totalOT = 0;
+    let present = 0;
+    let halfDays = 0;
+    let totalOT = 0;
 
-Object.values(attendanceData).forEach(item=>{
+    Object.values(attendanceData).forEach(item=>{
 
-    if(item.status==="present"){
-        present++;
-    }
+        if(item.status==="present"){
+            present++;
+        }
 
-    if(item.status==="half"){
-        halfDays++;
-    }
+        if(item.status==="half"){
+            halfDays++;
+        }
 
-    totalOT += item.ot || 0;
+        totalOT += Number(item.ot || 0);
 
-});
+    });
 
-workers[selectedAttendanceWorker].presentDays =
-    present + (halfDays * 0.5);
+    workers[selectedAttendanceWorker].presentDays =
+        present + (halfDays * 0.5);
 
-workers[selectedAttendanceWorker].halfDays =
-    halfDays;
+    workers[selectedAttendanceWorker].halfDays =
+        halfDays;
 
-workers[selectedAttendanceWorker].totalOT =
-    totalOT;
+    workers[selectedAttendanceWorker].totalOT =
+        totalOT;
 
     saveWorkers();
-
-    refreshWorkerCard(selectedAttendanceWorker);
 
     renderCalendar();
 
     closeDateAction();
+
+    closeAttendance();
+
+    renderAttendanceWorkers();
 
 }
 
@@ -2392,7 +2558,7 @@ function aboutApp(){
 
     alert(
         "👷 Worker Attendance App\n\n" +
-        "Version : 1.0.17\n\n" +
+        "Version : 1.0.18\n\n" +
         "Developer : Safaul Ansari\n\n" +
         "Features:\n" +
         "✔ Worker Management\n" +
