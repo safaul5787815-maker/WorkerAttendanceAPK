@@ -2648,3 +2648,386 @@ button,
     }
 
 }
+
+
+/* ==========================================
+   HOME WORKERS + WORKER DETAILS
+========================================== */
+
+.home-workers-modal{
+    position:fixed;
+    inset:0;
+    background:rgba(0,0,0,.48);
+    display:none;
+    align-items:center;
+    justify-content:center;
+    padding:18px;
+    z-index:9999;
+}
+
+.home-workers-modal-box{
+    width:100%;
+    max-width:520px;
+    max-height:90vh;
+    overflow-y:auto;
+    background:#fff;
+    border-radius:24px;
+    box-shadow:0 20px 60px rgba(0,0,0,.25);
+    padding:20px;
+}
+
+.home-workers-modal-header{
+    display:flex;
+    align-items:flex-start;
+    justify-content:space-between;
+    gap:12px;
+    margin-bottom:18px;
+}
+
+.home-workers-modal-header h2{
+    margin:0;
+    font-size:22px;
+}
+
+.home-workers-modal-header p{
+    margin:5px 0 0;
+    color:#777;
+    font-size:13px;
+}
+
+.home-workers-close-btn{
+    width:38px;
+    height:38px;
+    border:0;
+    border-radius:50%;
+    background:#f1f3f5;
+    font-size:26px;
+    line-height:1;
+    cursor:pointer;
+}
+
+.home-workers-list{
+    display:flex;
+    flex-direction:column;
+    gap:10px;
+}
+
+.home-worker-select-card{
+    display:flex;
+    align-items:center;
+    gap:12px;
+    padding:14px;
+    border:1px solid #ececec;
+    border-radius:18px;
+    background:#fafafa;
+    cursor:pointer;
+    transition:.15s;
+}
+
+.home-worker-select-card:active{
+    transform:scale(.98);
+}
+
+.home-worker-select-avatar{
+    width:48px;
+    height:48px;
+    border-radius:15px;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    background:#e9eefc;
+    font-size:20px;
+    font-weight:700;
+}
+
+.home-worker-select-info{
+    flex:1;
+    display:flex;
+    flex-direction:column;
+    gap:4px;
+}
+
+.home-worker-select-info strong{
+    font-size:16px;
+}
+
+.home-worker-select-info span{
+    color:#777;
+    font-size:12px;
+}
+
+.home-worker-select-arrow{
+    font-size:28px;
+    color:#999;
+}
+
+.home-workers-empty{
+    text-align:center;
+    padding:40px 20px;
+    display:flex;
+    flex-direction:column;
+    gap:8px;
+}
+
+.home-workers-empty div{
+    font-size:42px;
+}
+
+.home-workers-empty span{
+    color:#777;
+    font-size:13px;
+}
+
+.home-worker-back-btn{
+    border:0;
+    background:#f1f3f5;
+    padding:9px 14px;
+    border-radius:12px;
+    font-weight:600;
+    cursor:pointer;
+    margin-bottom:18px;
+}
+
+.home-worker-detail-profile{
+    display:flex;
+    align-items:center;
+    gap:14px;
+    padding:4px 2px 20px;
+}
+
+.home-worker-detail-avatar{
+    width:58px;
+    height:58px;
+    border-radius:18px;
+    background:#e9eefc;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    font-size:24px;
+    font-weight:700;
+}
+
+.home-worker-detail-profile h3{
+    margin:0 0 5px;
+    font-size:20px;
+}
+
+.home-worker-detail-profile span{
+    color:#777;
+    font-size:13px;
+}
+
+.home-worker-detail-grid{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:12px;
+}
+
+.home-worker-detail-card{
+    min-height:115px;
+    border-radius:20px;
+    padding:16px;
+    background:#f8f9fb;
+    display:flex;
+    flex-direction:column;
+    justify-content:space-between;
+    border:1px solid #eeeeee;
+}
+
+.detail-card-icon{
+    font-size:22px;
+}
+
+.home-worker-detail-card span{
+    font-size:13px;
+    color:#777;
+}
+
+.home-worker-detail-card strong{
+    font-size:21px;
+    color:#222;
+}
+
+.detail-present{
+    background:#f1fbf4;
+}
+
+.detail-half{
+    background:#fffaf0;
+}
+
+.detail-ot{
+    background:#f4f8ff;
+}
+
+.detail-salary{
+    background:#f7f2ff;
+}
+
+.detail-paid{
+    background:#f2fbff;
+}
+
+.detail-balance{
+    background:#f1f6ff;
+}
+
+@media(max-width:380px){
+
+    .home-worker-detail-grid{
+        grid-template-columns:1fr;
+    }
+
+}
+
+/* ==========================================
+   HOME SELECTED WORKER STATS
+========================================== */
+
+.home-worker-stats-header{
+    margin-top:24px;
+}
+
+.home-worker-stats-header h3{
+    margin:0;
+    font-size:20px;
+    font-weight:700;
+}
+
+.home-worker-stats-header p{
+    margin:5px 0 0;
+    font-size:13px;
+    color:#777;
+}
+
+.home-worker-stats-grid{
+    display:grid;
+    grid-template-columns:repeat(2,minmax(0,1fr));
+    gap:12px;
+    margin-top:12px;
+}
+
+.home-worker-stat-card{
+    min-height:120px;
+    padding:16px;
+    border-radius:20px;
+    background:#fff;
+    border:1px solid #ececec;
+    box-shadow:0 6px 18px rgba(0,0,0,.06);
+
+    display:flex;
+    flex-direction:column;
+    justify-content:space-between;
+
+    transition:transform .15s ease,
+               box-shadow .15s ease;
+}
+
+.home-worker-stat-card:active{
+    transform:scale(.97);
+}
+
+.home-worker-stat-icon{
+    width:40px;
+    height:40px;
+    border-radius:13px;
+
+    display:flex;
+    align-items:center;
+    justify-content:center;
+
+    font-size:20px;
+    background:#f3f5f8;
+}
+
+.home-worker-stat-card span{
+    margin-top:10px;
+    font-size:13px;
+    color:#777;
+}
+
+.home-worker-stat-card strong{
+    margin-top:3px;
+    font-size:22px;
+    font-weight:750;
+    color:#222;
+}
+
+/* Individual cards */
+
+.home-worker-stat-card:nth-child(1){
+    background:#f1fbf4;
+}
+
+.home-worker-stat-card:nth-child(2){
+    background:#fff9ed;
+}
+
+.home-worker-stat-card:nth-child(3){
+    background:#f1f7ff;
+}
+
+.home-worker-stat-card:nth-child(4){
+    background:#f7f2ff;
+}
+
+.home-worker-stat-card:nth-child(5){
+    background:#f0fbff;
+}
+
+.home-worker-stat-card:nth-child(6){
+    background:#f1f5ff;
+}
+
+.home-worker-stat-card:nth-child(1) .home-worker-stat-icon{
+    background:#dcf7e5;
+}
+
+.home-worker-stat-card:nth-child(2) .home-worker-stat-icon{
+    background:#fff0c9;
+}
+
+.home-worker-stat-card:nth-child(3) .home-worker-stat-icon{
+    background:#dceaff;
+}
+
+.home-worker-stat-card:nth-child(4) .home-worker-stat-icon{
+    background:#eadfff;
+}
+
+.home-worker-stat-card:nth-child(5) .home-worker-stat-icon{
+    background:#dff5ff;
+}
+
+.home-worker-stat-card:nth-child(6) .home-worker-stat-icon{
+    background:#dfe8ff;
+}
+
+@media(max-width:380px){
+
+    .home-worker-stats-grid{
+        grid-template-columns:1fr 1fr;
+        gap:9px;
+    }
+
+    .home-worker-stat-card{
+        min-height:108px;
+        padding:13px;
+        border-radius:17px;
+    }
+
+    .home-worker-stat-card strong{
+        font-size:19px;
+    }
+
+    .home-worker-stat-card span{
+        font-size:12px;
+    }
+
+    .home-worker-stat-icon{
+        width:36px;
+        height:36px;
+        font-size:18px;
+    }
+
+}

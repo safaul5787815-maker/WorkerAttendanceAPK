@@ -57,7 +57,9 @@
 
     <div class="modern-home-stats">
 
-        <div class="modern-home-stat-card modern-stat-workers">
+        <div class="modern-home-stat-card modern-stat-workers"
+     onclick="openHomeWorkersModal()"
+     style="cursor:pointer;">
 
             <div class="modern-stat-icon">
                 👷
@@ -124,7 +126,58 @@
     <div class="modern-home-section-header">
 
         <div>
-            <h3>Quick Actions</h3>
+
+<!-- SELECTED WORKER STATS -->
+
+<div class="modern-home-section-header home-worker-stats-header">
+    <div>
+        <h3 id="homeSelectedWorkerName">👷 Select Worker</h3>
+        <p>Worker performance and payment summary</p>
+    </div>
+</div>
+
+<div class="home-worker-stats-grid">
+
+    <div class="home-worker-stat-card">
+        <div class="home-worker-stat-icon">🟢</div>
+        <span>Present Days</span>
+        <strong id="homePresentDays">0</strong>
+    </div>
+
+    <div class="home-worker-stat-card">
+        <div class="home-worker-stat-icon">🟡</div>
+        <span>Half Days</span>
+        <strong id="homeHalfDays">0</strong>
+    </div>
+
+    <div class="home-worker-stat-card">
+        <div class="home-worker-stat-icon">⏱️</div>
+        <span>OT Hours</span>
+        <strong id="homeOTHours">0</strong>
+    </div>
+
+    <div class="home-worker-stat-card">
+        <div class="home-worker-stat-icon">💰</div>
+        <span>Completed Salary</span>
+        <strong id="homeCompletedSalary">₹0</strong>
+    </div>
+
+    <div class="home-worker-stat-card">
+        <div class="home-worker-stat-icon">💵</div>
+        <span>Paid</span>
+        <strong id="homePaid">₹0</strong>
+    </div>
+
+    <div class="home-worker-stat-card">
+        <div class="home-worker-stat-icon">🔵</div>
+        <span>Balance</span>
+        <strong id="homeBalance">₹0</strong>
+    </div>
+
+</div>
+
+
+    <h3>Quick Actions</h3>
             <p>Manage attendance and workers</p>
         </div>
 
@@ -706,6 +759,42 @@
         <button onclick="closePaidDialog()">
             Cancel
         </button>
+
+    </div>
+
+</div>
+
+
+<!-- HOME WORKERS / WORKER DETAILS MODAL -->
+<div id="homeWorkersModal" class="home-workers-modal">
+
+    <div class="home-workers-modal-box">
+
+        <div class="home-workers-modal-header">
+
+            <div>
+                <h2 id="homeWorkersModalTitle">👷 All Workers</h2>
+                <p id="homeWorkersModalSubtitle">
+                    Select a worker to view details
+                </p>
+            </div>
+
+            <button
+                class="home-workers-close-btn"
+                onclick="closeHomeWorkersModal()">
+                ×
+            </button>
+
+        </div>
+
+        <div id="homeWorkersList"
+             class="home-workers-list">
+        </div>
+
+        <div id="homeWorkerDetails"
+             class="home-worker-details"
+             style="display:none;">
+        </div>
 
     </div>
 

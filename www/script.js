@@ -227,6 +227,188 @@ function getCurrentMonthName(){
     );
 }
 
+
+
+function openHomeWorkersModal(){
+
+    let modal =
+        document.getElementById("homeWorkersModal");
+
+    let list =
+        document.getElementById("homeWorkersList");
+
+    if(!modal || !list){
+        return;
+    }
+
+    list.innerHTML = "";
+
+    if(!workers || workers.length === 0){
+
+        list.innerHTML = `
+            <div class="home-workers-empty">
+                <div>👷</div>
+                <strong>No workers added yet</strong>
+            </div>
+        `;
+
+    }else{
+
+        workers.forEach(function(worker,index){
+
+            let initials =
+                String(worker.name || "?")
+                .trim()
+                .charAt(0)
+                .toUpperCase();
+
+            list.innerHTML += `
+                <div
+                    class="home-worker-select-card"
+                    onclick="selectHomeWorker(${index})">
+
+                    <div class="home-worker-select-avatar">
+                        ${initials}
+                    </div>
+
+                    <div class="home-worker-select-info">
+                        <strong>
+                            ${worker.name || "Unnamed Worker"}
+                        </strong>
+
+                        <span>
+                            Daily Wage ₹${Number(worker.wage || 0)}
+                        </span>
+                    </div>
+
+                    <div class="home-worker-select-arrow">
+                        ›
+                    </div>
+
+                </div>
+            `;
+
+        });
+
+    }
+
+    modal.style.display = "flex";
+}
+
+
+function closeHomeWorkersModal(){
+
+    let modal =
+        document.getElementById("homeWorkersModal");
+
+    if(modal){
+        modal.style.display = "none";
+    }
+
+}
+
+
+function selectHomeWorker(index){
+
+    let worker = workers[index];
+
+    if(!worker){
+        return;
+    }
+
+    let presentDays = 0;
+    let halfDays = 0;
+    let totalOT = 0;
+
+    if(worker.attendance){
+
+        Object.keys(worker.attendance).forEach(function(dateKey){
+
+            let item =
+                worker.attendance[dateKey] || {};
+
+            if(item.status === "present"){
+                presentDays++;
+            }
+
+            if(item.status === "half"){
+                halfDays++;
+            }
+
+            totalOT += Number(item.ot || 0);
+
+        });
+
+    }
+
+    let completedSalary =
+        typeof getCompletedSalary === "function"
+            ? getCompletedSalary(worker)
+            : 0;
+
+    let paid =
+        Number(worker.paid || 0);
+
+    let balance =
+        completedSalary - paid;
+
+    let present =
+        document.getElementById("homePresentDays");
+
+    let half =
+        document.getElementById("homeHalfDays");
+
+    let ot =
+        document.getElementById("homeOTHours");
+
+    let salary =
+        document.getElementById("homeCompletedSalary");
+
+    let paidEl =
+        document.getElementById("homePaid");
+
+    let balanceEl =
+        document.getElementById("homeBalance");
+
+    if(present){
+        present.innerHTML = presentDays;
+    }
+
+    if(half){
+        half.innerHTML = halfDays;
+    }
+
+    if(ot){
+        ot.innerHTML = totalOT;
+    }
+
+    if(salary){
+        salary.innerHTML =
+            "₹" + Math.round(completedSalary);
+    }
+
+    if(paidEl){
+        paidEl.innerHTML =
+            "₹" + Math.round(paid);
+    }
+
+    if(balanceEl){
+        balanceEl.innerHTML =
+            "₹" + Math.round(balance);
+    }
+
+    let selectedName =
+        document.getElementById("homeSelectedWorkerName");
+
+    if(selectedName){
+        selectedName.innerHTML =
+            "👷 " + (worker.name || "Worker");
+    }
+
+    closeHomeWorkersModal();
+
+}
+
 function renderWorkers(){
 
     let totalWorkersElement =
@@ -1374,9 +1556,12 @@ function markDatePresent(){
             ot:0
         };
 
-    attendanceData[selectedDate].status = "present";
+    attendanceData[selectedDate].status="present";
+
+    saveAttendanceWithoutClosing();
 
     updateModernAttendanceStatus("present");
+
 }
 
 
@@ -1388,9 +1573,12 @@ function markDateAbsent(){
             ot:0
         };
 
-    attendanceData[selectedDate].status = "absent";
+    attendanceData[selectedDate].status="absent";
+
+    saveAttendanceWithoutClosing();
 
     updateModernAttendanceStatus("absent");
+
 }
 
 
@@ -1402,95 +1590,27 @@ function markDateHalfDay(){
             ot:0
         };
 
-    attendanceData[selectedDate].status = "half";
+    attendanceData[selectedDate].status="half";
+
+    saveAttendanceWithoutClosing();
 
     updateModernAttendanceStatus("half");
-}
 
-
-function changeDateOT(step){
-
-    let input = document.getElementById("dateOTInput");
-
-    if(!input){
-        return;
-    }
-
-    let value = Number(input.value || 0);
-
-    value += Number(step || 0);
-
-    if(value < 0){
-        value = 0;
-    }
-
-    value = Math.round(value * 2) / 2;
-
-    input.value = value;
-
-    updateModernOTHint();
-}
-
-
-function updateModernOTHint(){
-
-    let input = document.getElementById("dateOTInput");
-    let hint = document.getElementById("modernOTHint");
-
-    if(!input || !hint){
-        return;
-    }
-
-    let value = Number(input.value || 0);
-
-    hint.innerHTML =
-        "OT: " +
-        value +
-        (value === 1 ? " hour" : " hours");
-}
-
-
-function saveDateOT(){
-
-    let input = document.getElementById("dateOTInput");
-
-    if(!input){
-        return;
-    }
-
-    let ot = Number(input.value || 0);
-
-    if(isNaN(ot) || ot < 0){
-        alert("Invalid OT Hours");
-        return;
-    }
-
-    ot = Math.round(ot * 2) / 2;
-
-    attendanceData[selectedDate] =
-        attendanceData[selectedDate] || {
-            status:"present",
-            ot:0
-        };
-
-    attendanceData[selectedDate].ot = ot;
-
-    if(!attendanceData[selectedDate].status){
-        attendanceData[selectedDate].status = "present";
-    }
-
-    updateAttendance();
 }
 
 
 function addDateOT(){
 
-    let input = document.getElementById("dateOTInput");
+    let input =
+        document.getElementById("dateOTInput");
 
     if(input){
+
         input.focus();
         input.select();
+
     }
+
 }
 
 
@@ -1503,13 +1623,13 @@ function updateAttendance(){
     let halfDays = 0;
     let totalOT = 0;
 
-    Object.values(attendanceData).forEach(item=>{
+    Object.values(attendanceData).forEach(function(item){
 
-        if(item.status==="present"){
+        if(item.status === "present"){
             present++;
         }
 
-        if(item.status==="half"){
+        if(item.status === "half"){
             halfDays++;
         }
 
@@ -1528,13 +1648,61 @@ function updateAttendance(){
 
     saveWorkers();
 
+    refreshWorkerCard(
+        selectedAttendanceWorker
+    );
+
     renderCalendar();
 
-    closeDateAction();
+    /*
+       IMPORTANT:
+       Calendar/date modal ko yahan close nahi karna.
+       User multiple dates mark kar sakta hai.
+    */
 
-    closeAttendance();
+}
 
-    renderAttendanceWorkers();
+
+
+function saveAttendanceWithoutClosing(){
+
+    workers[selectedAttendanceWorker].attendance =
+        attendanceData;
+
+    let present = 0;
+    let halfDays = 0;
+    let totalOT = 0;
+
+    Object.values(attendanceData).forEach(function(item){
+
+        if(item.status === "present"){
+            present++;
+        }
+
+        if(item.status === "half"){
+            halfDays++;
+        }
+
+        totalOT += Number(item.ot || 0);
+
+    });
+
+    workers[selectedAttendanceWorker].presentDays =
+        present + (halfDays * 0.5);
+
+    workers[selectedAttendanceWorker].halfDays =
+        halfDays;
+
+    workers[selectedAttendanceWorker].totalOT =
+        totalOT;
+
+    saveWorkers();
+
+    refreshWorkerCard(
+        selectedAttendanceWorker
+    );
+
+    renderCalendar();
 
 }
 
@@ -2558,7 +2726,7 @@ function aboutApp(){
 
     alert(
         "👷 Worker Attendance App\n\n" +
-        "Version : 1.0.19\n\n" +
+        "Version : 1.0.20\n\n" +
         "Developer : Safaul Ansari\n\n" +
         "Features:\n" +
         "✔ Worker Management\n" +
