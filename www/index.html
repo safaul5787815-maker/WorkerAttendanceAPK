@@ -243,29 +243,93 @@
 
 <div id="dateActionModal" class="attendance-modal">
 
-    <div class="attendance-box">
+    <div class="modern-attendance-action-box">
 
-        <h3 id="selectedDateTitle"></h3>
+        <div class="modern-attendance-header">
+            <div class="modern-attendance-header-icon">📅</div>
+            <div>
+                <h2>Attendance</h2>
+                <span id="selectedDateTitle"></span>
+            </div>
+        </div>
 
-        <button onclick="markDatePresent()">
-            ✅ Present
+        <div class="modern-section-label">Attendance Status</div>
+
+        <div class="modern-status-grid">
+
+            <button id="statusPresentBtn"
+                    class="modern-status-card modern-status-present"
+                    onclick="markDatePresent()">
+                <span class="modern-status-icon">✓</span>
+                <span class="modern-status-text">
+                    <strong>Present</strong>
+                    <small>Full day</small>
+                </span>
+            </button>
+
+            <button id="statusHalfBtn"
+                    class="modern-status-card modern-status-half"
+                    onclick="markDateHalfDay()">
+                <span class="modern-status-icon">½</span>
+                <span class="modern-status-text">
+                    <strong>Half Day</strong>
+                    <small>50% wage</small>
+                </span>
+            </button>
+
+            <button id="statusAbsentBtn"
+                    class="modern-status-card modern-status-absent"
+                    onclick="markDateAbsent()">
+                <span class="modern-status-icon">×</span>
+                <span class="modern-status-text">
+                    <strong>Absent</strong>
+                    <small>No wage</small>
+                </span>
+            </button>
+
+        </div>
+
+        <div class="modern-section-label modern-ot-label">
+            Overtime
+        </div>
+
+        <div class="modern-ot-card">
+
+            <div class="modern-ot-info">
+                <div class="modern-ot-icon">⏱</div>
+                <div>
+                    <strong>OT Hours</strong>
+                    <small>Extra working time</small>
+                </div>
+            </div>
+
+            <div class="modern-ot-stepper">
+                <button type="button" onclick="changeDateOT(-0.5)">−</button>
+
+                <input id="dateOTInput"
+                       type="number"
+                       min="0"
+                       step="0.5"
+                       value="0"
+                       inputmode="decimal"
+                       oninput="updateModernOTHint()">
+
+                <button type="button" onclick="changeDateOT(0.5)">+</button>
+            </div>
+
+        </div>
+
+        <div id="modernOTHint" class="modern-ot-hint">
+            OT: 0 hours
+        </div>
+
+        <button class="modern-save-attendance-btn"
+                onclick="saveDateOT()">
+            ✓ Save Attendance
         </button>
 
-        <button onclick="markDateAbsent()">
-            ❌ Absent
-        </button>
-
-        <button onclick="markDateHalfDay()">
-            🟡 Half Day
-        </button>
-
-        <button onclick="addDateOT()">
-            ⏱ Add OT
-        </button>
-
-        <br><br>
-
-        <button onclick="closeDateAction()">
+        <button class="modern-close-attendance-btn"
+                onclick="closeDateAction()">
             Close
         </button>
 

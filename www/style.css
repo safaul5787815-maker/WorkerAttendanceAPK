@@ -1974,3 +1974,266 @@ button,
     font-size:12px;
 }
 
+
+
+/* ==========================================
+   MODERN ATTENDANCE STATUS + OT
+========================================== */
+
+.modern-attendance-action-box{
+    width:calc(100% - 28px);
+    max-width:430px;
+    max-height:88vh;
+    overflow-y:auto;
+    box-sizing:border-box;
+    padding:20px;
+    background:#fff;
+    border-radius:24px;
+    box-shadow:0 18px 50px rgba(0,0,0,.18);
+}
+
+.modern-attendance-header{
+    display:flex;
+    align-items:center;
+    gap:12px;
+    margin-bottom:22px;
+}
+
+.modern-attendance-header-icon{
+    width:48px;
+    height:48px;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    background:#eaf3ff;
+    border-radius:15px;
+    font-size:23px;
+}
+
+.modern-attendance-header h2{
+    margin:0;
+    font-size:20px;
+    color:#202124;
+}
+
+.modern-attendance-header span{
+    display:block;
+    margin-top:3px;
+    font-size:13px;
+    color:#777;
+}
+
+.modern-section-label{
+    margin:0 0 10px;
+    font-size:12px;
+    font-weight:700;
+    color:#6f7780;
+    text-transform:uppercase;
+    letter-spacing:.5px;
+}
+
+.modern-status-grid{
+    display:grid;
+    grid-template-columns:1fr 1fr 1fr;
+    gap:8px;
+}
+
+.modern-status-card{
+    min-width:0;
+    min-height:88px;
+    padding:10px 6px;
+    border:2px solid transparent;
+    border-radius:16px;
+    background:#f7f9fc;
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    justify-content:center;
+    gap:7px;
+    box-sizing:border-box;
+    transition:.12s ease;
+}
+
+.modern-status-card:active{
+    transform:scale(.97);
+}
+
+.modern-status-icon{
+    width:34px;
+    height:34px;
+    border-radius:11px;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    font-size:20px;
+    font-weight:800;
+}
+
+.modern-status-text{
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    gap:2px;
+}
+
+.modern-status-text strong{
+    font-size:13px;
+    color:#202124;
+}
+
+.modern-status-text small{
+    font-size:10px;
+    color:#858b93;
+}
+
+.modern-status-present .modern-status-icon{
+    background:#e7f6ec;
+    color:#16803c;
+}
+
+.modern-status-half .modern-status-icon{
+    background:#fff4d6;
+    color:#b77900;
+}
+
+.modern-status-absent .modern-status-icon{
+    background:#ffe9e9;
+    color:#d93025;
+}
+
+.modern-status-present.modern-status-selected{
+    background:#f0faf3;
+    border-color:#45b96b;
+}
+
+.modern-status-half.modern-status-selected{
+    background:#fff9e9;
+    border-color:#e5ad35;
+}
+
+.modern-status-absent.modern-status-selected{
+    background:#fff3f3;
+    border-color:#e35d5d;
+}
+
+.modern-ot-label{
+    margin-top:20px;
+}
+
+.modern-ot-card{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    gap:10px;
+    padding:13px;
+    background:#f7f9fc;
+    border:1px solid #e5e9ef;
+    border-radius:17px;
+}
+
+.modern-ot-info{
+    display:flex;
+    align-items:center;
+    gap:10px;
+}
+
+.modern-ot-icon{
+    width:42px;
+    height:42px;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    background:#eaf3ff;
+    border-radius:13px;
+    font-size:20px;
+}
+
+.modern-ot-info strong{
+    display:block;
+    font-size:14px;
+    color:#202124;
+}
+
+.modern-ot-info small{
+    display:block;
+    margin-top:3px;
+    font-size:11px;
+    color:#858b93;
+}
+
+.modern-ot-stepper{
+    display:flex;
+    align-items:center;
+    gap:5px;
+}
+
+.modern-ot-stepper button{
+    width:34px;
+    height:34px;
+    border:0;
+    border-radius:10px;
+    background:#eaf3ff;
+    color:#1976d2;
+    font-size:22px;
+    font-weight:700;
+}
+
+.modern-ot-stepper input{
+    width:52px;
+    height:34px;
+    padding:0 4px;
+    box-sizing:border-box;
+    border:1px solid #dfe4ea;
+    border-radius:10px;
+    background:#fff;
+    color:#202124;
+    text-align:center;
+    font-size:14px;
+    font-weight:700;
+    outline:none;
+}
+
+.modern-ot-stepper input:focus{
+    border-color:#1976d2;
+}
+
+.modern-ot-hint{
+    margin-top:7px;
+    text-align:right;
+    font-size:11px;
+    color:#777;
+}
+
+.modern-save-attendance-btn{
+    width:100%;
+    margin-top:17px;
+    padding:13px;
+    border:0;
+    border-radius:14px;
+    background:#1976d2;
+    color:#fff;
+    font-size:14px;
+    font-weight:700;
+}
+
+.modern-close-attendance-btn{
+    width:100%;
+    margin-top:9px;
+    padding:12px;
+    border:0;
+    border-radius:13px;
+    background:#f1f4f8;
+    color:#555;
+    font-size:14px;
+    font-weight:600;
+}
+
+@media(max-width:360px){
+    .modern-attendance-action-box{
+        padding:16px;
+    }
+
+    .modern-status-grid{
+        gap:6px;
+    }
+}

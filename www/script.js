@@ -1122,6 +1122,86 @@ function nextMonth(){
 
 }
 
+function openDateAction(dateKey){
+
+    selectedDate = dateKey;
+
+    let item = attendanceData[selectedDate] || {
+        status:"",
+        ot:0
+    };
+
+    let parts = selectedDate.split("-");
+
+    let monthNames = [
+        "January","February","March","April",
+        "May","June","July","August",
+        "September","October","November","December"
+    ];
+
+    let displayDate =
+        Number(parts[2]) + " " +
+        monthNames[Number(parts[1])-1] + " " +
+        parts[0];
+
+    document.getElementById("selectedDateTitle").innerHTML =
+        displayDate;
+
+    let input = document.getElementById("dateOTInput");
+
+    if(input){
+        input.value = Number(item.ot || 0);
+    }
+
+    updateModernAttendanceStatus(item.status || "");
+    updateModernOTHint();
+
+    document.getElementById("dateActionModal").style.display = "flex";
+}
+
+
+function updateModernAttendanceStatus(status){
+
+    [
+        "statusPresentBtn",
+        "statusHalfBtn",
+        "statusAbsentBtn"
+    ].forEach(function(id){
+
+        let btn = document.getElementById(id);
+
+        if(btn){
+            btn.classList.remove("modern-status-selected");
+        }
+
+    });
+
+    let selectedId = "";
+
+    if(status === "present"){
+        selectedId = "statusPresentBtn";
+    }
+
+    if(status === "half"){
+        selectedId = "statusHalfBtn";
+    }
+
+    if(status === "absent"){
+        selectedId = "statusAbsentBtn";
+    }
+
+    if(selectedId){
+
+        let btn = document.getElementById(selectedId);
+
+        if(btn){
+            btn.classList.add("modern-status-selected");
+        }
+
+    }
+}
+
+
 function markDatePresent(){
 
     attendanceData[selectedDate] =
@@ -1130,11 +1210,11 @@ function markDatePresent(){
             ot:0
         };
 
-    attendanceData[selectedDate].status="present";
+    attendanceData[selectedDate].status = "present";
 
-    updateAttendance();
-
+    updateModernAttendanceStatus("present");
 }
+
 
 function markDateAbsent(){
 
@@ -1144,11 +1224,11 @@ function markDateAbsent(){
             ot:0
         };
 
-    attendanceData[selectedDate].status="absent";
+    attendanceData[selectedDate].status = "absent";
 
-    updateAttendance();
-
+    updateModernAttendanceStatus("absent");
 }
+
 
 function markDateHalfDay(){
 
@@ -1160,22 +1240,68 @@ function markDateHalfDay(){
 
     attendanceData[selectedDate].status = "half";
 
-    updateAttendance();
-
+    updateModernAttendanceStatus("half");
 }
 
-function addDateOT(){
 
-    let ot = prompt("Enter OT Hours");
+function changeDateOT(step){
 
-    if(ot===null) return;
+    let input = document.getElementById("dateOTInput");
 
-    ot = Number(ot);
-
-    if(isNaN(ot) || ot<0){
-        alert("Invalid OT");
+    if(!input){
         return;
     }
+
+    let value = Number(input.value || 0);
+
+    value += Number(step || 0);
+
+    if(value < 0){
+        value = 0;
+    }
+
+    value = Math.round(value * 2) / 2;
+
+    input.value = value;
+
+    updateModernOTHint();
+}
+
+
+function updateModernOTHint(){
+
+    let input = document.getElementById("dateOTInput");
+    let hint = document.getElementById("modernOTHint");
+
+    if(!input || !hint){
+        return;
+    }
+
+    let value = Number(input.value || 0);
+
+    hint.innerHTML =
+        "OT: " +
+        value +
+        (value === 1 ? " hour" : " hours");
+}
+
+
+function saveDateOT(){
+
+    let input = document.getElementById("dateOTInput");
+
+    if(!input){
+        return;
+    }
+
+    let ot = Number(input.value || 0);
+
+    if(isNaN(ot) || ot < 0){
+        alert("Invalid OT Hours");
+        return;
+    }
+
+    ot = Math.round(ot * 2) / 2;
 
     attendanceData[selectedDate] =
         attendanceData[selectedDate] || {
@@ -1183,12 +1309,26 @@ function addDateOT(){
             ot:0
         };
 
-    attendanceData[selectedDate].status="present";
-    attendanceData[selectedDate].ot=ot;
+    attendanceData[selectedDate].ot = ot;
+
+    if(!attendanceData[selectedDate].status){
+        attendanceData[selectedDate].status = "present";
+    }
 
     updateAttendance();
-
 }
+
+
+function addDateOT(){
+
+    let input = document.getElementById("dateOTInput");
+
+    if(input){
+        input.focus();
+        input.select();
+    }
+}
+
 
 function updateAttendance(){
 
@@ -2252,7 +2392,7 @@ function aboutApp(){
 
     alert(
         "👷 Worker Attendance App\n\n" +
-        "Version : 1.0.16\n\n" +
+        "Version : 1.0.17\n\n" +
         "Developer : Safaul Ansari\n\n" +
         "Features:\n" +
         "✔ Worker Management\n" +
@@ -2774,39 +2914,173 @@ document.addEventListener("deviceready", function () {
 
     document.addEventListener("backbutton", function () {
 
-        let popup =
-            document.getElementById("popupMenu");
+        let popup = document.getElementById("popupMenu");
 
-        if (popup &&
-            popup.style.display !== "none") {
-
+        if(
+            popup &&
+            popup.style.display !== "none" &&
+            popup.style.display !== ""
+        ){
             popup.style.display = "none";
             return;
         }
 
-        let settings =
-            document.getElementById("settingsModal");
+        let modals = [
+            "pinManagerModal",
+            "pinModal",
+            "paidModal",
+            "paymentHistoryModal",
+            "paymentMonthModal",
+            "monthSelectorModal",
+            "attendanceModal",
+            "dateActionModal",
+            "addWorkerModal",
+            "workerNameModal",
+            "workerWageModal",
+            "settingsModal"
+        ];
 
-        if (settings &&
-            settings.style.display !== "none") {
+        for(let i = 0; i < modals.length; i++){
 
-            closeSettings();
-            return;
+            let modal = document.getElementById(modals[i]);
+
+            if(
+                modal &&
+                modal.style.display !== "none" &&
+                modal.style.display !== ""
+            ){
+
+                if(
+                    modals[i] === "paymentHistoryModal" &&
+                    typeof closePaymentHistory === "function"
+                ){
+                    closePaymentHistory();
+                }
+                else if(
+                    modals[i] === "paymentMonthModal" &&
+                    typeof closePaymentMonthSelector === "function"
+                ){
+                    closePaymentMonthSelector();
+                }
+                else if(
+                    modals[i] === "monthSelectorModal" &&
+                    typeof closeMonthSelector === "function"
+                ){
+                    closeMonthSelector();
+                }
+                else if(
+                    modals[i] === "attendanceModal" &&
+                    typeof closeAttendance === "function"
+                ){
+                    closeAttendance();
+                }
+                else if(
+                    modals[i] === "dateActionModal" &&
+                    typeof closeDateAction === "function"
+                ){
+                    closeDateAction();
+                }
+                else if(
+                    modals[i] === "addWorkerModal" &&
+                    typeof closeAddWorkerModal === "function"
+                ){
+                    closeAddWorkerModal();
+                }
+                else if(
+                    modals[i] === "settingsModal" &&
+                    typeof closeSettings === "function"
+                ){
+                    closeSettings();
+                }
+                else if(
+                    modals[i] === "pinManagerModal" &&
+                    typeof closePinManager === "function"
+                ){
+                    closePinManager();
+                }
+                else if(
+                    modals[i] === "paidModal" &&
+                    typeof closePaidDialog === "function"
+                ){
+                    closePaidDialog();
+                }
+                else{
+                    modal.style.display = "none";
+                }
+
+                return;
+            }
         }
 
-        let singleWorker =
+        let workerView =
             document.getElementById("singleWorkerView");
 
-        if (singleWorker &&
-            singleWorker.style.display !== "none") {
+        if(
+            workerView &&
+            workerView.style.display !== "none" &&
+            workerView.style.display !== ""
+        ){
 
-            closeWorkerCard();
+            if(typeof closeWorkerCard === "function"){
+                closeWorkerCard();
+            }else{
+                workerView.style.display = "none";
+            }
+
             return;
         }
 
-        if (navigator.app &&
-            navigator.app.exitApp) {
+        let workersView =
+            document.getElementById("workersView");
 
+        let attendanceView =
+            document.getElementById("attendanceView");
+
+        let salaryView =
+            document.getElementById("salaryView");
+
+        if(
+            (workersView &&
+             workersView.style.display !== "none" &&
+             workersView.style.display !== "") ||
+
+            (attendanceView &&
+             attendanceView.style.display !== "none" &&
+             attendanceView.style.display !== "") ||
+
+            (salaryView &&
+             salaryView.style.display !== "none" &&
+             salaryView.style.display !== "")
+        ){
+
+            if(typeof showDashboard === "function"){
+                showDashboard();
+            }else{
+
+                if(workersView)
+                    workersView.style.display = "none";
+
+                if(attendanceView)
+                    attendanceView.style.display = "none";
+
+                if(salaryView)
+                    salaryView.style.display = "none";
+
+                let dashboard =
+                    document.getElementById("dashboardView");
+
+                if(dashboard){
+                    dashboard.style.display = "block";
+                }
+            }
+
+            return;
+        }
+
+        if(
+            navigator.app &&
+            navigator.app.exitApp
+        ){
             navigator.app.exitApp();
         }
 
