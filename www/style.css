@@ -3128,3 +3128,89 @@ button,
     font-weight: 750;
     overflow-wrap: anywhere;
 }
+
+/* FINAL FIX: Make all 7 dashboard stat cards consistent */
+#dashboardView .modern-home-stats {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 12px;
+    padding: 0 14px;
+}
+
+#dashboardView .modern-home-stat-card,
+#dashboardView .home-worker-stat-card {
+    box-sizing: border-box;
+    width: 100%;
+    min-width: 0;
+    min-height: 120px;
+    padding: 15px;
+    border-radius: 20px;
+    border: 1px solid #edf0f5;
+    box-shadow: 0 4px 16px rgba(30, 50, 80, .07);
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    justify-content: center;
+    gap: 7px;
+}
+
+#dashboardView .modern-stat-icon,
+#dashboardView .home-worker-stat-icon {
+    width: 40px;
+    height: 40px;
+    min-width: 40px;
+    box-sizing: border-box;
+    border-radius: 13px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 21px;
+    flex-shrink: 0;
+}
+
+#dashboardView .modern-stat-info {
+    min-width: 0;
+}
+
+#dashboardView .modern-stat-info span,
+#dashboardView .home-worker-stat-card span {
+    display: block;
+    margin: 0;
+    font-size: 13px;
+    line-height: 1.3;
+    color: #777f89;
+}
+
+#dashboardView .modern-stat-info strong,
+#dashboardView .home-worker-stat-card strong {
+    display: block;
+    margin: 3px 0 0;
+    font-size: 22px;
+    line-height: 1.2;
+    font-weight: 750;
+    color: #222;
+    overflow-wrap: anywhere;
+}
+
+@media (max-width: 380px) {
+    #dashboardView .modern-home-stats,
+    #dashboardView .home-worker-stats-grid {
+        gap: 9px;
+    }
+
+    #dashboardView .modern-home-stat-card,
+    #dashboardView .home-worker-stat-card {
+        min-height: 110px;
+        padding: 12px;
+    }
+
+    #dashboardView .modern-stat-info span,
+    #dashboardView .home-worker-stat-card span {
+        font-size: 12px;
+    }
+
+    #dashboardView .modern-stat-info strong,
+    #dashboardView .home-worker-stat-card strong {
+        font-size: 19px;
+    }
+}
