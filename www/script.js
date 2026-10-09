@@ -1,4 +1,32 @@
-const APP_VERSION = "1.0.29";
+const APP_VERSION = "1.0.30";
+
+// TEMPORARY DEBUG LOGGER
+window.addEventListener("error", function(e) {
+    console.error("[APP ERROR]", e.message, e.filename, e.lineno, e.colno);
+    try {
+        localStorage.setItem("lastAppError",
+            JSON.stringify({
+                message: e.message,
+                file: e.filename,
+                line: e.lineno,
+                column: e.colno,
+                time: new Date().toISOString()
+            })
+        );
+    } catch (_) {}
+});
+window.addEventListener("unhandledrejection", function(e) {
+    console.error("[APP PROMISE ERROR]", e.reason);
+    try {
+        localStorage.setItem("lastAppError",
+            JSON.stringify({
+                message: String(e.reason),
+                time: new Date().toISOString()
+            })
+        );
+    } catch (_) {}
+});
+
 
 // ===============================
 // Worker Attendance App v2
