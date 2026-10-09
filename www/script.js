@@ -309,6 +309,7 @@ function closeHomeWorkersModal(){
 
 
 function selectHomeWorker(index){
+    window.homeSelectedWorkerIndex = index;
 
     let worker = workers[index];
 
@@ -398,10 +399,10 @@ function selectHomeWorker(index){
     }
 
     let selectedName =
-        document.getElementById("homeSelectedWorkerName");
+        document.getElementById("totalWorkers");
 
     if(selectedName){
-        selectedName.innerHTML =
+        selectedName.textContent =
             "👷 " + (worker.name || "Worker");
     }
 
@@ -434,7 +435,12 @@ function renderWorkers(){
 
 
     if(totalWorkersElement){
-        totalWorkersElement.innerHTML = workers.length;
+        let selected = Number.isInteger(window.homeSelectedWorkerIndex)
+            ? workers[window.homeSelectedWorkerIndex]
+            : null;
+        totalWorkersElement.textContent = selected
+            ? "👷 " + (selected.name || "Worker")
+            : "Select Worker";
     }
 
 
@@ -2804,7 +2810,7 @@ function aboutApp(){
 
     alert(
         "👷 Worker Attendance App\n\n" +
-        "Version : 1.0.21\n\n" +
+        "Version : 1.0.28\n\n" +
         "Developer : Safaul Ansari\n\n" +
         "Features:\n" +
         "✔ Worker Management\n" +
