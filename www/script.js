@@ -1,3 +1,5 @@
+const APP_VERSION = "1.0.29";
+
 // ===============================
 // Worker Attendance App v2
 // Part 1
@@ -2810,7 +2812,7 @@ function aboutApp(){
 
     alert(
         "👷 Worker Attendance App\n\n" +
-        "Version : 1.0.28\n\n" +
+        "Version : " + APP_VERSION + "\n\n" +
         "Developer : Safaul Ansari\n\n" +
         "Features:\n" +
         "✔ Worker Management\n" +
