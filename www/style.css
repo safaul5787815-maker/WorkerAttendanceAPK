@@ -3081,3 +3081,50 @@ button,
         grid-template-columns:repeat(2,1fr);
     }
 }
+
+/* Home dashboard: consistent two-column stat cards */
+#dashboardView .home-worker-stats-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 11px;
+    margin: 12px 14px 0;
+}
+
+#dashboardView .home-worker-stat-card {
+    min-width: 0;
+    min-height: 92px;
+    padding: 15px;
+    box-sizing: border-box;
+    border-radius: 20px;
+    border: 1px solid #edf0f5;
+    box-shadow: 0 4px 16px rgba(30, 50, 80, .07);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    gap: 5px;
+}
+
+#dashboardView .home-worker-stat-icon {
+    width: 30px;
+    height: 30px;
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 18px;
+}
+
+#dashboardView .home-worker-stat-card span {
+    margin-top: 3px;
+    font-size: 11px;
+    line-height: 1.2;
+    color: #777f89;
+}
+
+#dashboardView .home-worker-stat-card strong {
+    margin-top: 0;
+    font-size: 21px;
+    line-height: 1.1;
+    font-weight: 750;
+    overflow-wrap: anywhere;
+}

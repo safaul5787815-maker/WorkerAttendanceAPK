@@ -1,7 +1,7 @@
 {
   "name": "com.safaul.workerattendance",
   "displayName": "Worker Attendance",
-  "version": "1.0.22",
+  "version": "1.0.23",
   "description": "A sample Apache Cordova application that responds to the deviceready event.",
   "main": "index.js",
   "scripts": {
