@@ -3460,3 +3460,26 @@ body:has(#dashboardView:not([style*="display: none"])) .bottom-nav button.active
         border-radius: 19px;
     }
 }
+
+/* Settings navigation - version 1.0.27 */
+.bottom-nav {
+    display: flex;
+    justify-content: space-around;
+    gap: 2px;
+    padding-left: 4px;
+    padding-right: 4px;
+}
+
+.bottom-nav button {
+    flex: 1 1 0;
+    min-width: 0;
+    max-width: none;
+    padding: 4px 1px;
+    font-size: 19px;
+}
+
+.bottom-nav button span {
+    font-size: 10px;
+    white-space: nowrap;
+}
+
