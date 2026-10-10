@@ -1454,19 +1454,7 @@ if(futureDate > today){
 
         box.innerHTML=html;
 
-        box.onclick=()=>{
-
-            selectedDate=dateKey;
-
-            document.getElementById(
-                "selectedDateTitle"
-            ).innerHTML=dateKey;
-
-            document.getElementById(
-                "dateActionModal"
-            ).style.display="flex";
-
-        };
+        box.onclick = () => { openDateAction(dateKey); };
 
         grid.appendChild(box);
 
@@ -1577,6 +1565,18 @@ function openDateAction(dateKey){
 
 }
 
+function updateModernOTHint(){
+    const input = document.getElementById("dateOTInput");
+    const hint = document.getElementById("modernOTHint");
+
+    if (!input || !hint) return;
+
+    let hours = Number(input.value);
+    if (!Number.isFinite(hours) || hours < 0) hours = 0;
+
+    hint.textContent = "OT: " + hours + (hours === 1 ? " hour" : " hours");
+}
+
 function updateModernAttendanceStatus(status){
 
     [
@@ -1658,6 +1658,19 @@ function markDateHalfDay(){
 }
 
 
+function changeDateOT(amount){
+    const input = document.getElementById("dateOTInput");
+    if(!input) return;
+
+    let current = Number(input.value);
+    if(!Number.isFinite(current) || current < 0) current = 0;
+
+    let next = Math.max(0, Math.round((current + amount) * 2) / 2);
+    input.value = next;
+
+    updateModernOTHint();
+}
+
 function addDateOT(){
 
     let input =
@@ -1707,9 +1720,7 @@ function updateAttendance(){
 
     saveWorkers();
 
-    refreshWorkerCard(
-        selectedAttendanceWorker
-    );
+    renderWorkers();
 
     renderCalendar();
 
@@ -1757,9 +1768,7 @@ function saveAttendanceWithoutClosing(){
 
     saveWorkers();
 
-    refreshWorkerCard(
-        selectedAttendanceWorker
-    );
+    renderWorkers();
 
     renderCalendar();
 
@@ -1790,8 +1799,9 @@ function confirmDateAttendance(){
 
     attendanceData[selectedDate].ot = ot;
 
-    if(!attendanceData[selectedDate].status){
-        attendanceData[selectedDate].status = "present";
+    if (!attendanceData[selectedDate].status) {
+        closeDateAction();
+        return;
     }
 
     updateAttendance();
