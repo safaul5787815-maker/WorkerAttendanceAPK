@@ -63,6 +63,8 @@ jobs:
           }
           EOF
 
+      - name: Sync app version from config.xml
+        run: node hooks/before_prepare/update-version.js
       - name: Prepare Android
         run: cordova prepare android
 

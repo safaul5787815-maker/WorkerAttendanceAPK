@@ -1875,19 +1875,26 @@ function deleteWorker(index){
 
     saveWorkers();
 
-    document.getElementById(
-        "singleWorkerView"
-    ).style.display = "none";
+    const singleWorkerView = document.getElementById("singleWorkerView");
+    if (singleWorkerView) {
+        singleWorkerView.style.display = "none";
+    }
 
-    document.querySelector(
-        ".container"
-    ).style.display = "block";
+    const mainContainer = document.querySelector(".container");
+    if (mainContainer) {
+        mainContainer.style.display = "block";
+    }
 
-    document.getElementById(
-        "dashboardView"
-    ).style.display = "block";
+    const dashboardView = document.getElementById("dashboardView");
+    if (dashboardView) {
+        dashboardView.style.display = "block";
+    }
 
-    renderWorkers();
+    if (typeof showWorkers === "function") {
+        showWorkers();
+    } else {
+        renderWorkers();
+    }
 
 }
 
