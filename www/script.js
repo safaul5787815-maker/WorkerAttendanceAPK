@@ -1913,34 +1913,22 @@ function editWorker(index){
 }
 
 function deleteWorker(index){
-
     if(!confirm("Delete this worker?")) return;
 
-    workers.splice(index,1);
-
+    workers.splice(index, 1);
     saveWorkers();
 
     const singleWorkerView = document.getElementById("singleWorkerView");
-    if (singleWorkerView) {
+    if(singleWorkerView){
         singleWorkerView.style.display = "none";
     }
 
-    const mainContainer = document.querySelector(".container");
-    if (mainContainer) {
-        mainContainer.style.display = "block";
+    const bottomNav = document.querySelector(".bottom-nav");
+    if(bottomNav){
+        bottomNav.style.display = "flex";
     }
 
-    const dashboardView = document.getElementById("dashboardView");
-    if (dashboardView) {
-        dashboardView.style.display = "block";
-    }
-
-    if (typeof showWorkers === "function") {
-        showWorkers();
-    } else {
-        renderWorkers();
-    }
-
+    showWorkers();
 }
 
 function menuDelete(){
