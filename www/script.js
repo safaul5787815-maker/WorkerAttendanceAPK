@@ -1,4 +1,4 @@
-const APP_VERSION = "1.0.30";
+const APP_VERSION = window.APP_VERSION || "1.0.31";
 
 // TEMPORARY DEBUG LOGGER
 window.addEventListener("error", function(e) {
@@ -561,7 +561,7 @@ function renderWorkers(){
 
                 <div
                     class="modern-home-worker-card"
-                    onclick="openWorkerCard(${index})">
+                    onclick="window.openWorkerCard(${index})">
 
                     <div class="modern-home-worker-avatar">
                         ${initials}
@@ -970,7 +970,7 @@ function openWorkerCard(index){
     `;
 
 
-    document.querySelector(".container").style.display = "none";
+    let mainContainer = document.querySelector(".container"); if(mainContainer){ mainContainer.style.display = "none"; }
 
     let dashboard =
         document.getElementById("dashboardView");
@@ -3925,7 +3925,7 @@ function renderWorkersScreen(){
 
         target.innerHTML += `
             <div class="modern-worker-card"
-                 onclick="openWorkerCard(${index})">
+                 onclick="window.openWorkerCard(${index})">
 
                 <div class="worker-avatar">
                     ${initials}
@@ -4023,3 +4023,5 @@ function setActiveNav(id){
     }
 }
 
+
+window.openWorkerCard = openWorkerCard;
