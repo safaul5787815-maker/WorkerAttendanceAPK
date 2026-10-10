@@ -372,6 +372,41 @@ function selectHomeWorker(index){
 
     }
 
+    // Calculate current month's earning from attendance only
+    const now = new Date();
+    const currentMonth = now.getFullYear() + "-" +
+        String(now.getMonth() + 1).padStart(2, "0");
+
+    let monthPresentDays = 0;
+    let monthHalfDays = 0;
+    let monthOT = 0;
+
+    if (worker.attendance) {
+        Object.keys(worker.attendance).forEach(function(dateKey) {
+            if (!dateKey.startsWith(currentMonth)) return;
+
+            const item = worker.attendance[dateKey] || {};
+
+            if (item.status === "present") monthPresentDays++;
+            if (item.status === "half") monthHalfDays++;
+            monthOT += Number(item.ot || 0);
+        });
+    }
+
+    const dailyWage = Number(worker.wage || 0);
+    const hourlyRate = dailyWage / 8;
+    const currentMonthEarning =
+        ((monthPresentDays + monthHalfDays * 0.5) * dailyWage) +
+        (monthOT * hourlyRate);
+
+    const monthEarningEl =
+        document.getElementById("homeCurrentMonthEarning");
+
+    if (monthEarningEl) {
+        monthEarningEl.textContent =
+            "₹" + Math.round(currentMonthEarning);
+    }
+
     let completedSalary =
         typeof getCompletedSalary === "function"
             ? getCompletedSalary(worker)
